@@ -1,0 +1,1126 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="page" class="site page-home">
+    
+    <header>
+        <div class="header-main mobile-hide">
+            <div class="container">
+                <div class="wrapper flexitem">
+                    <div class="left">
+                        <div class="dpt-cat">
+                            <div class="dpt-head">
+                                <div class="main-text">All Categories</div>
+                                <div class="mini-text mobile-hide">Total of {{ product_count }} Products</div>
+                                <a href="#" class="dpt-trigger mobile-hide">
+                                    <i class="ri-menu-add-fill"></i>
+                                </a>
+                            </div>
+                            <div class="dpt-menu">
+                                <ul class="second-links">
+                                    
+                                    {% for category in categories %}
+                                    <li class="has-child beauty">
+                                        <a href="#" style="display: flex; align-items: center;">
+                                            {{ category.name }}
+                                            <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
+                                            <span style="font-size: 14px; font-weight: 500;">{{ category.product_set.count }}</span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="search box">
+                            <form action="" class="search" method="get">
+                                <span class="icon-large"><i class="ri-search-line"></i></span>
+                                <input type="search" name="query" placeholder="Search for products.....">
+                                <button type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="slider">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="myslider swiper">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <div class="image object-cover">
+                                        <img src="{% static 'assets/slider/samsung.jpg' %}" alt="">
+                                    </div>
+                                    <div class="text-content flexcol">
+                                        <h4>Phones</h4>
+                                        <h2><span>Come and Get it!</span><br><span>Brand New Phones</span></h2>
+                                        <a href="#" class="primary-button">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <div class="image object-cover">
+                                        <img src="{% static 'assets/slider/desktop.jpg' %}" alt="">
+                                    </div>
+                                    <div class="text-content flexcol">
+                                        <h4>Computing</h4>
+                                        <h2><span>Very Powerful Machines</span><br><span>Start Gaming Today</span></h2>
+                                        <a href="add-to-cart/<int:product_id>/" class="primary-button">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <div class="image object-cover">
+                                        <img src="{% static 'assets/slider/laptops.jpg' %}" alt="">
+                                    </div>
+                                    <div class="text-content flexcol">
+                                        <h4>Laptops</h4>
+                                        <h2><span>Tap On It, Recieve It.</span><br><span>Brand New Laptops</span></h2>
+                                        <a href="add-to-cart/<int:product_id>/" class="primary-button">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="item">
+                                    <div class="image object-cover">
+                                        <img src="{% static 'assets/slider/slider0.jpg' %}" alt="">
+                                    </div>
+                                    <div class="text-content flexcol">
+                                        <h4>Shoes</h4>
+                                        <h2><span>Come and Get it!</span><br><span>Brand New Shoes</span></h2>
+                                        <a href="add-to-cart/<int:product_id>/" class="primary-button">Shop Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- slider -->
+
+        <div class="brands">
+            <div class="container">
+                <div class="wrapper flexitem">
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/hurley.png' %}" alt=""></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/dng.png' %}" alt=""></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/zara.png' %}" alt=""></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/samsung.png' %}" alt=""></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/oppo.png' %}" alt=""></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/asus.png' %}" alt=""></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="trending">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="sectop flexitem">
+                        <h2><span class="circle"></span><span>Trending Products</span></h2>
+                    </div>
+                    <div class="column">
+                        <div class="flexwrap">
+                            <div class="row products big">
+                                <div class="item">
+                                    <div class="offer">
+                                        <p>Offer ends at</p>
+                                        <ul class="flexcenter">
+                                            <li>5</li>
+                                            <li>45</li>
+                                            <li>27</li>
+                                            <li>60</li>
+                                        </ul>
+                                    </div>
+                                    <div class="media">
+                                        <div class="image">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/samsung.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>50%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(17,098)</span>
+                                        </div>
+                                        <h3 class="main-links"><a href="#">Galaxy S23 Ultra Lavande 256GB 5G Samsung</a></h3>
+                                        <div class="price">
+                                            <span class="current">2,500,000UGX</span>
+                                            <span class="normal mini-text">5000,000UGX</span>
+                                        </div>
+                                        <div class="stock mini-text">
+                                            <div class="qty">
+                                                <span>Stock: <strong class="qty-available">2,089</strong></span>
+                                                <span>Sold: <strong class="qty-sold">4,904</strong></span>
+                                            </div>
+                                            <div class="bar">
+                                                <div class="available"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row products mini">
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/rubik' %}'s.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="add-to-cart/<int:product_id>/" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>50%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">Educational Toys Rubik'S Cube-Third Order</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(34,708)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">8,000UGX</span>
+                                            <span class="normal mini-text">10,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/acer.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="add-to-cart/<int:product_id>/" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>19%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">Acer Predator Triton 300 2020 i9-10750H RTX 2060 15.6" 120Hz display 32GB RAM 1TB SSD</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(34,708)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">8,000,000UGX</span>
+                                            <span class="normal mini-text">10,000,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                        </div>
+                                    </div>
+                                </div><div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/ax-armani.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="add-to-cart/<int:product_id>/" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>20%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">AX Armani Exchange Analog Bracelet Watch Leather Strap Set - Black</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(34,708)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">80,000UGX</span>
+                                            <span class="normal mini-text">100,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                            <p>Free Delivery</p>
+                                        </div>
+                                    </div>
+                                </div><div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="add-to-cart/<int:product_id>/">
+                                                <img src="{% static 'assets/products/beats1.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="add-to-cart/<int:product_id>/" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>10%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">Wireless Headphones Over Ear, Bluetooth</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(1,411)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">700,000UGX</span>
+                                            <span class="normal mini-text">800,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                            <p>Free Delivery</p>
+                                            <p class="stock-danger">Stock: 7 left</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row products mini">                                    
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/laptop3.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="add-to-cart/<int:product_id>/" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>5%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">HP Victus RYZEN 5 512GB ROM, 8GB RAM, 4GB Dedicated Video Memory</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(34,708)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">2,500,000UGX</span>
+                                            <span class="normal mini-text">3,000,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                            <p class="stock-danger">Stock: 7 left</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/storage.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>10%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">Western Digital 4TB Black My Passport Portable External Hard Drive - USB 3.0</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(34,708)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">400,000UGX</span>
+                                            <span class="normal mini-text">500,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                            <p class="stock-danger">Stock: 7 left</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/shoe01.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>28%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">Men's Air Jordan XX9 Basketball Shoes</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(34,708)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">410,000UGX</span>
+                                            <span class="normal mini-text">570,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                            <p class="stock-danger">Stock: 7 left</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="#">
+                                                <img src="{% static 'assets/products/watch.jpg' %}" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active"><a href="#" class="social-info">
+                                                    <span><i class="ri-heart-line"></i></span>
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-eye-line"></i></span>
+                                                    <p class="hover-text">View more</p>
+                                                </a></li>
+                                                <li><a href="#" class="social-info">
+                                                    <span><i class="ri-shopping-cart-line"></i></span>
+                                                    <p class="hover-text">Add to Cart</p>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="discount circle flexcenter"><span>15%</span></div>
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links"><a href="#">G-Shock Analog Digital Gold Metal Shock Resistant Watch-Gold</a></h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">(34,708)</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">500,000UGX</span>
+                                            <span class="normal mini-text">750,000UGX</span>
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>74,582 sold</p>
+                                            <p>Free Delivery</p>
+                                            <p class="stock-danger">Stock: 7 left</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Trending Products-->
+
+        <div class="features">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="column">
+                        <div class="sectop flexitem">
+                            <h2><span class="circle"></span><span>All Products</span></h2>
+                            <div class="second-links">
+                                <a href="#" class="view-all">View All<i class="ri-arrow-right-line"></i></a><br>
+                            </div>
+                        </div>
+                        
+                        <div class="products main flexwrap">
+                            
+                            {% for product in products %}
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                            {% if product.image %}
+                                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                            {% else %}
+                                                <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="{% url 'product_detail' product.category.slug product.slug %}" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>New</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">({{ product.stock }} in stock)</span>
+                                    </div>
+                                    <h3><a href="{% url 'product_detail' product.category.slug product.slug %}">{{ product.name }}</a></h3>
+                                    <div class="price">
+                                        <span class="current">{{ product.price }}UGX</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">IronMan shoes directly from Stark Industries.</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/louis.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">Louis vuitton yellow brown unisex zipper hoodie premium outfit for men women luxury brand</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <ul class="mini-text">
+                                        <li>A premium polyester</li>
+                                        <li>Ultra-soft and incredibly warm, comfortable, and healthy</li>
+                                        <li>Fabric is durable and resistant to wrinkles, shrinking, and mildew</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/puma.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">Elevate Your Look with These Trendy Puma Trousers</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <ul class="mini-text">
+                                        <li>100% Cotton</li>
+                                        <li>Charm in Every Step</li>
+                                        <li>Dress like you mean it</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/samsung1.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">Galaxy S22 Ultra 512GB ROM 16GB RAM</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/spider.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">Spider hoodies to keep you warm</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                </div>
+                                <div class="footer">
+                                    <ul class="mini-text">
+                                        <li>Cotton, Polyester</li>
+                                        <li>Become the next Spider Man</li>
+                                        <li>With Great Power, Come Great ........</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/watch1.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">Devon Watch, Water, Dust and Shock resistant</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                    <div class="footer">
+                                        <ul class="mini-text">
+                                            <li>You will never be late again</li>
+                                            <li>These intricate timepieces make the Apple Watch look like a cheap piece of junk</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/dress.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">Lauriell Bright Orange Wrap Front Crepe Midi Dress</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                    <div class="footer">
+                                        <ul class="mini-text">
+                                            <li>You will never be late again</li>
+                                            <li>Grab all the atention on those Summer Parties.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="media">
+                                    <div class="thumbnail object-cover">
+                                        <a href="#">
+                                            <img src="{% static 'assets/products/dress2.jpg' %}" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="hoverable">
+                                        <ul>
+                                            <li class="active"><a href="#" class="social-info">
+                                                <span><i class="ri-heart-line"></i></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-eye-line"></i></span>
+                                                <p class="hover-text">View more</p>
+                                            </a></li>
+                                            <li><a href="#" class="social-info">
+                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                <p class="hover-text">Add to Cart</p>
+                                            </a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="discount circle flexcenter"><span>50%</span></div>
+                                </div>
+                                <div class="content">
+                                    <div class="rating">
+                                        <div class="stars"></div>
+                                        <span class="mini-text">(17,098)</span>
+                                    </div>
+                                    <h3><a href="#">HomRain Women's Elegant Floral Lace Dress Off The Shoulder High Low Hem Dresses for Wedding for Cocktail for Party</a></h3>
+                                    <div class="price">
+                                        <span class="current">2,500,000UGX</span>
+                                        <span class="normal mini-text">5000,000UGX</span>
+                                    </div>
+                                    <div class="footer">
+                                        <ul class="mini-text">
+                                            <li>The next Wedding will definetly be yours.</li>
+                                            <li>For the Cockttails, you're definetly leaving with a Gentle man</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="banners">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="column">
+                        <div class="banner flexwrap">
+                            <div class="row">
+                                <div class="item">
+                                    <div class="image">
+                                        <img src="{% static 'assets/banner/banner1.jpg' %}" alt="">
+                                    </div>
+                                    <div class="text-content flexcol">
+                                        <h4>Brutal Sale!</h4>
+                                        <h3><span>Get the deal Now</span><br>Furniture</h3>
+                                        <a href="#" class="primary-button">Show Now</a>
+                                    </div>
+                                    <a href="#" class="over-link"></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="item get-gray">
+                                    <div class="image">
+                                        <img src="{% static 'assets/banner/banner2.jpg' %}" alt="">
+                                    </div>
+                                    <div class="text-content flexcol">
+                                        <h4>Brutal Sale!</h4>
+                                        <h3><span>Discount Everyday</span><br>Office Wear</h3>
+                                        <a href="#" class="primary-button">Show Now</a>
+                                    </div>
+                                    <a href="#" class="over-link"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-categories flexwrap">
+                            <div class="row">
+                                <div class="item">
+                                    <div class="image">
+                                        <img src="{% static 'assets/banner/lock1.jpg' %}" alt="">
+                                    </div>
+                                    <div class="content mini-links">
+                                        <h4>Security</h4>
+                                        <ul class="flexcol">
+                                            <li><a href="#">Cameras</a></li>
+                                            <li><a href="#">Alarms</a></li>
+                                            <li><a href="#">Password Locks</a></li>
+                                            <li><a href="#">Electic Fences</a></li>
+                                        </ul>
+                                        <div class="second-links">
+                                            <a href="" class="view-all">View All<i class="ri-arrow-right-line"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="item">
+                                    <div class="image">
+                                        <img src="{% static 'assets/banner/samsung.jpg' %}" alt="">
+                                    </div>
+                                    <div class="content mini-links">
+                                        <h4>Phones</h4>
+                                        <ul class="flexcol">
+                                            <li><a href="#">Samsung</a></li>
+                                            <li><a href="#">iPhone</a></li>
+                                            <li><a href="#">Tecno</a></li>
+                                            <li><a href="#">Redmi</a></li>
+                                            <li><a href="#">Infinix</a></li>
+                                            <li><a href="#">Google Pixel</a></li>
+                                        </ul>
+                                        <div class="second-links">
+                                            <a href="" class="view-all">View All<i class="ri-arrow-right-line"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="item">
+                                    <div class="image">
+                                        <img src="{% static 'assets/banner/chair1.jpg' %}" alt="">
+                                    </div>
+                                    <div class="content mini-links">
+                                        <h4>Gaming</h4>
+                                        <ul class="flexcol">
+                                            <li><a href="#">Chairs</a></li>
+                                            <li><a href="#">Gaming Pads</a></li>
+                                            <li><a href="#">Sony Play Stations</a></li>
+                                            <li><a href="#">Games</a></li>
+                                            <li><a href="#">Wheels</a></li>
+                                        </ul>
+                                        <div class="second-links">
+                                            <a href="" class="view-all">View All<i class="ri-arrow-right-line"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="newsletter">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="box">
+                        <div class="content">
+                            <h3>Subscribe to our newsletter</h3>
+                            <p>Get E-mail updates on our latest updates and<strong> Special Offers</strong></p>
+                        </div>
+                        <form action="" class="search">
+                            <span class="icon-large"><i class="ri-mail-line"></i></span>
+                            <input type="mail" placeholder="Enter E-mail Address" required>
+                            <button type="submit">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="accept">
+                    <input type="checkbox" id="accept">
+                    <label for="accept">I agree to DigitalCart's Privacy and Cookie Policy. You can unsubscribe from newsletters at any time.</label>
+                </div>
+                <div class="acc"><strong><a href="#">I accept the Legal Terms</a></strong></div>                    
+            </div>
+        </div>
+        <!-- newsletter -->
+
+        <div class="widgets">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="flexwrap">
+                        <div class="row">
+                            <div class="item mini-links">
+                                <h4>Need Help</h4>
+                                <ul class="flexcol">
+                                    <li><a href="#">Chat with us</a></li>
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Contact us</a></li>
+                                    <li><a href="#"> </a></li>
+                                </ul>
+                            </div>
+                            <div class="item mini-links">
+                                <h4>Useful Links</h4>
+                                <ul class="flexcol">
+                                    <li><a href="#">Place an order</a></li>
+                                    <li><a href="#">Pay for your order</a></li>
+                                    <li><a href="#">Delivery</a></li>
+                                    <li><a href="#">Delivery Timelines</a></li>
+                                    <li><a href="#">Report a Product</a></li>
+                                    <li><a href="#">Create a return</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item mini-links">
+                                <h4>About DigitalCart</h4>
+                                <ul class="flexcol">
+                                    <li><a href="#">About us</a></li>
+                                    <li><a href="#">DigitalCart Careers</a></li>
+                                    <li><a href="#">Terms and Conditions</a></li>
+                                    <li><a href="#">Store & Credit Terms & Conditions</a></li>
+                                    <li><a href="#">Dispute Resolution Policy</a></li>
+                                    <li><a href="#">Privacy policy Notice</a></li>
+                                    <li><a href="#">Return & Refund Policy</a></li>
+                                    <li><a href="#">Cookie Notice</a></li>
+                                    <li><a href="#">Flash Sales</a></li>
+                                    <li><a href="#">Cookie Notice</a></li>
+                                    <li><a href="#">DigitalCart Global</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item mini-links">
+                                <h4>Make money with us</h4>
+                                <ul class="flexcol">
+                                    <li><a href="#">Sell on DigitalCart</a></li>
+                                    <li><a href="#">Vendor Hub</a></li>
+                                    <li><a href="#">Become a Sales Consultant</a></li>
+                                    <li><a href="#">Become a Logistics Service Partner</a></li>
+                                    <li><a href="#">Become a DigitalCart Delivery Agent</a></li>
+                                    <li><a href="#">DigitalCart B2B</a></li>
+                                    <li><a href="#">Become a DigitalCart Pickup Station Partner</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="item mini-links">
+                                <h4>DigitalCart International</h4>
+                                <ul class="flexcol">
+                                    <li><a href="#">Kenya</a></li>
+                                    <li><a href="#">Egypt</a></li>
+                                    <li><a href="#">Ghana</a></li>
+                                    <li><a href="#">Morocco</a></li>
+                                    <li><a href="#">SouthAfrica</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

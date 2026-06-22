@@ -1,0 +1,76 @@
+{% load static %}
+<header>
+    <div class="header-top mobile-hide">
+        <div class="container">
+            <div class="wrapper flexitem">
+                <div class="left">
+                    <ul class="flexitem main-links">
+                      <li><a href="#">About</a></li>
+                      <li><a href="#">Wishlist</a></li>
+                    </ul>
+                </div>
+                <div class="right">
+                    <ul class="flexitem main-links">
+                        <li><a href="#">Sign Out</a></li>
+                        <li><a href="#">Signup</a></li>
+                        <li><a href="#">Signin</a></li>
+                        <li><a href="#">Register Business</a></li>
+                        <li><a href="#">UGX<span class="icon-small"><i class="ri-arrow-down-s-line"></i></span></a>                                        
+                            <ul>
+                                <li class="current"><a href="#">UGX</a></li>
+                                <li><a href="#">USD</a></li>
+                                <li><a href="#">EURO</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">English<span class="icon-small"><i class="ri-arrow-down-s-line"></i></span></a>
+                            <ul>
+                                <li class="current"><a href="#">English</a></li>
+                                <li><a href="#">Luganda</a></li>
+                                <li><a href="#">Kiswahili</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-nav">
+        <div class="container">
+            <div class="wrapper flexitem">
+                <a href="#" class="trigger desktop-hide"><i class="ri-menu-add-fill"></i></a>
+                <div class="left flexitem">
+                    <div class="logo"><a href="{% url 'store' %}"><span class="circle"></span>.DigitalCart</a></div>
+                    <nav class="mobile-hide">
+                        <ul class="flexitem second-links">
+                            <li><a href="{% url 'store' %}">Home</a></li>
+                            <li><a href="#">Men</a></li>
+                            <li>
+                                <a href="#">Sports
+                                    <div class="fly-item"><span>New!</span></div>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="right">
+                    <ul class="flexitem second-links">
+                        <li class="mobile-hide"><a href="#">
+                            <div class="icon-large"><i class="ri-heart-line"></i></div>
+                            <div class="fly-item"><span class="item-number">0</span></div>
+                        </a></li>
+                        <li><a href="#" class="iscart">
+                            <div class="icon-large">
+                                <i class="ri-shopping-cart-line"></i>
+                                <div class="fly-item"><span class="item-number">0</span></div>
+                            </div>
+                            <div class="icon-text">
+                                <div class="mini-text">Total</div>
+                                <div class="cart-total">00UGX</div>
+                            </div>
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
