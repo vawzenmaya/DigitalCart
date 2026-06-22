@@ -19,17 +19,49 @@
                             </div>
                             <div class="dpt-menu">
                                 <ul class="second-links">
-                                    
+
                                     {% for category in categories %}
-                                    <li class="has-child beauty">
+                                    <li class="has-child">
                                         <a href="#" style="display: flex; align-items: center;">
                                             {{ category.name }}
                                             <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
                                             <span style="font-size: 14px; font-weight: 500;">{{ category.product_set.count }}</span>
                                         </a>
+
+                                        <div class="mega"
+                                            {% if category.menu_image %}
+                                                style="z-index: 999; background-color: #cccaca; min-height: 400px; background-image: url('{{ category.menu_image.url }}'); background-size: cover; background-position: right center;"
+                                            {% else %}
+                                                style="z-index: 999; background-color: #ffffff; min-height: 400px;"
+                                            {% endif %}>
+
+                                            <div class="mega-subcats" style="position: relative; z-index: 2; display: flex; flex-direction: row; gap: 2rem; align-items: flex-start;">
+
+                                                {% for sub in category.subcategories.all %}
+                                                    <div class="mega-sub-item" style="min-width: 160px; max-width: 200px; flex-shrink: 0;">
+                                                        <h4 style="margin-bottom: 10px; color: var(--secondary-dark-color); text-transform: uppercase; font-size: 13px; font-weight: 600;">
+                                                            {{ sub.name }}
+                                                        </h4>
+                                                        <ul style="list-style: none; padding: 0; margin: 0;">
+                                                            {% for subsub in sub.subsubcategories.all %}
+                                                                <li style="line-height: 2em;"><a href="#" style="font-size: 13px;">{{ subsub.name }}</a></li>
+                                                            {% empty %}
+                                                                <li><a href="#" style="color: #636161; font-style: italic; font-size: 13px;">More coming soon...</a></li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                {% empty %}
+                                                    <div class="mega-sub-item">
+                                                        <p style="color: #999; font-style: italic;">No subcategories added in Admin yet.</p>
+                                                    </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
                                     </li>
                                     {% endfor %}
-                                    </ul>
+
+                                </ul>
                             </div>
                         </div>
                     </div>

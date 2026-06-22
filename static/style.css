@@ -1907,7 +1907,10 @@ form label {
     background-size: auto;
   }
   .dpt-menu .mega {
+    overflow: visible;
     position: absolute;
+    max-height: none;
+    align-items: flex-start;
     top: 0;
     left: var(--percent100);
     width: var(--percent100);
@@ -1941,12 +1944,44 @@ form label {
     background-image: url(assets/menu/menu_bg4.jpg);
     /* background-size: cover; */
   }
+
+  .dpt-menu .mega-subcats {
+      column-width: 200px;
+      column-gap: 3rem;
+      height: 400px;           /* fixed height forces columns to wrap */
+      overflow: hidden;
+  }
+
+  .dpt-menu .mega-sub-item {
+      break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+      display: inline-block;   /* helps break-inside work cross-browser */
+      width: 100%;
+      margin-bottom: 1.5rem;
+      line-height: 2em;
+      font-size: var(--font-small);
+  }
+
+  .dpt-menu .mega-sub-item h4 {
+      margin-bottom: 6px;
+      color: var(--secondary-dark-color);
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: var(--fw6);
+  }
+
+  .dpt-menu .mega-sub-item ul li a:hover {
+      text-decoration: underline;
+  }
+
   .dpt-menu .mega {
     width: auto;
     min-width: var(--percent100);
   }
+  /* Changed from flex to block so CSS columns work correctly */
   .dpt-menu .has-child:hover .mega {
-    display: flex;
+    display: block;
   }
   .dpt-menu .has-child > :where(ul, .mega)::before {
     content: "";
@@ -1955,10 +1990,10 @@ form label {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, rgba(225, 225, 225, 1) 0%, rgba(225, 225, 225, 0) 100%);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 1) 100%);
   }
   .dpt-menu .has-child:hover .mega {
-    display: flex;
+    display: block;
   }
 
   /* slider */
