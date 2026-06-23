@@ -11,7 +11,7 @@ def store(request):
     trending_products = (
         Product.objects
         .filter(is_available=True, is_trending=True)
-        .order_by('trending_order', '-modified_date')[:8]
+        .order_by('trending_order', '-modified_date')[:9]
     )
 
     # Active TrendingSection config
@@ -26,7 +26,7 @@ def store(request):
         small_trending = [p for p in small_trending if p.pk != offer_product.pk]
 
     row1 = small_trending[:4]
-    row2 = small_trending[4:7]
+    row2 = small_trending[4:8]
 
     # Compute these EAGERLY in the view so the template gets plain Python
     # primitives — avoids any timezone subtlety when properties are evaluated
