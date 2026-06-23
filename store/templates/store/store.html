@@ -154,8 +154,267 @@
             </div>
         </div>
 
-        
         <div class="trending">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="sectop flexitem">
+                        <h2><span class="circle"></span><span>Trending Products</span></h2>
+                    </div>
+
+                    {% if not offer_product and not trending_row1 and not trending_row2 %}
+                        <p style="padding: 2rem 0; color: #999; text-align:center;">
+                            No trending products yet. Mark products as trending in the admin.
+                        </p>
+                    {% else %}
+                    <div class="column">
+                        <div class="flexwrap">
+
+                            {# ---- BIG OFFER CARD (left column) ---- #}
+                            <div class="row products big">
+                                {% if offer_product %}
+                                {% with config=trending_config %}
+                                <div class="item offer-card" id="offerCard">
+
+                                    {# Countdown block #}
+                                    {% if config.offer_ends_at %}
+                                    <div class="offer">
+                                        <p>Offer ends at</p>
+                                        <ul class="flexcenter countdown-timer" id="offerCountdownTimer">
+                                            <li id="cd-days"><span class="cd-num">00</span><span class="cd-label">d</span></li>
+                                            <li id="cd-hours"><span class="cd-num">00</span><span class="cd-label">h</span></li>
+                                            <li id="cd-mins"><span class="cd-num">00</span><span class="cd-label">m</span></li>
+                                            <li id="cd-secs"><span class="cd-num">00</span><span class="cd-label">s</span></li>
+                                        </ul>
+                                        {# Inject seconds as a JS variable — no data-attribute parsing needed #}
+                                        <script>
+                                            window.__offerSecondsRemaining = {{ offer_seconds_remaining }};
+                                        </script>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="media offer-media {% if offer_expired %}offer-expired{% endif %}">
+                                        <div class="image">
+                                            <a href="{% url 'product_detail' offer_product.category.slug offer_product.slug %}">
+                                                <img src="{{ offer_product.image.url }}" alt="{{ offer_product.name }}">
+                                            </a>
+                                        </div>
+
+                                        {# "OFFER ENDED" diagonal ribbon — shown server-side when expired #}
+                                        {% if offer_expired %}
+                                        <div class="offer-ended-ribbon">
+                                            <span>OFFER ENDED</span>
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active">
+                                                    <a href="#" class="social-info">
+                                                        <span><i class="ri-heart-line"></i></span>
+                                                        <p class="hover-text">Wishlist</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'product_detail' offer_product.category.slug offer_product.slug %}" class="social-info">
+                                                        <span><i class="ri-eye-line"></i></span>
+                                                        <p class="hover-text">View more</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="social-info">
+                                                        <span><i class="ri-shopping-cart-line"></i></span>
+                                                        <p class="hover-text">Add to Cart</p>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                        {% if offer_product.discount_percentage %}
+                                        <div class="discount circle flexcenter">
+                                            <span>{{ offer_product.discount_percentage }}%</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="content">
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">({{ offer_product.review_count|default:"0" }})</span>
+                                        </div>
+                                        <h3 class="main-links">
+                                            <a href="{% url 'product_detail' offer_product.category.slug offer_product.slug %}">
+                                                {{ offer_product.name }}
+                                            </a>
+                                        </h3>
+                                        <div class="price">
+                                            <span class="current">{{ offer_product.price|floatformat:0 }} UGX</span>
+                                            {% if offer_product.original_price != offer_product.price %}
+                                            <span class="normal mini-text">{{ offer_product.original_price|floatformat:0 }} UGX</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="stock mini-text">
+                                            <div class="qty">
+                                                <span>Stock: <strong class="qty-available">{{ offer_product.stock }}</strong></span>
+                                                <span>Sold: <strong class="qty-sold">{{ offer_product.units_sold }}</strong></span>
+                                            </div>
+                                            <div class="bar">
+                                                <div class="available" style="width: {{ offer_product.stock_percentage }}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endwith %}
+                                {% endif %}
+                            </div>
+                            {# ---- end big card ---- #}
+
+                            {# ---- SMALL CARDS ROW 1 (up to 4) ---- #}
+                            {% if trending_row1 %}
+                            <div class="row products mini">
+                                {% for product in trending_row1 %}
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active">
+                                                    <a href="#" class="social-info">
+                                                        <span><i class="ri-heart-line"></i></span>
+                                                        <p class="hover-text">Wishlist</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'product_detail' product.category.slug product.slug %}" class="social-info">
+                                                        <span><i class="ri-eye-line"></i></span>
+                                                        <p class="hover-text">View more</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="social-info">
+                                                        <span><i class="ri-shopping-cart-line"></i></span>
+                                                        <p class="hover-text">Add to Cart</p>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {% if product.discount_percentage %}
+                                        <div class="discount circle flexcenter">
+                                            <span>{{ product.discount_percentage }}%</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links">
+                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                                {{ product.name }}
+                                            </a>
+                                        </h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">({{ product.review_count }})</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">{{ product.price|floatformat:0 }} UGX</span>
+                                            {% if product.original_price != product.price %}
+                                            <span class="normal mini-text">{{ product.original_price|floatformat:0 }} UGX</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>{{ product.units_sold }} sold</p>
+                                            {% if product.is_free_delivery %}<p>Free Delivery</p>{% endif %}
+                                            {% if product.stock <= 10 %}
+                                            <p class="stock-danger">Stock: {{ product.stock }} left</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {# ---- end row 1 ---- #}
+
+                            {# ---- SMALL CARDS ROW 2 (up to 3 more, total 7 + offer = 8) ---- #}
+                            {% if trending_row2 %}
+                            <div class="row products mini">
+                                {% for product in trending_row2 %}
+                                <div class="item">
+                                    <div class="media">
+                                        <div class="thumbnail object-cover">
+                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                            </a>
+                                        </div>
+                                        <div class="hoverable">
+                                            <ul>
+                                                <li class="active">
+                                                    <a href="#" class="social-info">
+                                                        <span><i class="ri-heart-line"></i></span>
+                                                        <p class="hover-text">Wishlist</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'product_detail' product.category.slug product.slug %}" class="social-info">
+                                                        <span><i class="ri-eye-line"></i></span>
+                                                        <p class="hover-text">View more</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="social-info">
+                                                        <span><i class="ri-shopping-cart-line"></i></span>
+                                                        <p class="hover-text">Add to Cart</p>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        {% if product.discount_percentage %}
+                                        <div class="discount circle flexcenter">
+                                            <span>{{ product.discount_percentage }}%</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="main-links">
+                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                                {{ product.name }}
+                                            </a>
+                                        </h3>
+                                        <div class="rating">
+                                            <div class="stars"></div>
+                                            <span class="mini-text">({{ product.review_count }})</span>
+                                        </div>
+                                        <div class="price">
+                                            <span class="current">{{ product.price|floatformat:0 }} UGX</span>
+                                            {% if product.original_price != product.price %}
+                                            <span class="normal mini-text">{{ product.original_price|floatformat:0 }} UGX</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mini-text">
+                                            <p>{{ product.units_sold }} sold</p>
+                                            {% if product.is_free_delivery %}<p>Free Delivery</p>{% endif %}
+                                            {% if product.stock <= 10 %}
+                                            <p class="stock-danger">Stock: {{ product.stock }} left</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                            {# ---- end row 2 ---- #}
+
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- /Trending Products -->
+        
+        <!-- <div class="trending">
             <div class="container">
                 <div class="wrapper">
                     <div class="sectop flexitem">
@@ -340,221 +599,14 @@
                                             <p>Free Delivery</p>
                                         </div>
                                     </div>
-                                </div><div class="item">
-                                    <div class="media">
-                                        <div class="thumbnail object-cover">
-                                            <a href="add-to-cart/<int:product_id>/">
-                                                <img src="{% static 'assets/products/beats1.jpg' %}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="hoverable">
-                                            <ul>
-                                                <li class="active"><a href="#" class="social-info">
-                                                    <span><i class="ri-heart-line"></i></span>
-                                                    <p class="hover-text">Wishlist</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-eye-line"></i></span>
-                                                    <p class="hover-text">View more</p>
-                                                </a></li>
-                                                <li><a href="add-to-cart/<int:product_id>/" class="social-info">
-                                                    <span><i class="ri-shopping-cart-line"></i></span>
-                                                    <p class="hover-text">Add to Cart</p>
-                                                </a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="discount circle flexcenter"><span>10%</span></div>
-                                    </div>
-                                    <div class="content">
-                                        <h3 class="main-links"><a href="#">Wireless Headphones Over Ear, Bluetooth</a></h3>
-                                        <div class="rating">
-                                            <div class="stars"></div>
-                                            <span class="mini-text">(1,411)</span>
-                                        </div>
-                                        <div class="price">
-                                            <span class="current">700,000UGX</span>
-                                            <span class="normal mini-text">800,000UGX</span>
-                                        </div>
-                                        <div class="mini-text">
-                                            <p>74,582 sold</p>
-                                            <p>Free Delivery</p>
-                                            <p class="stock-danger">Stock: 7 left</p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="row products mini">                                    
-                                <div class="item">
-                                    <div class="media">
-                                        <div class="thumbnail object-cover">
-                                            <a href="#">
-                                                <img src="{% static 'assets/products/laptop3.jpg' %}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="hoverable">
-                                            <ul>
-                                                <li class="active"><a href="#" class="social-info">
-                                                    <span><i class="ri-heart-line"></i></span>
-                                                    <p class="hover-text">Wishlist</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-eye-line"></i></span>
-                                                    <p class="hover-text">View more</p>
-                                                </a></li>
-                                                <li><a href="add-to-cart/<int:product_id>/" class="social-info">
-                                                    <span><i class="ri-shopping-cart-line"></i></span>
-                                                    <p class="hover-text">Add to Cart</p>
-                                                </a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="discount circle flexcenter"><span>5%</span></div>
-                                    </div>
-                                    <div class="content">
-                                        <h3 class="main-links"><a href="#">HP Victus RYZEN 5 512GB ROM, 8GB RAM, 4GB Dedicated Video Memory</a></h3>
-                                        <div class="rating">
-                                            <div class="stars"></div>
-                                            <span class="mini-text">(34,708)</span>
-                                        </div>
-                                        <div class="price">
-                                            <span class="current">2,500,000UGX</span>
-                                            <span class="normal mini-text">3,000,000UGX</span>
-                                        </div>
-                                        <div class="mini-text">
-                                            <p>74,582 sold</p>
-                                            <p class="stock-danger">Stock: 7 left</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="media">
-                                        <div class="thumbnail object-cover">
-                                            <a href="#">
-                                                <img src="{% static 'assets/products/storage.jpg' %}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="hoverable">
-                                            <ul>
-                                                <li class="active"><a href="#" class="social-info">
-                                                    <span><i class="ri-heart-line"></i></span>
-                                                    <p class="hover-text">Wishlist</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-eye-line"></i></span>
-                                                    <p class="hover-text">View more</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-shopping-cart-line"></i></span>
-                                                    <p class="hover-text">Add to Cart</p>
-                                                </a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="discount circle flexcenter"><span>10%</span></div>
-                                    </div>
-                                    <div class="content">
-                                        <h3 class="main-links"><a href="#">Western Digital 4TB Black My Passport Portable External Hard Drive - USB 3.0</a></h3>
-                                        <div class="rating">
-                                            <div class="stars"></div>
-                                            <span class="mini-text">(34,708)</span>
-                                        </div>
-                                        <div class="price">
-                                            <span class="current">400,000UGX</span>
-                                            <span class="normal mini-text">500,000UGX</span>
-                                        </div>
-                                        <div class="mini-text">
-                                            <p>74,582 sold</p>
-                                            <p class="stock-danger">Stock: 7 left</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="media">
-                                        <div class="thumbnail object-cover">
-                                            <a href="#">
-                                                <img src="{% static 'assets/products/shoe01.jpg' %}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="hoverable">
-                                            <ul>
-                                                <li class="active"><a href="#" class="social-info">
-                                                    <span><i class="ri-heart-line"></i></span>
-                                                    <p class="hover-text">Wishlist</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-eye-line"></i></span>
-                                                    <p class="hover-text">View more</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-shopping-cart-line"></i></span>
-                                                    <p class="hover-text">Add to Cart</p>
-                                                </a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="discount circle flexcenter"><span>28%</span></div>
-                                    </div>
-                                    <div class="content">
-                                        <h3 class="main-links"><a href="#">Men's Air Jordan XX9 Basketball Shoes</a></h3>
-                                        <div class="rating">
-                                            <div class="stars"></div>
-                                            <span class="mini-text">(34,708)</span>
-                                        </div>
-                                        <div class="price">
-                                            <span class="current">410,000UGX</span>
-                                            <span class="normal mini-text">570,000UGX</span>
-                                        </div>
-                                        <div class="mini-text">
-                                            <p>74,582 sold</p>
-                                            <p class="stock-danger">Stock: 7 left</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="media">
-                                        <div class="thumbnail object-cover">
-                                            <a href="#">
-                                                <img src="{% static 'assets/products/watch.jpg' %}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="hoverable">
-                                            <ul>
-                                                <li class="active"><a href="#" class="social-info">
-                                                    <span><i class="ri-heart-line"></i></span>
-                                                    <p class="hover-text">Wishlist</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-eye-line"></i></span>
-                                                    <p class="hover-text">View more</p>
-                                                </a></li>
-                                                <li><a href="#" class="social-info">
-                                                    <span><i class="ri-shopping-cart-line"></i></span>
-                                                    <p class="hover-text">Add to Cart</p>
-                                                </a></li>
-                                            </ul>
-                                        </div>
-                                        <div class="discount circle flexcenter"><span>15%</span></div>
-                                    </div>
-                                    <div class="content">
-                                        <h3 class="main-links"><a href="#">G-Shock Analog Digital Gold Metal Shock Resistant Watch-Gold</a></h3>
-                                        <div class="rating">
-                                            <div class="stars"></div>
-                                            <span class="mini-text">(34,708)</span>
-                                        </div>
-                                        <div class="price">
-                                            <span class="current">500,000UGX</span>
-                                            <span class="normal mini-text">750,000UGX</span>
-                                        </div>
-                                        <div class="mini-text">
-                                            <p>74,582 sold</p>
-                                            <p>Free Delivery</p>
-                                            <p class="stock-danger">Stock: 7 left</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Trending Products -->
 
         <div class="features">
