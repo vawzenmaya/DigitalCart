@@ -88,6 +88,7 @@ if (dptButton && dptClass) {
     });
 }
 
+
 // 7. Product Image Slider (Detail Page)
 const thumbElement = document.querySelector('.small-image');
 const bigElement = document.querySelector('.big-image');

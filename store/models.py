@@ -4,6 +4,7 @@ from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    icon = models.CharField(max_length=100, blank=True, default='ri-grid-line')
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     menu_image = models.ImageField(upload_to='photos/categories', blank=True, null=True)

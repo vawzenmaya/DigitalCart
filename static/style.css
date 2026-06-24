@@ -666,6 +666,7 @@ e. Responsive Menu -off Canvas */
   padding: 0.5em;
   line-height: initial;
   color: var(--secondary-dark-color);
+  background-color: var(--light-bg-color);
   border-radius: 5px;
 }
 .products .offer ul li:not(:last-child)::before {
@@ -685,7 +686,7 @@ e. Responsive Menu -off Canvas */
   top: 0;
   margin-top: 20px;
 }
-/*.products .hoverable li a {
+.products .hoverable li a {
   width: 28px;
   height: 28px;
   padding: 0.25em;
@@ -695,7 +696,7 @@ e. Responsive Menu -off Canvas */
   background-color: var(--white-color);
   opacity: .5;
   transition: var(--trans-background-color), opacity .3s;
-}*/
+}
 
 .hoverable ul li {
   padding: 0.25em;
@@ -1166,7 +1167,7 @@ a. Search */
 a Department Menu */
 .page-home .dpt-cat .dpt-trigger,
 .dpt-trigger .ri-close-line,
-.showdpt .dpt-trigger .ri-menu-add-fill {
+.showdpt .dpt-trigger .ri-menu-3-line {
   display: none;
 }
 
