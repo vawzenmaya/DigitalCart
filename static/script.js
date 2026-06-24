@@ -122,13 +122,11 @@ if (thumbElement && bigElement) {
 
     // Read from the inline <script> variable — more reliable than data-attributes
     // which can be affected by template rendering or attribute parsing quirks.
-    let secondsLeft = (typeof window.__offerSecondsRemaining === 'number')
-        ? window.__offerSecondsRemaining
-        : 0;
+    let secondsLeft = parseInt(timerEl.dataset.seconds || '0', 10);
 
     // Resolve elements lazily so they're always current (ribbon appended later)
     function getOfferCard() { return document.getElementById('offerCard'); }
-    function getMediaEl()   { const c = getOfferCard(); return c ? c.querySelector('.media') : null; }
+    function getMediaEl() { const c = getOfferCard(); return c ? c.querySelector('.offer-media') : null; }
 
     const dEl = document.getElementById('cd-days');
     const hEl = document.getElementById('cd-hours');
@@ -159,7 +157,7 @@ if (thumbElement && bigElement) {
             if (!mediaEl.querySelector('.offer-ended-ribbon')) {
                 const ribbon = document.createElement('div');
                 ribbon.className = 'offer-ended-ribbon';
-                ribbon.innerHTML = '<span>OFFER ENDED</span>';
+                ribbon.innerHTML = '<span>OFFER<br>ENDED</span>';
                 // Guarantee positioning context in case CSS hasn't loaded yet
                 mediaEl.style.position = 'relative';
                 mediaEl.style.overflow = 'hidden';
@@ -167,15 +165,9 @@ if (thumbElement && bigElement) {
             }
         }
 
-        // Stop pulsing animation
-        if (offerCard) offerCard.classList.remove('countdown-active');
-
-        // Replace ticking numbers with a static pill
-        timerEl.innerHTML =
-            '<li style="background:#999;border-radius:6px;padding:6px 14px;' +
-            'color:#fff;font-size:0.85rem;letter-spacing:1px;list-style:none;">' +
-            'Offer Ended</li>';
-    }
+    timerEl.closest('.offer').innerHTML = 
+        '<p style="font-size:0.8rem; color:#999; letter-spacing:1px; text-transform:uppercase; margin:0;"><span>Offer Ended</span><br>Wait for the next offer</p>';
+        }
 
     if (secondsLeft <= 0) {
         render(0);
@@ -185,7 +177,6 @@ if (thumbElement && bigElement) {
 
     // Start pulsing
     const offerCard = getOfferCard();
-    if (offerCard) offerCard.classList.add('countdown-active');
     render(secondsLeft);
 
     const interval = setInterval(function () {
@@ -199,3 +190,8 @@ if (thumbElement && bigElement) {
         }
     }, 1000);
 })();
+
+// 9. Stock Bar Width
+document.querySelectorAll('.available[data-width]').forEach(function(el) {
+    el.style.width = el.dataset.width + '%';
+});

@@ -661,7 +661,7 @@ e. Responsive Menu -off Canvas */
 }
 .products .offer ul li {
   position: relative;
-  width: 34px;
+  width: 44px;
   height: 34px;
   padding: 0.5em;
   line-height: initial;
@@ -671,7 +671,7 @@ e. Responsive Menu -off Canvas */
 .products .offer ul li:not(:last-child)::before {
   content: ':';
   position: absolute;
-  right: -0.6em;
+  right: -0.75em;
   color: var(--light-text-color);
 }
 .products :where(.image, .thumbnail) img {
@@ -1595,7 +1595,7 @@ form label {
    Append these rules to your existing style.css
    ======================================================= */
 
-/* --- Countdown timer pill redesign --- */
+/* --- Countdown timer pill redesign ---
 .countdown-timer {
     display: flex;
     gap: 6px;
@@ -1628,68 +1628,88 @@ form label {
     text-transform: uppercase;
     opacity: 0.85;
     margin-top: 2px;
-}
+} */
 
-/* --- Offer card media wrapper (position context for ribbon) --- */
+/* --- Offer card media wrapper --- */
 .offer-media {
     position: relative;
+    width: 100%;
+    height: 300px;
     overflow: hidden;
-    transition: filter 0.4s ease;
 }
 
-/* --- Blurred image when offer expired --- */
-.offer-media.offer-expired > .image img {
+.products.big .item > .offer-media {
+    align-self: stretch;
+    height: 300px !important;
+}
+
+/* --- Image fills the box --- */
+.offer-media .image {
+    width: 100%;
+    height: 100%;
+}
+
+.offer-media .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.5s ease, transform 0.5s ease;
+}
+
+/* --- Blur when expired --- */
+.offer-media.offer-expired .image img {
     filter: blur(4px) grayscale(40%);
-    transform: scale(1.04); /* hide blur edges */
-    transition: filter 0.5s ease;
+    transform: scale(1.04);
 }
 
-/* --- Diagonal "OFFER ENDED" ribbon --- */
+/* --- Red circle overlay --- */
 .offer-ended-ribbon {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
     z-index: 10;
+    pointer-events: none;
 }
 
 .offer-ended-ribbon span {
-    display: inline-block;
-    background: rgba(200, 0, 0, 0.82);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: rgba(200, 0, 0, 0.88);
     color: #fff;
-    font-size: 1.05rem;
+    font-size: 0.75rem;
     font-weight: 800;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    padding: 10px 60px;
-    transform: rotate(-30deg);
-    white-space: nowrap;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
-    border-top: 2px solid rgba(255,255,255,0.3);
-    border-bottom: 2px solid rgba(255,255,255,0.3);
+    text-align: center;
+    line-height: 1.4;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    transform: rotate(-15deg);
 }
 
-/* --- Stock bar dynamic fill (set via inline style in template) --- */
+.products.big .offer-media {
+    height: 300px !important;
+    position: relative !important;
+    flex-shrink: 0;
+}
+
 .bar .available {
-    /* width is set dynamically via style="{{ product.stock_percentage }}%" */
     transition: width 0.6s ease;
 }
 
-/* --- Low-stock warning color --- */
 .stock-danger {
     color: #e03 !important;
     font-weight: 600;
-}
-
-/* --- Pulsing dot on active countdown (subtle attention signal) --- */
-@keyframes cdPulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.6; }
-}
-.countdown-active .countdown-timer {
-    animation: cdPulse 2s ease-in-out infinite;
 }
 
 
@@ -2111,6 +2131,14 @@ form label {
   }
   .products.big .media {
     max-height: 400px;
+  }
+  .products.big .offer-media {
+      height: 300px !important;
+      max-height: 300px !important;
+      min-height: 300px !important;
+      width: 100% !important;
+      flex-shrink: 0 !important;
+      flex-grow: 0 !important;
   }
   .products.main .item,
   .widgets .row {
