@@ -686,17 +686,6 @@ e. Responsive Menu -off Canvas */
   top: 0;
   margin-top: 20px;
 }
-/* .products .hoverable li a {
-  width: 28px;
-  height: 28px;
-  padding: 0.25em;
-  margin: 0.25em;
-  border-radius: var(--percent50);
-  line-height: 1;
-  background-color: var(--white-color);
-  opacity: .5;
-  transition: var(--trans-background-color), opacity .3s;
-} */
 
 .hoverable ul li {
   padding: 0.25em;
