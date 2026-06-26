@@ -1294,18 +1294,18 @@ d. Product decription*/
 .products .variant label ::before {
   opacity: 1;
 }
-.products .variant label[for="cogrey"]::before {
-  background-color: #576574;
+.products .variant label[for="color1"]::before {
+  background-color: #e90909;
 }
-.products .variant label[for="coblue"]::before {
-  background-color: #45a0ff;
+.products .variant label[for="color2"]::before {
+  background-color: #7d04e0;
 }
-.products .variant label[for="cogreen"]::before {
-  background-color: #1dd1a1;
+.products .variant label[for="color3"]::before {
+  background-color: #e009ab;
 }
 .single-product .variant form p input:checked + label {
   background-color: transparent;
-  border: 2px solid var(--dark-color);
+  border: 3px solid var(--dark-color);
   color: var(--white-color);
 }
 
@@ -1318,7 +1318,7 @@ d. Product decription*/
   left: 0;
   width: var(--percent100);
   height: var(--percent100);
-  font-size: 0.85em;
+  font-size: 0.65em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1335,7 +1335,7 @@ d. Product decription*/
 }
 .products .qty-control {
   width: fit-content;
-  padding: .5em;
+  padding: 0.5em;
   border: 1px solid var(--border-color);
   margin: 0 2em 2em 0;
 }
@@ -1399,11 +1399,12 @@ e. product review */
 }
 .products .collapse table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid var(--dark-color);
+  border-bottom: 4px solid var(--dark-color);
 }
 .products .collapse table :where(th, td) {
-  border-bottom: 1ps solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   padding-left: 2em;
+  text-align: center;
 }
 .products .collapse .content {
   display: none;
@@ -1435,10 +1436,10 @@ e. Product review form */
   text-align: center;
 }
 .products .review-block-head .rate-sum {
-  /* position: relative; */
+  position: relative;
   font-size: 4em;
   font-weight: var(--fw7);
-  font-weight: 0.5em;
+  padding-right: 0.5em;
 }
 .products .review-block-head .rate-sum::before {
   content: '';
@@ -1460,7 +1461,7 @@ e. Product review form */
   font-weight: var(--fw7);
   text-transform: uppercase;
 }
-.products .review-block-body .view-all {
+.products .review-block-body :where(.view-all, .review-title) {
   font-size: 1.25em;
   justify-content: end;
 }
