@@ -101,59 +101,47 @@
                         <div class="products one">
                             <div class="flexwrap">
                                 <div class="row">
-                                    <div class="item">
-                                    {% if product.discount_percentage %}
-                                        <div class="price"><span class="discount">{{ product.discount_percentage }}%<br>OFF</span></div>
-                                    </div>
-                                    {% endif %}
                                     <div class="item is_sticky">
+                                        
+                                        {% if product.discount_percentage %}
+                                            <div class="price"><span class="discount">{{ product.discount_percentage }}%<br>OFF</span></div>
+                                        {% endif %}
+                                        
                                         <div class="big-image">
                                             <div class="big-image-wrapper swiper-wrapper">
-                                                <div class="image-show swiper-slide">
-                                                    {% if product.image %}
+                                                {% if product.image %}
+                                                    <div class="image-show swiper-slide">
                                                         <a data-fslightbox href="{{ product.image.url }}">
                                                             <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius: 8px;">
                                                         </a>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="image-show swiper-slide">
-                                                    <a data-fslightbox href="{% static 'assets/products/shoe1.jpg' %}">
-                                                        <img src="{% static 'assets/products/shoe1.jpg' %}" alt="">
-                                                    </a>
-                                                </div>
-                                                <div class="image-show swiper-slide">
-                                                    <a data-fslightbox href="{% static 'assets/products/shoe1-2.jpg' %}">
-                                                        <img src="{% static 'assets/products/shoe1-2.jpg' %}" alt="Shoe Image 2">
-                                                    </a>
-                                                </div>
-                                                <div class="image-show swiper-slide">
-                                                    <a data-fslightbox href="{% static 'assets/products/shoe1-3.jpg' %}">
-                                                        <img src="{% static 'assets/products/shoe1-3.jpg' %}" alt="Shoe Image 3">
-                                                    </a>
-                                                </div>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                {% for gallery_img in product.images.all %}
+                                                    <div class="image-show swiper-slide">
+                                                        <a data-fslightbox href="{{ gallery_img.image.url }}">
+                                                            <img src="{{ gallery_img.image.url }}" alt="{{ product.name }} gallery image">
+                                                        </a>
+                                                    </div>
+                                                {% endfor %}
                                             </div>
                                             <div class="swiper-button-next"></div>
                                             <div class="swiper-button-prev"></div>
                                         </div>
+                                        
                                         <div thumbSlider="" class="small-image">
                                             <ul class="small-image-wrapper flexitem swiper-wrapper">
-                                                <li class="thumbnail-show swiper-slide">
-                                                    {% if product.image %}
+                                                {% if product.image %}
+                                                    <li class="thumbnail-show swiper-slide">
                                                         <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius: 8px;">
-                                                    {% endif %}
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1.jpg' %}" alt="">
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1-1.jpg' %}" alt="">
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1-2.jpg' %}" alt="">
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1-3.jpg' %}" alt="">
-                                                </li>
+                                                    </li>
+                                                {% endif %}
+                                                
+                                                {% for gallery_img in product.images.all %}
+                                                    <li class="thumbnail-show swiper-slide">
+                                                        <img src="{{ gallery_img.image.url }}" alt="{{ product.name }} thumbnail">
+                                                    </li>
+                                                {% endfor %}
                                             </ul>
                                         </div>
                                     </div>
@@ -418,15 +406,21 @@
                 <div class="sectop flexitem">
                     <h2><span class="circle"></span><span>Related Products</span></h2>
                     <div class="second-links">
-                        <a href="#" class="view-all">View All<i class="ri-arrow-right-line"></i></a><br>
+                        <a href="{% url 'store' %}?category={{ product.category.slug }}" class="view-all">View All<i class="ri-arrow-right-line"></i></a><br>
                     </div>
                 </div>
                 <div class="products main flexwrap">
+                    
+                    {% for related in related_products %}
                     <div class="item">
                         <div class="media">
                             <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
+                                <a href="{% url 'product_detail' related.category.slug related.slug %}">
+                                    {% if related.image %}
+                                        <img src="{{ related.image.url }}" alt="{{ related.name }}">
+                                    {% else %}
+                                        <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
+                                    {% endif %}
                                 </a>
                             </div>
                             <div class="hoverable">
@@ -435,7 +429,7 @@
                                         <span><i class="ri-heart-line"></i></span>
                                         <p class="hover-text">Wishlist</p>
                                     </a></li>
-                                    <li><a href="#" class="social-info">
+                                    <li><a href="{% url 'product_detail' related.category.slug related.slug %}" class="social-info">
                                         <span><i class="ri-eye-line"></i></span>
                                         <p class="hover-text">View more</p>
                                     </a></li>
@@ -445,318 +439,32 @@
                                     </a></li>
                                 </ul>
                             </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
+                            
+                            {% if related.discount_percentage > 0 %}
+                            <div class="discount circle flexcenter"><span>{{ related.discount_percentage }}%</span></div>
+                            {% endif %}
+                            
                         </div>
                         <div class="content">
                             <div class="rating">
                                 <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
+                                <span class="mini-text">({{ related.review_count }})</span>
                             </div>
-                            <h3><a href="#">IronMan shoes directly from Stark Industries.</a></h3>
+                            <h3><a href="{% url 'product_detail' related.category.slug related.slug %}">{{ related.name }}</a></h3>
                             <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
+                                <span class="current">{{ related.price|floatformat:0 }} UGX</span>
+                                {% if related.original_price > related.price %}
+                                <span class="normal mini-text">{{ related.original_price|floatformat:0 }} UGX</span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/louis.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
+                    {% empty %}
+                        <div style="width: 100%; padding: 2em; text-align: center;">
+                            <p style="color: #999;">No other related products found in this category right now.</p>
                         </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Louis vuitton yellow brown unisex zipper hoodie premium outfit for men women luxury brand</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <ul class="mini-text">
-                                <li>A premium polyester</li>
-                                <li>Ultra-soft and incredibly warm, comfortable, and healthy</li>
-                                <li>Fabric is durable and resistant to wrinkles, shrinking, and mildew</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/puma.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Elevate Your Look with These Trendy Puma Trousers</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <ul class="mini-text">
-                                <li>100% Cotton</li>
-                                <li>Charm in Every Step</li>
-                                <li>Dress like you mean it</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/samsung1.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Galaxy S22 Ultra 512GB ROM 16GB RAM</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/spider.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Spider hoodies to keep you warm</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <ul class="mini-text">
-                                <li>Cotton, Polyester</li>
-                                <li>Become the next Spider Man</li>
-                                <li>With Great Power, Come Great ........</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/watch1.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Devon Watch, Water, Dust and Shock resistant</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                            <div class="footer">
-                                <ul class="mini-text">
-                                    <li>You will never be late again</li>
-                                    <li>These intricate timepieces make the Apple Watch look like a cheap piece of junk</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/dress.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Lauriell Bright Orange Wrap Front Crepe Midi Dress</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                            <div class="footer">
-                                <ul class="mini-text">
-                                    <li>You will never be late again</li>
-                                    <li>Grab all the atention on those Summer Parties.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/dress2.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">HomRain Women's Elegant Floral Lace Dress Off The Shoulder High Low Hem Dresses for Wedding for Cocktail for Party</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                            <div class="footer">
-                                <ul class="mini-text">
-                                    <li>The next Wedding will definetly be yours.</li>
-                                    <li>For the Cockttails, you're definetly leaving with a Gentle man</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
+                    
                 </div>
             </div>
         </div>

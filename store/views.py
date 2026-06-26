@@ -50,5 +50,14 @@ def store(request):
 
 def product_detail(request, category_slug, product_slug):
     product = get_object_or_404(Product, category__slug=category_slug, slug=product_slug)
-    context = {'product': product}
+    
+    related_products = Product.objects.filter(
+        category=product.category, 
+        is_available=True
+    ).exclude(id=product.id).order_by('-created_date')[:8]
+    
+    context = {
+        'product': product,
+        'related_products': related_products,
+    }
     return render(request, 'store/product_detail.html', context)

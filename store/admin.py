@@ -59,8 +59,9 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, VariationInline]
+    
+    filter_horizontal = ('additional_categories',)
 
-    # Give the name column much more room via custom CSS injected into the page
     class Media:
         css = {
             'all': ('admin/css/product_list_fix.css',)
@@ -68,7 +69,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Core Details', {
-            'fields': ('name', 'slug', 'description', 'image', 'category', 'subcategory', 'subsubcategory'),
+            'fields': ('name', 'slug', 'description', 'image', 'category', 'additional_categories', 'subcategory', 'subsubcategory'),
         }),
         ('Pricing & Inventory', {
             'fields': ('price', 'original_price', 'stock', 'units_sold'),

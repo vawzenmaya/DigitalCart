@@ -43,7 +43,15 @@ class SubSubCategory(models.Model):
 
 class Product(models.Model):
     # Hierarchy
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='primary_products')
+    
+    additional_categories = models.ManyToManyField(
+        Category, 
+        blank=True, 
+        related_name='extra_products',
+        help_text="Hold down Ctrl (or Cmd on Mac) to select multiple."
+    )
+    
     subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, blank=True, null=True)
     subsubcategory = models.ForeignKey(SubSubCategory, on_delete=models.CASCADE, blank=True, null=True)
 
