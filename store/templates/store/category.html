@@ -80,686 +80,192 @@
         </div>       
     </header>
     <main>
-        <div class="single-product">
+        <div class="single-category">
             <div class="container">
                 <div class="wrapper">
-                    <div class="breadcrumb">
-                        <ul class="flexitem">
-                            <li><a href="{% url 'store' %}">Home</a></li>
-                            <li><a href="#">{{ product.category.name }}</a></li>
-                            {% if product.subcategory %}
-                                <li><a href="#">{{ product.subcategory.name }}</a></li>
-                            {% endif %}
-                            {% if product.subsubcategory %}
-                                <li><a href="#">{{ product.subsubcategory.name }}</a></li>
-                            {% endif %}
-                            <li>{{ product.name }}</li>
-                        </ul>
-                    </div>
-
                     <div class="column">
-                        <div class="products one">
-                            <div class="flexwrap">
-                                <div class="row">
-                                    <div class="item">
-                                    {% if product.discount_percentage %}
-                                        <div class="price"><span class="discount">{{ product.discount_percentage }}%<br>OFF</span></div>
+                        <div class="holder">
+                            <div class="row sidebar">
+                                <div class="filter">
+                                    <div class="filter-block">
+                                        <h4>Category</h4>
+                                        <ul>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="bags">
+                                                <label for="bags">
+                                                    <span class="checked"></span>
+                                                    <span>Bags</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="clothings">
+                                                <label for="clothings">
+                                                    <span class="checked"></span>
+                                                    <span>Clothings</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="phones">
+                                                <label for="phones">
+                                                    <span class="checked"></span>
+                                                    <span>Phones</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="shoes">
+                                                <label for="shoes">
+                                                    <span class="checked"></span>
+                                                    <span>Shoes</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="jewerly">
+                                                <label for="jewerly">
+                                                    <span class="checked"></span>
+                                                    <span>Jewerly</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="laptops">
+                                                <label for="laptops">
+                                                    <span class="checked"></span>
+                                                    <span>Laptops</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="furniture">
+                                                <label for="furniture">
+                                                    <span class="checked"></span>
+                                                    <span>Furniture</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    {% endif %}
-                                    <div class="item is_sticky">
-                                        <div class="big-image">
-                                            <div class="big-image-wrapper swiper-wrapper">
-                                                <div class="image-show swiper-slide">
-                                                    {% if product.image %}
-                                                        <a data-fslightbox href="{{ product.image.url }}">
-                                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius: 8px;">
-                                                        </a>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="image-show swiper-slide">
-                                                    <a data-fslightbox href="{% static 'assets/products/shoe1.jpg' %}">
-                                                        <img src="{% static 'assets/products/shoe1.jpg' %}" alt="">
-                                                    </a>
-                                                </div>
-                                                <div class="image-show swiper-slide">
-                                                    <a data-fslightbox href="{% static 'assets/products/shoe1-2.jpg' %}">
-                                                        <img src="{% static 'assets/products/shoe1-2.jpg' %}" alt="Shoe Image 2">
-                                                    </a>
-                                                </div>
-                                                <div class="image-show swiper-slide">
-                                                    <a data-fslightbox href="{% static 'assets/products/shoe1-3.jpg' %}">
-                                                        <img src="{% static 'assets/products/shoe1-3.jpg' %}" alt="Shoe Image 3">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="swiper-button-next"></div>
-                                            <div class="swiper-button-prev"></div>
-                                        </div>
-                                        <div thumbSlider="" class="small-image">
-                                            <ul class="small-image-wrapper flexitem swiper-wrapper">
-                                                <li class="thumbnail-show swiper-slide">
-                                                    {% if product.image %}
-                                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius: 8px;">
-                                                    {% endif %}
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1.jpg' %}" alt="">
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1-1.jpg' %}" alt="">
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1-2.jpg' %}" alt="">
-                                                </li>
-                                                <li class="thumbnail-show swiper-slide">
-                                                    <img src="{% static 'assets/products/shoe1-3.jpg' %}" alt="">
-                                                </li>
-                                            </ul>
-                                        </div>
+                                    <div class="filter-block">
+                                        <h4>Brands</h4>
+                                        <ul>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="nike">
+                                                <label for="nike">
+                                                    <span class="checked"></span>
+                                                    <span>Nike</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="louis-vuitton">
+                                                <label for="louis-vuitton">
+                                                    <span class="checked"></span>
+                                                    <span>Louis Vuitton</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="hermes">
+                                                <label for="hermes">
+                                                    <span class="checked"></span>
+                                                    <span>Hermes</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="gucci">
+                                                <label for="gucci">
+                                                    <span class="checked"></span>
+                                                    <span>Gucci</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="zara">
+                                                <label for="zara">
+                                                    <span class="checked"></span>
+                                                    <span>Zara</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                        </ul>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="item">
-                                        <h1>{{ product.name }}</h1>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <a href="" class="mini-text">2,345 Reviews</a>
-                                                <a href="" class="add-review mini-text">Add a Review</a>
+                                    <div class="filter-block products">
+                                        <h4>Color</h4>
+                                        <ul class="bycolor variant flexitem">
+                                            <li>
+                                                <input type="radio" name="color" id="color1">
+                                                <label for="color1" class="circle"></label>
+                                            </li>
+                                            <li>
+                                                <input type="radio" name="color" id="color2">
+                                                <label for="color2" class="circle"></label>
+                                            </li>
+                                            <li>
+                                                <input type="radio" name="color" id="color3">
+                                                <label for="color3" class="circle"></label>
+                                            </li>
+                                            <li>
+                                                <input type="radio" name="color" id="color4">
+                                                <label for="color4" class="circle"></label>
+                                            </li>
+                                            <li>
+                                                <input type="radio" name="color" id="color5">
+                                                <label for="color5" class="circle"></label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="filter-block">
+                                        <h4>Discount</h4>
+                                        <ul>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="all">
+                                                <label for="all">
+                                                    <span class="checked"></span>
+                                                    <span>Show all</span>
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="with-discount">
+                                                <label for="with-discount">
+                                                    <span class="checked"></span>
+                                                    <span>With Discount</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                            <li>
+                                                <input type="checkbox" name="checkbox" id="without-discount">
+                                                <label for="without-discount">
+                                                    <span class="checked"></span>
+                                                    <span>Without Discount</span>
+                                                </label>
+                                                <span class="count">10</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="filter-block pricing">
+                                        <h4>Price</h4>
+                                        <div class="byprice">
+                                            <div class="range-track">
+                                                <input type="range" value="2000000" min="1000" max="90000000">
                                             </div>
-                                            <div class="stock-sku">
-                                                <span class="available">In Stock</span>
-                                                <span class="sku mini-text">SKU-881</span>
-                                            </div>
-                                            <div class="price">
-                                                <span class="current">{{ product.price }} UGX</span>
-                                                {% if product.original_price != product.price %}
-                                                <span class="normal">{{ product.original_price|floatformat:0 }} UGX</span>
-                                                {% endif %}
-                                            </div>
-                                            <div class="colors">
-                                                <p>Color</p>
-                                                <div class="variant">
-                                                    <form action="">
-                                                        <p>
-                                                            <input type="radio" name="color" id="color1">
-                                                            <label for="color1" class="circle"></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="color" id="color2">
-                                                            <label for="color2" class="circle"></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="color" id="color3">
-                                                            <label for="color3" class="circle"></label>
-                                                        </p>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <div class="sizes">
-                                                <p>Size</p>
-                                                <div class="variant">
-                                                    <form action="">
-                                                        <p>
-                                                            <input type="radio" name="size" id="size1">
-                                                            <label for="size1" class="circle"><span>S</span></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="size" id="size2">
-                                                            <label for="size2" class="circle"><span>M</span></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="size" id="size3">
-                                                            <label for="size3" class="circle"><span>L</span></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="size" id="size4">
-                                                            <label for="size4" class="circle"><span>XL</span></label>
-                                                        </p>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <div class="actions">
-                                                <div class="qty-control flexitem">
-                                                    <button class="minus circle">-</button>
-                                                    <input type="text" value="1">
-                                                    <button class="plus circle">+</button>
-                                                </div>
-                                                <div class="button-cart"><button class="primary-button">Add to Cart</button></div>
-                                                <div class="wish-share">
-                                                    <ul class="flexitem second-links">
-                                                        <li><a href="">
-                                                            <span class="icon-large"><i class="ri-heart-line"></i></span>
-                                                            <span>Wishlist</span>
-                                                        </a></li>
-                                                        <li><a href="">
-                                                            <span class="icon-large"><i class="ri-share-line"></i></span>
-                                                            <span>Share</span>
-                                                        </a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="description collapse">
-                                                <ul>
-                                                    <li class="has-child expand">
-                                                        <a href="" class="icon-small">Information</a>
-                                                        <ul class="content">
-                                                            <li><span>Brands</span> <span>Louis Vuitton</span></li>
-                                                            <li><span>Materials</span> <span>Cotton</span></li>
-                                                            <li><span>Gender</span> <span>Unisex</span></li>
-                                                            <li><span>Weight</span> <span>0.5 kg</span></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="has-child">
-                                                        <a href="" class="icon-small">Details</a>
-                                                        <div class="content">
-                                                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat, illum tempore quisquam unde tempora explicabo?</p>
-                                                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro sed incidunt voluptatum eaque voluptatibus laboriosam consectetur quisquam illo corrupti. Earum illum quae rerum? Molestiae, aperiam.</p>
-                                                        </div>
-                                                    </li>
-                                                    <li class="has-child">
-                                                        <a href="" class="icon-small">Custom</a>
-                                                        <div class="content">
-                                                            <table>
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Size</th>
-                                                                        <th>Bust <span class="mini-text">(cm)</span></th>
-                                                                        <th>Waist <span class="mini-text">(cm)</span></th>
-                                                                        <th>Hips <span class="mini-text">(cm)</span></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>XS</td>
-                                                                        <td>82.5</td>
-                                                                        <td>62</td>
-                                                                        <td>87.5</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>S</td>
-                                                                        <td>85</td>
-                                                                        <td>63.5</td>
-                                                                        <td>89</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>M</td>
-                                                                        <td>87.5</td>
-                                                                        <td>67.5</td>
-                                                                        <td>93</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>L</td>
-                                                                        <td>90</td>
-                                                                        <td>72.5</td>
-                                                                        <td>98</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>XL</td>
-                                                                        <td>93</td>
-                                                                        <td>77.5</td>
-                                                                        <td>103</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </li>
-                                                    <div class="has-child">
-                                                        <a href="" class="icon-small">Reviews<span class="mini-text">2.2k</span></a>
-                                                        <div class="content">
-                                                            <div class="reviews">
-                                                                <h4>Customer Reviews</h4>
-                                                                <div class="review-block">
-                                                                    <div class="review-block-head">
-                                                                        <div class="flexitem">
-                                                                            <span class="rate-sum">4.9</span>
-                                                                            <span>2,251 Reviews</span>
-                                                                        </div>
-                                                                        <a href="" class="secondary-button">Write Review</a>
-                                                                    </div>
-                                                                    <div class="review-block-body">
-                                                                        <ul>
-                                                                            <li class="item">
-                                                                                <div class="review-form">
-                                                                                    <p class="person">Review by Ketra</p>
-                                                                                    <p class="mini-text">On 26/03/2023</p>
-                                                                                </div>
-                                                                                <div class="review-rating rating">
-                                                                                    <div class="stars"></div>
-                                                                                </div>
-                                                                                <div class="review-title">
-                                                                                    <p>Awesome Product!</p>
-                                                                                </div>
-                                                                                <div class="review-text">
-                                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nunc nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="item">
-                                                                                <div class="review-form">
-                                                                                    <p class="person">Review by Kasule</p>
-                                                                                    <p class="mini-text">On 26/03/2023</p>
-                                                                                </div>
-                                                                                <div class="review-rating rating">
-                                                                                    <div class="stars"></div>
-                                                                                </div>
-                                                                                <div class="review-title">
-                                                                                    <p>Awesome Product!</p>
-                                                                                </div>
-                                                                                <div class="review-text">
-                                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nunc nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
-                                                                                </div>
-                                                                            </li>
-                                                                        </ul>
-                                                                        <div class="second-link">
-                                                                            <a href="" class="view-all">View All Reviews <i class="ri-arrow-right-fill"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div id="review-rorm" class="review-form">
-                                                                        <h4>Write a review</h4>
-                                                                        <div class="rating">
-                                                                            <p>Are you satisfied by this product?</p>
-                                                                            <div class="rate-this">
-                                                                                <input type="radio" name="rating" id="star5">
-                                                                                <label for="star5"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star4">
-                                                                                <label for="star4"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star3">
-                                                                                <label for="star3"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star2">
-                                                                                <label for="star2"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star1">
-                                                                                <label for="star1"><i class="ri-star-fill"></i></label>
-                                                                            </div>
-                                                                        </div>
-                                                                        <form action="">
-                                                                            <p>
-                                                                                <label>Name</label>
-                                                                                <input type="text">
-                                                                            </p>
-                                                                            <p>
-                                                                                <label>Summary</label>
-                                                                                <input type="text">
-                                                                            </p>
-                                                                            <p>
-                                                                                <label>Review</label>
-                                                                                <textarea cols="30" rows="10"></textarea>
-                                                                            </p>
-                                                                            <p>
-                                                                                <a href="" class="primary-button">Submit Review</a>
-                                                                            </p>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ul>
-                                            </div>
+                                        </div>
+                                        <div class="price-range">
+                                            <span class="price-form">UGX 1000</span>
+                                            <span class="price-to">UGX 1000000</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>           
-    </main>
-</div>
-
-<div class="features">
-    <div class="container">
-        <div class="wrapper">
-            <div class="column">
-                <div class="sectop flexitem">
-                    <h2><span class="circle"></span><span>Related Products</span></h2>
-                    <div class="second-links">
-                        <a href="#" class="view-all">View All<i class="ri-arrow-right-line"></i></a><br>
-                    </div>
-                </div>
-                <div class="products main flexwrap">
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">IronMan shoes directly from Stark Industries.</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/louis.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Louis vuitton yellow brown unisex zipper hoodie premium outfit for men women luxury brand</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <ul class="mini-text">
-                                <li>A premium polyester</li>
-                                <li>Ultra-soft and incredibly warm, comfortable, and healthy</li>
-                                <li>Fabric is durable and resistant to wrinkles, shrinking, and mildew</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/puma.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Elevate Your Look with These Trendy Puma Trousers</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <ul class="mini-text">
-                                <li>100% Cotton</li>
-                                <li>Charm in Every Step</li>
-                                <li>Dress like you mean it</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/samsung1.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Galaxy S22 Ultra 512GB ROM 16GB RAM</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/spider.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Spider hoodies to keep you warm</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                        </div>
-                        <div class="footer">
-                            <ul class="mini-text">
-                                <li>Cotton, Polyester</li>
-                                <li>Become the next Spider Man</li>
-                                <li>With Great Power, Come Great ........</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/watch1.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Devon Watch, Water, Dust and Shock resistant</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                            <div class="footer">
-                                <ul class="mini-text">
-                                    <li>You will never be late again</li>
-                                    <li>These intricate timepieces make the Apple Watch look like a cheap piece of junk</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/dress.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">Lauriell Bright Orange Wrap Front Crepe Midi Dress</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                            <div class="footer">
-                                <ul class="mini-text">
-                                    <li>You will never be late again</li>
-                                    <li>Grab all the atention on those Summer Parties.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="media">
-                            <div class="thumbnail object-cover">
-                                <a href="#">
-                                    <img src="{% static 'assets/products/dress2.jpg' %}" alt="">
-                                </a>
-                            </div>
-                            <div class="hoverable">
-                                <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
-                                </ul>
-                            </div>
-                            <div class="discount circle flexcenter"><span>50%</span></div>
-                        </div>
-                        <div class="content">
-                            <div class="rating">
-                                <div class="stars"></div>
-                                <span class="mini-text">(17,098)</span>
-                            </div>
-                            <h3><a href="#">HomRain Women's Elegant Floral Lace Dress Off The Shoulder High Low Hem Dresses for Wedding for Cocktail for Party</a></h3>
-                            <div class="price">
-                                <span class="current">2,500,000UGX</span>
-                                <span class="normal mini-text">5000,000UGX</span>
-                            </div>
-                            <div class="footer">
-                                <ul class="mini-text">
-                                    <li>The next Wedding will definetly be yours.</li>
-                                    <li>For the Cockttails, you're definetly leaving with a Gentle man</li>
-                                </ul>
-                            </div>
+                            <div class="section"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 {% endblock %}

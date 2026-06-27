@@ -22,7 +22,7 @@
 
                                     {% for category in categories %}
                                     <li class="has-child">
-                                        <a href="#" style="display: flex; align-items: center;">
+                                        <a href="{% url 'category' category.slug %}" style="display: flex; align-items: center;">
                                              <div class="icon-large"><i class="{{ category.icon }}"></i></div>
                                             {{ category.name }}
                                             <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
@@ -522,7 +522,7 @@
                                         <img src="{% static 'assets/banner/lock1.jpg' %}" alt="">
                                     </div>
                                     <div class="content mini-links">
-                                        <h4>Security</h4>
+                                        <h4>Fashion</h4>
                                         <ul class="flexcol">
                                             <li><a href="#">Cameras</a></li>
                                             <li><a href="#">Alarms</a></li>
@@ -530,8 +530,7 @@
                                             <li><a href="#">Electic Fences</a></li>
                                         </ul>
                                         <div class="second-links">
-                                            <a href="" class="view-all">View All<i class="ri-arrow-right-line"></i>
-                                            </a>
+                                            <a href="{% url 'category' 'fashion' %}" class="view-all">View All...</a>
                                         </div>
                                     </div>
                                 </div>
@@ -552,7 +551,7 @@
                                             <li><a href="#">Google Pixel</a></li>
                                         </ul>
                                         <div class="second-links">
-                                            <a href="" class="view-all">View All<i class="ri-arrow-right-line"></i>
+                                            <a href="{% url 'category' 'phones-tablets' %}" class="view-all">View All...</a>
                                             </a>
                                         </div>
                                     </div>
@@ -573,7 +572,7 @@
                                             <li><a href="#">Wheels</a></li>
                                         </ul>
                                         <div class="second-links">
-                                            <a href="" class="view-all">View All<i class="ri-arrow-right-line"></i>
+                                            <a href="{% url 'category' 'gaming' %}" class="view-all">View All...</a>
                                             </a>
                                         </div>
                                     </div>

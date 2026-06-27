@@ -28,9 +28,6 @@ def store(request):
     row1 = small_trending[:4]
     row2 = small_trending[4:8]
 
-    # Compute these EAGERLY in the view so the template gets plain Python
-    # primitives — avoids any timezone subtlety when properties are evaluated
-    # lazily during template rendering.
     offer_seconds_remaining = trending_config.seconds_remaining if trending_config else 0
     offer_expired = trending_config.offer_expired if trending_config else False
 
@@ -48,14 +45,64 @@ def store(request):
     return render(request, 'store/store.html', context)
 
 
+def category(request, category_slug):
+    current_category = get_object_or_404(Category, slug=category_slug)
+    categories = Category.objects.all()
+
+    # Base queryset — products in this category (primary or additional)
+    products = Product.objects.filter(
+        is_available=True,
+        category=current_category,
+    ).order_by('-created_date')
+
+    # --- Subcategory filter ---
+    subcategory_slug = request.GET.get('sub')
+    subsubcategory_slug = request.GET.get('subsub')
+    active_sub = None
+    active_subsub = None
+
+    if subcategory_slug:
+        from .models import SubCategory, SubSubCategory
+        active_sub = get_object_or_404(SubCategory, slug=subcategory_slug, category=current_category)
+        products = products.filter(subcategory=active_sub)
+
+        if subsubcategory_slug:
+            active_subsub = get_object_or_404(SubSubCategory, slug=subsubcategory_slug, subcategory=active_sub)
+            products = products.filter(subsubcategory=active_subsub)
+
+    # --- Sorting ---
+    sort = request.GET.get('sort', 'newest')
+    sort_map = {
+        'newest':    '-created_date',
+        'oldest':    'created_date',
+        'price_asc': 'price',
+        'price_desc':'-price',
+        'popular':   '-units_sold',
+    }
+    products = products.order_by(sort_map.get(sort, '-created_date'))
+
+    product_count = products.count()
+
+    context = {
+        'current_category': current_category,
+        'categories': categories,
+        'products': products,
+        'product_count': product_count,
+        'active_sub': active_sub,
+        'active_subsub': active_subsub,
+        'current_sort': sort,
+    }
+    return render(request, 'store/category.html', context)
+
+
 def product_detail(request, category_slug, product_slug):
     product = get_object_or_404(Product, category__slug=category_slug, slug=product_slug)
-    
+
     related_products = Product.objects.filter(
-        category=product.category, 
+        category=product.category,
         is_available=True
     ).exclude(id=product.id).order_by('-created_date')[:8]
-    
+
     context = {
         'product': product,
         'related_products': related_products,
