@@ -1663,6 +1663,16 @@ form label {
     font-weight: 600;
 }
 
+/* PAGE CATEGORY */
+.single-category .holder {
+  display: flex;
+  flex-direction: column;
+}
+.single-category .sidebar,
+.single-category .section {
+  flex: 1 0 100%;
+}
+
 /* PAGE CATEGORY
 Sidebar products filter */
 
@@ -1754,12 +1764,77 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--light-text-color);
   margin-top: 0.5em;
 }
-
-
-
-
-
-
+.page-title {
+  margin-bottom: 2em;
+}
+.cat-description p {
+  font-weight: var(--fw3);
+  font-size: 0.9em;
+}
+.cat-navigation {
+  font-size: 0.85em;
+  margin: 2em 0;
+  justify-content: flex-end;
+  gap: 1em;
+}
+.cat-navigation .item-filter {
+  margin-right: auto;
+}
+.cat-navigation > div {
+  position: relative;
+}
+.cat-navigation .item-filter a {
+  align-items: center;
+  text-transform: uppercase;
+}
+.cat-navigation ul {
+  display: none;
+  position: absolute;
+  left: 0;
+  min-width: var(--percent100);
+  width: max-content;
+  z-index: 10;
+}
+.cat-navigation .label, .cat-navigation ul li {
+  display: flex;
+  gap: 0.5em;
+  padding: 0.5em 1em;
+  transition: var(--trans-color);
+}
+:where(.item-sortir, .item-options) .label,
+.cat-navigation ul {
+  color: var(--light-text-color);
+  background-color: var(--light-bg-color);
+  cursor: pointer;
+}
+.cat-navigation :where(label, ul li):hover {
+  color: var(--dark-color);
+}
+:where(.item-sortir, .item-options):hover ul {
+  display: block;
+}
+.load-more {
+  margin: 2em 0 4em;
+}
+.filter {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  padding: 2em;
+  max-width: 400px;
+  width: 90%;
+  background-color: var(--white-color);
+  overflow: auto;
+  z-index: 1000;
+  box-shadow: rgb(0 0 0 / 30%) 0 10px 50px;
+  visibility: hidden;
+  opacity: 0;
+}
+.filter.show {
+  visibility: visible;
+  opacity: 1;
+}
 
 
 
@@ -2189,6 +2264,30 @@ input[type="range"]::-webkit-slider-thumb {
   }
   .products.one .flexwrap > .row:last-child > .item {
     padding-left: 2em;
+  }
+
+  /* page category */
+  .single-category .holder {
+    flex-direction: row;
+  }
+  .single-category .sidebar {
+    flex: 1 0 25%;
+  }
+  .single-category .section {
+    flex: 1 0 75%;
+  }
+  .single-category .sidebar .filter {
+    padding: 0 1.5em 0 0;
+    position: sticky;
+    top: 2em;
+    box-shadow: none;
+    width: var(--percent100);
+    z-index: initial;
+    visibility: visible;
+    opacity: 1;
+  }
+  .single-category .products.main .item {
+    flex: 0 0 33.3333%;
   }
 
   /* page cart */
