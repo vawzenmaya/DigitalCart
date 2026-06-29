@@ -1,0 +1,331 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="page" class="page-cart">
+    <header>
+        <div class="header-main mobile-hide">
+            <div class="container">
+                <div class="wrapper flexitem">
+                    <div class="left">
+                        <div class="dpt-cat">
+                            <div class="dpt-head">
+                                <div class="main-text">All Categories</div>
+                                <div class="mini-text mobile-hide">Total of {{ product_count }} Products</div>
+                                <a href="#" class="dpt-trigger mobile-hide">
+                                    <i class="ri-menu-3-line ri-xl"></i>
+                                    <i class="ri-close-line ri-xl"></i>
+                                </a>
+                            </div>
+                            <div class="dpt-menu">
+                                <ul class="second-links">
+
+                                    {% for category in categories %}
+                                    <li class="has-child">
+                                        <a href="#" style="display: flex; align-items: center;">
+                                             <div class="icon-large"><i class="{{ category.icon }}"></i></div>
+                                            {{ category.name }}
+                                            <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
+                                            <span style="font-size: 14px; font-weight: 500;">{{ category.product_set.count }}</span>
+                                        </a>
+
+                                        <div class="mega"
+                                            {% if category.menu_image %}
+                                                style="z-index: 999; background-color: #cccaca; min-height: 400px; background-image: url('{{ category.menu_image.url }}'); background-size: cover; background-position: right center;"
+                                            {% else %}
+                                                style="z-index: 999; background-color: #ffffff; min-height: 400px;"
+                                            {% endif %}>
+
+                                            <div class="mega-subcats" style="position: relative; z-index: 2; display: flex; flex-direction: row; gap: 2rem; align-items: flex-start;">
+
+                                                {% for sub in category.subcategories.all %}
+                                                    <div class="mega-sub-item" style="min-width: 160px; max-width: 200px; flex-shrink: 0;">
+                                                        <h4 style="margin-bottom: 10px; color: var(--secondary-dark-color); text-transform: uppercase; font-size: 13px; font-weight: 600;">
+                                                            {{ sub.name }}
+                                                        </h4>
+                                                        <ul style="list-style: none; padding: 0; margin: 0;">
+                                                            {% for subsub in sub.subsubcategories.all %}
+                                                                <li style="line-height: 2em;"><a href="#" style="font-size: 13px;">{{ subsub.name }}</a></li>
+                                                            {% empty %}
+                                                                <li><a href="#" style="color: #636161; font-style: italic; font-size: 13px;">More coming soon...</a></li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                {% empty %}
+                                                    <div class="mega-sub-item">
+                                                        <p style="color: #999; font-style: italic;">No subcategories added in Admin yet.</p>
+                                                    </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="search box">
+                            <form action="" class="search" method="get">
+                                <span class="icon-large"><i class="ri-search-line"></i></span>
+                                <input type="search" name="query" placeholder="Search for products.....">
+                                <button type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>       
+    </header>
+    <main>
+        <div class="single-cart">
+            <div class="container">
+                <div class="wrapper">
+                    <div class="breadcrumb">
+                        <ul class="flexitem">
+                            <li><a href="">Home</a></li>
+                            <li>Cart</li>
+                        </ul>
+                    </div>
+                    <div class="page-title">
+                        <h1>Shopping Cart</h1>
+                    </div>
+                    <div class="products one cart">
+                        <div class="flexwrap">
+                            <form action="" class="form-cart">
+                                <div class="item">
+                                    <table id="cart-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Price</th>
+                                                <th>Qty</th>
+                                                <th>Subtotal</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="flexitem">
+                                                    <div class="thumbnail object-cover">
+                                                        <a href=""><img src="{% static 'assets/products/puma.jpg' %}" alt=""></a>
+                                                    </div>
+                                                    <div class="content">
+                                                        <strong><a href="">Trendy Puma Trousers</a></strong>
+                                                        <p>Color: Black</p>
+                                                    </div>
+                                                </td>
+                                                <td>80000UGX</td>
+                                                <td>
+                                                    <div class="qty-control flexitem">
+                                                        <button class="minus">-</button>
+                                                        <input type="text" value="2" min="1">
+                                                        <button class="plus">+</button>
+                                                    </div>
+                                                </td>
+                                                <td>160000UGX</td>
+                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="flexitem">
+                                                    <div class="thumbnail object-cover">
+                                                        <a href=""><img src="{% static 'assets/products/samsung1.jpg' %}" alt=""></a>
+                                                    </div>
+                                                    <div class="content">
+                                                        <strong><a href="">Galaxy S22 Ultra 512GB ROM 16GB RAMs</a></strong>
+                                                        <p>Color: Black</p>
+                                                    </div>
+                                                </td>
+                                                <td>2,500,000UGX</td>
+                                                <td>
+                                                    <div class="qty-control flexitem">
+                                                        <button class="minus">-</button>
+                                                        <input type="text" value="1" min="1">
+                                                        <button class="plus">+</button>
+                                                    </div>
+                                                </td>
+                                                <td>2,500,000UGX</td>
+                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="flexitem">
+                                                    <div class="thumbnail object-cover">
+                                                        <a href=""><img src="{% static 'assets/products/spider.jpg' %}" alt=""></a>
+                                                    </div>
+                                                    <div class="content">
+                                                        <strong><a href="">Spider hoodies to keep you warm</a></strong>
+                                                        <p>Color: Black</p>
+                                                    </div>
+                                                </td>
+                                                <td>80000UGX</td>
+                                                <td>
+                                                    <div class="qty-control flexitem">
+                                                        <button class="minus">-</button>
+                                                        <input type="text" value="1" min="1">
+                                                        <button class="plus">+</button>
+                                                    </div>
+                                                </td>
+                                                <td>80000UGX</td>
+                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="flexitem">
+                                                    <div class="thumbnail object-cover">
+                                                        <a href=""><img src="{% static 'assets/products/watch1.jpg' %}" alt=""></a>
+                                                    </div>
+                                                    <div class="content">
+                                                        <strong><a href="">Devon Watch, Water, Dust and Shock resistant</a></strong>
+                                                        <p>Color: Black</p>
+                                                    </div>
+                                                </td>
+                                                <td>180000UGX</td>
+                                                <td>
+                                                    <div class="qty-control flexitem">
+                                                        <button class="minus">-</button>
+                                                        <input type="text" value="1" min="1">
+                                                        <button class="plus">+</button>
+                                                    </div>
+                                                </td>
+                                                <td>18000UGX</td>
+                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="flexitem">
+                                                    <div class="thumbnail object-cover">
+                                                        <a href=""><img src="{% static 'assets/products/dress.jpg' %}" alt=""></a>
+                                                    </div>
+                                                    <div class="content">
+                                                        <strong><a href="">Lauriell Bright Orange Wrap Front Crepe Midi Dress</a></strong>
+                                                        <p>Color: Black</p>
+                                                    </div>
+                                                </td>
+                                                <td>80000UGX</td>
+                                                <td>
+                                                    <div class="qty-control flexitem">
+                                                        <button class="minus">-</button>
+                                                        <input type="text" value="2" min="1">
+                                                        <button class="plus">+</button>
+                                                    </div>
+                                                </td>
+                                                <td>160000UGX</td>
+                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="flexitem">
+                                                    <div class="thumbnail object-cover">
+                                                        <a href=""><img src="{% static 'assets/products/dress2.jpg' %}" alt=""></a>
+                                                    </div>
+                                                    <div class="content">
+                                                        <strong><a href="">HomRain Women's Elegant Floral Lace Dress Off The Shoulder High Low Hem Dresses for Wedding for Cocktail for Party</a></strong>
+                                                        <p>Color: Black</p>
+                                                    </div>
+                                                </td>
+                                                <td>3500UGX</td>
+                                                <td>
+                                                    <div class="qty-control flexitem">
+                                                        <button class="minus">-</button>
+                                                        <input type="text" value="1" min="1">
+                                                        <button class="plus">+</button>
+                                                    </div>
+                                                </td>
+                                                <td>35000UGX</td>
+                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                            <div class="cart-summary styled">
+                                <div class="item">
+                                    <div class="coupon">
+                                        <input type="text" placeholder="Enter Coupon">
+                                        <button>Apply</button>
+                                    </div>
+                                    <div class="shipping-rate collapse">
+                                        <div class="has-child expand">
+                                            <a href="" class="icon-small">Shipping and Tax</a>
+                                            <div class="content">
+                                                <div class="district">
+                                                    <form action="">
+                                                        <label for="district">District</label>
+                                                        <select name="district" id="district">
+                                                            <option value=""></option>
+                                                            <option value="1" selected = "selected" >Kampala</option>
+                                                            <option value="2">Wakiso</option>
+                                                            <option value="3">Jinja</option>
+                                                            <option value="4">Entebbe</option>
+                                                            <option value="5">Mukono</option>
+                                                        </select>
+                                                    </form>
+                                                </div>
+                                                <div class="parish">
+                                                    <form action="">
+                                                        <label for="parish">Parish</label>
+                                                        <select name="parish" id="parish">
+                                                            <option value="">Select Parish</option>
+                                                            <option value="1" selected = "selected" >Salama</option>
+                                                            <option value="2">Munyonyo</option>
+                                                            <option value="3">Masajja</option>
+                                                            <option value="4">Busabala</option>
+                                                            <option value="5">Makindye</option>
+                                                        </select>
+                                                    </form>
+                                                </div>
+                                                <div class="postal-code">
+                                                    <form action="">
+                                                        <label for="postal">Zip/Postal Code</label>
+                                                        <input type="number" name="postal" id="postal">
+                                                    </form>
+                                                </div>
+                                                <div class="rate-options variant">
+                                                    <form action="">
+                                                        <p>
+                                                            <span>Flat: 10000000UGX</span>
+                                                            <input type="radio" name="rate-option" id="flat" checked>
+                                                            <label for="flat" class="circle"></label>
+                                                        </p>
+                                                        <p>
+                                                            <span>Best: 00UGX</span>
+                                                            <input type="radio" name="rate-option" id="best">
+                                                            <label for="best" class="circle"></label>
+                                                        </p>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cart-total">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Subtotal</th>
+                                                    <td>6700000UGX</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Discount</th>
+                                                    <td>10000UGX</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Shipping <span class="mini-text">(Flat)</span></th>
+                                                    <td>1000000UGX</td>
+                                                </tr>
+                                                <tr class="grand-total">
+                                                    <th>TOTAL</th>
+                                                    <td><strong>12300000UGX</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <a href="" class="secondary-button">Checkout</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
