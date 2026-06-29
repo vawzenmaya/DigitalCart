@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.utils.html import format_html, mark_safe
-from django.utils import timezone
 from .models import (
     Category, SubCategory, SubSubCategory,
     Product, ProductImage, Variation, TrendingSection,
@@ -10,6 +9,7 @@ from .models import (
 # ---------------------------------------------------------------------------
 # Category hierarchy
 # ---------------------------------------------------------------------------
+
 class SubSubCategoryInline(admin.TabularInline):
     model = SubSubCategory
     prepopulated_fields = {'slug': ('name',)}
@@ -17,26 +17,34 @@ class SubSubCategoryInline(admin.TabularInline):
 
 
 class SubCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category')
+    list_display        = ('name', 'category')
+    list_filter         = ('category',)
+    search_fields       = ('name',)
     prepopulated_fields = {'slug': ('name',)}
-    inlines = [SubSubCategoryInline]
+    inlines             = [SubSubCategoryInline]
 
 
 class SubCategoryInline(admin.TabularInline):
-    model = SubCategory
+    model               = SubCategory
     prepopulated_fields = {'slug': ('name',)}
-    extra = 1
+    extra               = 1
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    list_display        = ('name', 'slug', 'product_count')
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'slug')
-    inlines = [SubCategoryInline]
+    inlines             = [SubCategoryInline]
+
+    @admin.display(description='Products')
+    def product_count(self, obj):
+        return obj.primary_products.filter(is_available=True).count()
 
 
 # ---------------------------------------------------------------------------
 # Product
 # ---------------------------------------------------------------------------
+
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
@@ -50,41 +58,37 @@ class VariationInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        'name', 'price', 'original_price', 'discount_badge',
-        'stock', 'units_sold', 'category',
-        'trending_order', 'is_trending', 'is_available',
+        'name', 'category', 'price', 'original_price', 'discount_badge',
+        'stock', 'units_sold', 'trending_order', 'is_trending', 'is_available',
     )
-    list_editable = ('price', 'is_available', 'is_trending', 'trending_order')
-    list_filter = ('is_trending', 'is_available', 'category')
-    search_fields = ('name',)
+    list_editable  = ('price', 'is_available', 'is_trending', 'trending_order')
+    list_filter    = ('is_trending', 'is_available', 'category', 'is_free_delivery')
+    search_fields  = ('name', 'description', 'category__name')
     prepopulated_fields = {'slug': ('name',)}
-    inlines = [ProductImageInline, VariationInline]
-    
-    filter_horizontal = ('additional_categories',)
+    inlines             = [ProductImageInline, VariationInline]
+    filter_horizontal   = ('additional_categories',)
+    readonly_fields     = ('discount_badge', 'stock_percentage_display', 'created_date', 'modified_date')
 
     class Media:
-        css = {
-            'all': ('admin/css/product_list_fix.css',)
-        }
+        css = {'all': ('admin/css/product_list_fix.css',)}
 
     fieldsets = (
         ('Core Details', {
             'fields': ('name', 'slug', 'description', 'image', 'category', 'additional_categories', 'subcategory', 'subsubcategory'),
         }),
         ('Pricing & Inventory', {
-            'fields': ('price', 'original_price', 'stock', 'units_sold'),
+            'fields': ('price', 'original_price', 'discount_badge', 'stock', 'units_sold', 'stock_percentage_display'),
         }),
         ('Trending Section', {
             'fields': ('is_trending', 'trending_order'),
             'description': mark_safe(
                 'Check <strong>is_trending</strong> to include this product in the Trending section. '
                 'Set <strong>trending_order</strong> to control the slot '
-                '(1 = big offer card, 2 to 8 = small cards). '
-                'Only the first 8 trending products (by order) are shown.'
+                '(1 = big offer card, 2–8 = small cards).'
             ),
         }),
         ('Metadata', {
-            'fields': ('review_count', 'is_free_delivery', 'is_available'),
+            'fields': ('review_count', 'is_free_delivery', 'is_available', 'created_date', 'modified_date'),
         }),
     )
 
@@ -92,19 +96,22 @@ class ProductAdmin(admin.ModelAdmin):
     def discount_badge(self, obj):
         pct = obj.discount_percentage
         if pct:
-            return format_html('<span style="color:#e03;">{}</span>', str(pct) + '%')
+            return format_html('<strong style="color:#e03;">{}%</strong>', pct)
         return '—'
+
+    @admin.display(description='Stock sold %')
+    def stock_percentage_display(self, obj):
+        return f"{obj.stock_percentage}%"
 
 
 # ---------------------------------------------------------------------------
 # TrendingSection config
 # ---------------------------------------------------------------------------
+
 @admin.register(TrendingSection)
 class TrendingSectionAdmin(admin.ModelAdmin):
-    list_display = ('offer_product', 'offer_ends_at', 'countdown_status', 'is_active')
+    list_display  = ('offer_product', 'offer_ends_at', 'countdown_status', 'is_active')
     list_editable = ('is_active',)
-    # Use raw_id_fields instead of autocomplete_fields to avoid any FK-related
-    # format_html issues in Django 6.
     raw_id_fields = ('offer_product',)
 
     fieldsets = (
@@ -120,22 +127,18 @@ class TrendingSectionAdmin(admin.ModelAdmin):
             'fields': ('offer_ends_at',),
             'description': mark_safe(
                 'When the timer hits zero the offer card will show an '
-                '<strong>OFFER ENDED</strong> diagonal banner and blur the product image. '
+                '<strong>OFFER ENDED</strong> banner and blur the product image. '
                 'Leave blank to hide the countdown entirely.'
             ),
         }),
-        ('Active', {
+        ('Visibility', {
             'fields': ('is_active',),
-            'description': mark_safe(
-                'Only <strong>one</strong> Trending Section Config should be '
-                'active at a time.'
-            ),
+            'description': mark_safe('Only <strong>one</strong> row should be active at a time.'),
         }),
     )
 
     @admin.display(description='Status')
     def countdown_status(self, obj):
-        """Safe status column — never passes None or unformatted values to format_html."""
         if not obj.offer_ends_at:
             return '—'
         if obj.offer_expired:
@@ -144,17 +147,8 @@ class TrendingSectionAdmin(admin.ModelAdmin):
         days    = remaining // 86400
         hours   = (remaining % 86400) // 3600
         minutes = (remaining % 3600) // 60
-
-        if days > 0:
-            label = '%dd %dh remaining' % (days, hours)
-        else:
-            label = '%dh %dm remaining' % (hours, minutes)
-
-        return format_html(
-            '<span style="color:green;">{}</span>',
-            label,
-        )
+        label = f'{days}d {hours}h remaining' if days > 0 else f'{hours}h {minutes}m remaining'
+        return format_html('<span style="color:green;">{}</span>', label)
 
 
-admin.site.register(Category, CategoryAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)

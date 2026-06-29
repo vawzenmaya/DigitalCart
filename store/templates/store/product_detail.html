@@ -1,17 +1,22 @@
 {% extends 'store/base.html' %}
 {% load static %}
 
+{% block title %}{{ product.name }} — DigitalCart{% endblock %}
+
 {% block content %}
 <div id="page" class="page-single">
+
+    {# ── Secondary header ─────────────────────────────────────────────────── #}
     <header>
         <div class="header-main mobile-hide">
             <div class="container">
                 <div class="wrapper flexitem">
+
                     <div class="left">
                         <div class="dpt-cat">
                             <div class="dpt-head">
                                 <div class="main-text">All Categories</div>
-                                <div class="mini-text mobile-hide">Total of {{ product_count }} Products</div>
+                                <div class="mini-text mobile-hide">{{ product_count }} Product{{ product_count|pluralize }}</div>
                                 <a href="#" class="dpt-trigger mobile-hide">
                                     <i class="ri-menu-3-line ri-xl"></i>
                                     <i class="ri-close-line ri-xl"></i>
@@ -19,79 +24,79 @@
                             </div>
                             <div class="dpt-menu">
                                 <ul class="second-links">
-
-                                    {% for category in categories %}
-                                    <li class="has-child">
-                                        <a href="#" style="display: flex; align-items: center;">
-                                             <div class="icon-large"><i class="{{ category.icon }}"></i></div>
-                                            {{ category.name }}
+                                    {% for cat in categories %}
+                                    <li class="has-child{% if cat.slug == product.category.slug %} active{% endif %}">
+                                        <a href="{% url 'category' cat.slug %}" style="display:flex;align-items:center;">
+                                            <div class="icon-large"><i class="{{ cat.icon }}"></i></div>
+                                            {{ cat.name }}
                                             <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
-                                            <span style="font-size: 14px; font-weight: 500;">{{ category.product_set.count }}</span>
                                         </a>
-
                                         <div class="mega"
-                                            {% if category.menu_image %}
-                                                style="z-index: 999; background-color: #cccaca; min-height: 400px; background-image: url('{{ category.menu_image.url }}'); background-size: cover; background-position: right center;"
+                                            {% if cat.menu_image %}
+                                                style="z-index:999;background-image:url('{{ cat.menu_image.url }}');background-size:cover;background-position:right center;min-height:400px;"
                                             {% else %}
-                                                style="z-index: 999; background-color: #ffffff; min-height: 400px;"
+                                                style="z-index:999;background-color:#fff;min-height:400px;"
                                             {% endif %}>
-
-                                            <div class="mega-subcats" style="position: relative; z-index: 2; display: flex; flex-direction: row; gap: 2rem; align-items: flex-start;">
-
-                                                {% for sub in category.subcategories.all %}
-                                                    <div class="mega-sub-item" style="min-width: 160px; max-width: 200px; flex-shrink: 0;">
-                                                        <h4 style="margin-bottom: 10px; color: var(--secondary-dark-color); text-transform: uppercase; font-size: 13px; font-weight: 600;">
-                                                            {{ sub.name }}
-                                                        </h4>
-                                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                                            {% for subsub in sub.subsubcategories.all %}
-                                                                <li style="line-height: 2em;"><a href="#" style="font-size: 13px;">{{ subsub.name }}</a></li>
-                                                            {% empty %}
-                                                                <li><a href="#" style="color: #636161; font-style: italic; font-size: 13px;">More coming soon...</a></li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </div>
+                                            <div class="mega-subcats" style="position:relative;z-index:2;display:flex;flex-direction:row;gap:2rem;align-items:flex-start;">
+                                                {% for sub in cat.subcategories.all %}
+                                                <div class="mega-sub-item" style="min-width:160px;max-width:200px;flex-shrink:0;">
+                                                    <h4 style="margin-bottom:10px;color:var(--secondary-dark-color);text-transform:uppercase;font-size:13px;font-weight:600;">
+                                                        <a href="{% url 'category' cat.slug %}?sub={{ sub.slug }}">{{ sub.name }}</a>
+                                                    </h4>
+                                                    <ul style="list-style:none;padding:0;margin:0;">
+                                                        {% for subsub in sub.subsubcategories.all %}
+                                                        <li style="line-height:2em;">
+                                                            <a href="{% url 'category' cat.slug %}?sub={{ sub.slug }}&subsub={{ subsub.slug }}" style="font-size:13px;">{{ subsub.name }}</a>
+                                                        </li>
+                                                        {% empty %}
+                                                        <li><a href="#" style="color:#999;font-style:italic;font-size:13px;">More coming soon…</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
                                                 {% empty %}
-                                                    <div class="mega-sub-item">
-                                                        <p style="color: #999; font-style: italic;">No subcategories added in Admin yet.</p>
-                                                    </div>
+                                                <div class="mega-sub-item">
+                                                    <p style="color:#999;font-style:italic;">No subcategories yet.</p>
+                                                </div>
                                                 {% endfor %}
-
                                             </div>
                                         </div>
                                     </li>
                                     {% endfor %}
-
                                 </ul>
                             </div>
                         </div>
                     </div>
+
                     <div class="right">
                         <div class="search box">
-                            <form action="" class="search" method="get">
+                            <form action="{% url 'store' %}" class="search" method="get">
                                 <span class="icon-large"><i class="ri-search-line"></i></span>
-                                <input type="search" name="query" placeholder="Search for products.....">
+                                <input type="search" name="query" placeholder="Search for products…">
                                 <button type="submit">Search</button>
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
-        </div>       
+        </div>
     </header>
+
     <main>
         <div class="single-product">
             <div class="container">
                 <div class="wrapper">
+
+                    {# Breadcrumb — all links real #}
                     <div class="breadcrumb">
                         <ul class="flexitem">
                             <li><a href="{% url 'store' %}">Home</a></li>
-                            <li><a href="#">{{ product.category.name }}</a></li>
+                            <li><a href="{% url 'category' product.category.slug %}">{{ product.category.name }}</a></li>
                             {% if product.subcategory %}
-                                <li><a href="#">{{ product.subcategory.name }}</a></li>
+                            <li><a href="{% url 'category' product.category.slug %}?sub={{ product.subcategory.slug }}">{{ product.subcategory.name }}</a></li>
                             {% endif %}
                             {% if product.subsubcategory %}
-                                <li><a href="#">{{ product.subsubcategory.name }}</a></li>
+                            <li><a href="{% url 'category' product.category.slug %}?sub={{ product.subcategory.slug }}&subsub={{ product.subsubcategory.slug }}">{{ product.subsubcategory.name }}</a></li>
                             {% endif %}
                             <li>{{ product.name }}</li>
                         </ul>
@@ -100,305 +105,241 @@
                     <div class="column">
                         <div class="products one">
                             <div class="flexwrap">
+
+                                {# ── Left: image gallery ───────────────────────────────────────── #}
                                 <div class="row">
                                     <div class="item is_sticky">
-                                        
+
                                         {% if product.discount_percentage %}
-                                            <div class="price"><span class="discount">{{ product.discount_percentage }}%<br>OFF</span></div>
+                                        <div class="price">
+                                            <span class="discount">{{ product.discount_percentage }}%<br>OFF</span>
+                                        </div>
                                         {% endif %}
-                                        
+
                                         <div class="big-image">
                                             <div class="big-image-wrapper swiper-wrapper">
                                                 {% if product.image %}
-                                                    <div class="image-show swiper-slide">
-                                                        <a data-fslightbox href="{{ product.image.url }}">
-                                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius: 8px;">
-                                                        </a>
-                                                    </div>
+                                                <div class="image-show swiper-slide">
+                                                    <a data-fslightbox href="{{ product.image.url }}">
+                                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius:8px;">
+                                                    </a>
+                                                </div>
                                                 {% endif %}
-                                                
-                                                {% for gallery_img in product.images.all %}
-                                                    <div class="image-show swiper-slide">
-                                                        <a data-fslightbox href="{{ gallery_img.image.url }}">
-                                                            <img src="{{ gallery_img.image.url }}" alt="{{ product.name }} gallery image">
-                                                        </a>
-                                                    </div>
+                                                {% for img in product.images.all %}
+                                                <div class="image-show swiper-slide">
+                                                    <a data-fslightbox href="{{ img.image.url }}">
+                                                        <img src="{{ img.image.url }}" alt="{{ product.name }}" style="border-radius:8px;">
+                                                    </a>
+                                                </div>
                                                 {% endfor %}
                                             </div>
                                             <div class="swiper-button-next"></div>
                                             <div class="swiper-button-prev"></div>
                                         </div>
-                                        
+
                                         <div thumbSlider="" class="small-image">
                                             <ul class="small-image-wrapper flexitem swiper-wrapper">
                                                 {% if product.image %}
-                                                    <li class="thumbnail-show swiper-slide">
-                                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius: 8px;">
-                                                    </li>
+                                                <li class="thumbnail-show swiper-slide">
+                                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="border-radius:8px;">
+                                                </li>
                                                 {% endif %}
-                                                
-                                                {% for gallery_img in product.images.all %}
-                                                    <li class="thumbnail-show swiper-slide">
-                                                        <img src="{{ gallery_img.image.url }}" alt="{{ product.name }} thumbnail">
-                                                    </li>
+                                                {% for img in product.images.all %}
+                                                <li class="thumbnail-show swiper-slide">
+                                                    <img src="{{ img.image.url }}" alt="{{ product.name }} thumbnail">
+                                                </li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
+
                                     </div>
                                 </div>
+                                {# ── end gallery ───────────────────────────────────────────────── #}
+
+                                {# ── Right: product info ───────────────────────────────────────── #}
                                 <div class="row">
                                     <div class="item">
                                         <h1>{{ product.name }}</h1>
                                         <div class="content">
+
                                             <div class="rating">
                                                 <div class="stars"></div>
-                                                <a href="" class="mini-text">2,345 Reviews</a>
-                                                <a href="" class="add-review mini-text">Add a Review</a>
+                                                <a href="#review-form" class="mini-text">{{ product.review_count }} Review{{ product.review_count|pluralize }}</a>
+                                                <a href="#review-form" class="add-review mini-text">Add a Review</a>
                                             </div>
+
                                             <div class="stock-sku">
-                                                <span class="available">In Stock</span>
-                                                <span class="sku mini-text">SKU-881</span>
+                                                {% if product.is_in_stock %}
+                                                    <span class="available">In Stock ({{ product.stock }} left)</span>
+                                                {% else %}
+                                                    <span class="available" style="color:#e74c3c;">Out of Stock</span>
+                                                {% endif %}
                                             </div>
+
                                             <div class="price">
-                                                <span class="current">{{ product.price }} UGX</span>
+                                                <span class="current">{{ product.price|floatformat:0 }} UGX</span>
                                                 {% if product.original_price != product.price %}
                                                 <span class="normal">{{ product.original_price|floatformat:0 }} UGX</span>
                                                 {% endif %}
                                             </div>
-                                            <div class="colors">
-                                                <p>Color</p>
-                                                <div class="variant">
-                                                    <form action="">
+
+                                            {# ── DB-driven variations ──────────────────────────── #}
+                                            {% if variations %}
+                                            <div class="variations">
+                                                {% for var_type, var_list in variations.items %}
+                                                <div class="{{ var_type }}s" style="margin-bottom:1rem;">
+                                                    <p style="text-transform:capitalize;font-weight:600;margin-bottom:0.4rem;">{{ var_type }}</p>
+                                                    <div class="variant">
+                                                        {% for v in var_list %}
                                                         <p>
-                                                            <input type="radio" name="color" id="color1">
-                                                            <label for="color1" class="circle"></label>
+                                                            <input type="radio" name="{{ var_type }}" id="var-{{ var_type }}-{{ forloop.counter }}" value="{{ v.variation_value }}">
+                                                            <label for="var-{{ var_type }}-{{ forloop.counter }}" class="circle">
+                                                                <span>{{ v.variation_value }}</span>
+                                                            </label>
                                                         </p>
-                                                        <p>
-                                                            <input type="radio" name="color" id="color2">
-                                                            <label for="color2" class="circle"></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="color" id="color3">
-                                                            <label for="color3" class="circle"></label>
-                                                        </p>
-                                                    </form>
+                                                        {% endfor %}
+                                                    </div>
                                                 </div>
+                                                {% endfor %}
                                             </div>
-                                            <div class="sizes">
-                                                <p>Size</p>
-                                                <div class="variant">
-                                                    <form action="">
-                                                        <p>
-                                                            <input type="radio" name="size" id="size1">
-                                                            <label for="size1" class="circle"><span>S</span></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="size" id="size2">
-                                                            <label for="size2" class="circle"><span>M</span></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="size" id="size3">
-                                                            <label for="size3" class="circle"><span>L</span></label>
-                                                        </p>
-                                                        <p>
-                                                            <input type="radio" name="size" id="size4">
-                                                            <label for="size4" class="circle"><span>XL</span></label>
-                                                        </p>
-                                                    </form>
-                                                </div>
-                                            </div>
+                                            {% endif %}
+                                            {# ── end variations ────────────────────────────────── #}
+
                                             <div class="actions">
                                                 <div class="qty-control flexitem">
-                                                    <button class="minus circle">-</button>
-                                                    <input type="text" value="1">
-                                                    <button class="plus circle">+</button>
+                                                    <button class="minus circle" type="button">-</button>
+                                                    <input type="number" value="1" min="1" max="{{ product.stock }}" id="qty-input" style="width:48px;text-align:center;">
+                                                    <button class="plus circle" type="button">+</button>
                                                 </div>
-                                                <div class="button-cart"><button class="primary-button">Add to Cart</button></div>
+                                                <div class="button-cart">
+                                                    <button class="primary-button" {% if not product.is_in_stock %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
+                                                        {% if product.is_in_stock %}Add to Cart{% else %}Out of Stock{% endif %}
+                                                    </button>
+                                                </div>
                                                 <div class="wish-share">
                                                     <ul class="flexitem second-links">
-                                                        <li><a href="">
-                                                            <span class="icon-large"><i class="ri-heart-line"></i></span>
-                                                            <span>Wishlist</span>
-                                                        </a></li>
-                                                        <li><a href="">
-                                                            <span class="icon-large"><i class="ri-share-line"></i></span>
-                                                            <span>Share</span>
-                                                        </a></li>
+                                                        <li>
+                                                            <a href="#">
+                                                                <span class="icon-large"><i class="ri-heart-line"></i></span>
+                                                                <span>Wishlist</span>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" onclick="navigator.clipboard.writeText(window.location.href); return false;">
+                                                                <span class="icon-large"><i class="ri-share-line"></i></span>
+                                                                <span>Share</span>
+                                                            </a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
+
+                                            {# ── Collapsible info panels ──────────────────────── #}
                                             <div class="description collapse">
                                                 <ul>
                                                     <li class="has-child expand">
-                                                        <a href="" class="icon-small">Information</a>
-                                                        <ul class="content">
-                                                            <li><span>Brands</span> <span>Louis Vuitton</span></li>
-                                                            <li><span>Materials</span> <span>Cotton</span></li>
-                                                            <li><span>Gender</span> <span>Unisex</span></li>
-                                                            <li><span>Weight</span> <span>0.5 kg</span></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="has-child">
-                                                        <a href="" class="icon-small">Details</a>
+                                                        <a href="#" class="icon-small">Description</a>
                                                         <div class="content">
+                                                            {% if product.description %}
                                                             <p>{{ product.description }}</p>
-                                                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro sed incidunt voluptatum eaque voluptatibus laboriosam consectetur quisquam illo corrupti. Earum illum quae rerum? Molestiae, aperiam.</p>
+                                                            {% else %}
+                                                            <p style="color:#999;">No description provided.</p>
+                                                            {% endif %}
                                                         </div>
                                                     </li>
                                                     <li class="has-child">
-                                                        <a href="" class="icon-small">Custom</a>
+                                                        <a href="#" class="icon-small">Product Details</a>
                                                         <div class="content">
-                                                            <table>
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Size</th>
-                                                                        <th>Bust <span class="mini-text">(cm)</span></th>
-                                                                        <th>Waist <span class="mini-text">(cm)</span></th>
-                                                                        <th>Hips <span class="mini-text">(cm)</span></th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>XS</td>
-                                                                        <td>82.5</td>
-                                                                        <td>62</td>
-                                                                        <td>87.5</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>S</td>
-                                                                        <td>85</td>
-                                                                        <td>63.5</td>
-                                                                        <td>89</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>M</td>
-                                                                        <td>87.5</td>
-                                                                        <td>67.5</td>
-                                                                        <td>93</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>L</td>
-                                                                        <td>90</td>
-                                                                        <td>72.5</td>
-                                                                        <td>98</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>XL</td>
-                                                                        <td>93</td>
-                                                                        <td>77.5</td>
-                                                                        <td>103</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
+                                                            <ul style="list-style:none;padding:0;">
+                                                                <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;">
+                                                                    <span style="color:#888;">Category</span>
+                                                                    <span>{{ product.category.name }}</span>
+                                                                </li>
+                                                                {% if product.subcategory %}
+                                                                <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;">
+                                                                    <span style="color:#888;">Subcategory</span>
+                                                                    <span>{{ product.subcategory.name }}</span>
+                                                                </li>
+                                                                {% endif %}
+                                                                <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;">
+                                                                    <span style="color:#888;">Availability</span>
+                                                                    <span>{% if product.is_in_stock %}In Stock{% else %}Out of Stock{% endif %}</span>
+                                                                </li>
+                                                                <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;">
+                                                                    <span style="color:#888;">Units Sold</span>
+                                                                    <span>{{ product.units_sold }}</span>
+                                                                </li>
+                                                                {% if product.is_free_delivery %}
+                                                                <li style="display:flex;justify-content:space-between;padding:6px 0;">
+                                                                    <span style="color:#888;">Delivery</span>
+                                                                    <span style="color:#10ac84;"><i class="ri-truck-line"></i> Free Delivery</span>
+                                                                </li>
+                                                                {% endif %}
+                                                            </ul>
                                                         </div>
                                                     </li>
-                                                    <div class="has-child">
-                                                        <a href="" class="icon-small">Reviews<span class="mini-text">2.2k</span></a>
+                                                    <li class="has-child" id="review-form">
+                                                        <a href="#" class="icon-small">Reviews <span class="mini-text">({{ product.review_count }})</span></a>
                                                         <div class="content">
                                                             <div class="reviews">
                                                                 <h4>Customer Reviews</h4>
                                                                 <div class="review-block">
                                                                     <div class="review-block-head">
                                                                         <div class="flexitem">
-                                                                            <span class="rate-sum">4.9</span>
-                                                                            <span>2,251 Reviews</span>
+                                                                            <span class="rate-sum">—</span>
+                                                                            <span>{{ product.review_count }} Review{{ product.review_count|pluralize }}</span>
                                                                         </div>
-                                                                        <a href="" class="secondary-button">Write Review</a>
+                                                                        <a href="#" class="secondary-button">Write Review</a>
                                                                     </div>
                                                                     <div class="review-block-body">
-                                                                        <ul>
-                                                                            <li class="item">
-                                                                                <div class="review-form">
-                                                                                    <p class="person">Review by Ketra</p>
-                                                                                    <p class="mini-text">On 26/03/2023</p>
-                                                                                </div>
-                                                                                <div class="review-rating rating">
-                                                                                    <div class="stars"></div>
-                                                                                </div>
-                                                                                <div class="review-title">
-                                                                                    <p>Awesome Product!</p>
-                                                                                </div>
-                                                                                <div class="review-text">
-                                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nunc nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
-                                                                                </div>
-                                                                            </li>
-                                                                            <li class="item">
-                                                                                <div class="review-form">
-                                                                                    <p class="person">Review by Kasule</p>
-                                                                                    <p class="mini-text">On 26/03/2023</p>
-                                                                                </div>
-                                                                                <div class="review-rating rating">
-                                                                                    <div class="stars"></div>
-                                                                                </div>
-                                                                                <div class="review-title">
-                                                                                    <p>Awesome Product!</p>
-                                                                                </div>
-                                                                                <div class="review-text">
-                                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nunc nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
-                                                                                </div>
-                                                                            </li>
-                                                                        </ul>
-                                                                        <div class="second-link">
-                                                                            <a href="" class="view-all">View All Reviews <i class="ri-arrow-right-fill"></i></a>
-                                                                        </div>
+                                                                        <p style="color:#999;font-style:italic;padding:1rem 0;">
+                                                                            No reviews yet. Be the first!
+                                                                        </p>
                                                                     </div>
-                                                                    <div id="review-rorm" class="review-form">
+                                                                    <div class="review-form" style="margin-top:1.5rem;">
                                                                         <h4>Write a review</h4>
-                                                                        <div class="rating">
-                                                                            <p>Are you satisfied by this product?</p>
+                                                                        <div class="rating" style="margin-bottom:1rem;">
+                                                                            <p>Are you satisfied with this product?</p>
                                                                             <div class="rate-this">
-                                                                                <input type="radio" name="rating" id="star5">
-                                                                                <label for="star5"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star4">
-                                                                                <label for="star4"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star3">
-                                                                                <label for="star3"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star2">
-                                                                                <label for="star2"><i class="ri-star-fill"></i></label>
-
-                                                                                <input type="radio" name="rating" id="star1">
-                                                                                <label for="star1"><i class="ri-star-fill"></i></label>
+                                                                                <input type="radio" name="rating" id="star5"><label for="star5"><i class="ri-star-fill"></i></label>
+                                                                                <input type="radio" name="rating" id="star4"><label for="star4"><i class="ri-star-fill"></i></label>
+                                                                                <input type="radio" name="rating" id="star3"><label for="star3"><i class="ri-star-fill"></i></label>
+                                                                                <input type="radio" name="rating" id="star2"><label for="star2"><i class="ri-star-fill"></i></label>
+                                                                                <input type="radio" name="rating" id="star1"><label for="star1"><i class="ri-star-fill"></i></label>
                                                                             </div>
                                                                         </div>
-                                                                        <form action="">
-                                                                            <p>
-                                                                                <label>Name</label>
-                                                                                <input type="text">
-                                                                            </p>
-                                                                            <p>
-                                                                                <label>Summary</label>
-                                                                                <input type="text">
-                                                                            </p>
-                                                                            <p>
-                                                                                <label>Review</label>
-                                                                                <textarea cols="30" rows="10"></textarea>
-                                                                            </p>
-                                                                            <p>
-                                                                                <a href="" class="primary-button">Submit Review</a>
-                                                                            </p>
+                                                                        <form method="post" action="#">
+                                                                            {% csrf_token %}
+                                                                            <p><label>Name</label><input type="text" name="name" required></p>
+                                                                            <p><label>Summary</label><input type="text" name="summary"></p>
+                                                                            <p><label>Review</label><textarea name="review" cols="30" rows="6"></textarea></p>
+                                                                            <p><button type="submit" class="primary-button">Submit Review</button></p>
                                                                         </form>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </li>
                                                 </ul>
                                             </div>
+                                            {# ── end collapsible panels ────────────────────────── #}
+
                                         </div>
                                     </div>
                                 </div>
+                                {# ── end product info ──────────────────────────────────────────── #}
+
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
-        </div>           
+        </div>
     </main>
 </div>
 
+{# ── Related Products ─────────────────────────────────────────────────────── #}
 <div class="features">
     <div class="container">
         <div class="wrapper">
@@ -406,44 +347,34 @@
                 <div class="sectop flexitem">
                     <h2><span class="circle"></span><span>Related Products</span></h2>
                     <div class="second-links">
-                        <a href="{% url 'store' %}?category={{ product.category.slug }}" class="view-all">View All<i class="ri-arrow-right-line"></i></a><br>
+                        <a href="{% url 'category' product.category.slug %}" class="view-all">View All <i class="ri-arrow-right-line"></i></a>
                     </div>
                 </div>
                 <div class="products main flexwrap">
-                    
                     {% for related in related_products %}
                     <div class="item">
                         <div class="media">
                             <div class="thumbnail object-cover">
                                 <a href="{% url 'product_detail' related.category.slug related.slug %}">
-                                    {% if related.image %}
-                                        <img src="{{ related.image.url }}" alt="{{ related.name }}">
-                                    {% else %}
-                                        <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
-                                    {% endif %}
+                                    <img src="{{ related.image.url }}" alt="{{ related.name }}" loading="lazy">
                                 </a>
                             </div>
                             <div class="hoverable">
                                 <ul>
-                                    <li class="active"><a href="#" class="social-info">
-                                        <span><i class="ri-heart-line"></i></span>
-                                        <p class="hover-text">Wishlist</p>
-                                    </a></li>
-                                    <li><a href="{% url 'product_detail' related.category.slug related.slug %}" class="social-info">
-                                        <span><i class="ri-eye-line"></i></span>
-                                        <p class="hover-text">View more</p>
-                                    </a></li>
-                                    <li><a href="#" class="social-info">
-                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                        <p class="hover-text">Add to Cart</p>
-                                    </a></li>
+                                    <li class="active">
+                                        <a href="#" class="social-info"><span><i class="ri-heart-line"></i></span><p class="hover-text">Wishlist</p></a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'product_detail' related.category.slug related.slug %}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="social-info"><span><i class="ri-shopping-cart-line"></i></span><p class="hover-text">Add to Cart</p></a>
+                                    </li>
                                 </ul>
                             </div>
-                            
-                            {% if related.discount_percentage > 0 %}
+                            {% if related.discount_percentage %}
                             <div class="discount circle flexcenter"><span>{{ related.discount_percentage }}%</span></div>
                             {% endif %}
-                            
                         </div>
                         <div class="content">
                             <div class="rating">
@@ -460,14 +391,15 @@
                         </div>
                     </div>
                     {% empty %}
-                        <div style="width: 100%; padding: 2em; text-align: center;">
-                            <p style="color: #999;">No other related products found in this category right now.</p>
-                        </div>
+                    <div style="width:100%;padding:2rem;text-align:center;color:#999;">
+                        <p>No related products found in this category right now.</p>
+                    </div>
                     {% endfor %}
-                    
                 </div>
             </div>
         </div>
     </div>
 </div>
+{# ── end Related Products ─────────────────────────────────────────────────── #}
+
 {% endblock %}

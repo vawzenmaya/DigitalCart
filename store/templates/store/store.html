@@ -3,158 +3,170 @@
 
 {% block content %}
 <div id="page" class="site page-home">
-    
+
+    {# ── Secondary header: departments + search ───────────────────────────── #}
     <header>
         <div class="header-main mobile-hide">
             <div class="container">
                 <div class="wrapper flexitem">
+
+                    {# Left: department category panel #}
                     <div class="left">
                         <div class="dpt-cat">
                             <div class="dpt-head">
                                 <div class="main-text">All Categories</div>
-                                <div class="mini-text mobile-hide">Total of {{ product_count }} Products</div>
+                                <div class="mini-text mobile-hide">{{ product_count }} Product{{ product_count|pluralize }}</div>
                                 <a href="#" class="dpt-trigger mobile-hide">
-                                    <i class="ri-menu-add-fill"></i>
+                                    <i class="ri-menu-3-line ri-xl"></i>
+                                    <i class="ri-close-line ri-xl"></i>
                                 </a>
                             </div>
                             <div class="dpt-menu">
                                 <ul class="second-links">
-
                                     {% for category in categories %}
                                     <li class="has-child">
-                                        <a href="{% url 'category' category.slug %}" style="display: flex; align-items: center;">
-                                             <div class="icon-large"><i class="{{ category.icon }}"></i></div>
+                                        <a href="{% url 'category' category.slug %}" style="display:flex;align-items:center;">
+                                            <div class="icon-large"><i class="{{ category.icon }}"></i></div>
                                             {{ category.name }}
                                             <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
-                                            <span style="font-size: 14px; font-weight: 500;">{{ category.product_set.count }}</span>
                                         </a>
-
                                         <div class="mega"
                                             {% if category.menu_image %}
-                                                style="z-index: 999; background-color: #cccaca; min-height: 400px; background-image: url('{{ category.menu_image.url }}'); background-size: cover; background-position: right center;"
+                                                style="z-index:999;background-image:url('{{ category.menu_image.url }}');background-size:cover;background-position:right center;min-height:400px;"
                                             {% else %}
-                                                style="z-index: 999; background-color: #ffffff; min-height: 400px;"
+                                                style="z-index:999;background-color:#fff;min-height:400px;"
                                             {% endif %}>
-
-                                            <div class="mega-subcats" style="position: relative; z-index: 2; display: flex; flex-direction: row; gap: 2rem; align-items: flex-start;">
-
+                                            <div class="mega-subcats" style="position:relative;z-index:2;display:flex;flex-direction:row;gap:2rem;align-items:flex-start;">
                                                 {% for sub in category.subcategories.all %}
-                                                    <div class="mega-sub-item" style="min-width: 160px; max-width: 200px; flex-shrink: 0;">
-                                                        <h4 style="margin-bottom: 10px; color: var(--secondary-dark-color); text-transform: uppercase; font-size: 13px; font-weight: 600;">
-                                                            {{ sub.name }}
-                                                        </h4>
-                                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                                            {% for subsub in sub.subsubcategories.all %}
-                                                                <li style="line-height: 2em;"><a href="#" style="font-size: 13px;">{{ subsub.name }}</a></li>
-                                                            {% empty %}
-                                                                <li><a href="#" style="color: #636161; font-style: italic; font-size: 13px;">More coming soon...</a></li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </div>
+                                                <div class="mega-sub-item" style="min-width:160px;max-width:200px;flex-shrink:0;">
+                                                    <h4 style="margin-bottom:10px;color:var(--secondary-dark-color);text-transform:uppercase;font-size:13px;font-weight:600;">
+                                                        <a href="{% url 'category' category.slug %}?sub={{ sub.slug }}">{{ sub.name }}</a>
+                                                    </h4>
+                                                    <ul style="list-style:none;padding:0;margin:0;">
+                                                        {% for subsub in sub.subsubcategories.all %}
+                                                        <li style="line-height:2em;">
+                                                            <a href="{% url 'category' category.slug %}?sub={{ sub.slug }}&subsub={{ subsub.slug }}" style="font-size:13px;">
+                                                                {{ subsub.name }}
+                                                            </a>
+                                                        </li>
+                                                        {% empty %}
+                                                        <li><a href="#" style="color:#999;font-style:italic;font-size:13px;">More coming soon…</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
                                                 {% empty %}
-                                                    <div class="mega-sub-item">
-                                                        <p style="color: #999; font-style: italic;">No subcategories added in Admin yet.</p>
-                                                    </div>
+                                                <div class="mega-sub-item">
+                                                    <p style="color:#999;font-style:italic;">No subcategories yet.</p>
+                                                </div>
                                                 {% endfor %}
-
                                             </div>
                                         </div>
                                     </li>
                                     {% endfor %}
-
                                 </ul>
                             </div>
                         </div>
                     </div>
+
+                    {# Right: search bar #}
                     <div class="right">
                         <div class="search box">
-                            <form action="" class="search" method="get">
+                            <form action="{% url 'store' %}" class="search" method="get">
                                 <span class="icon-large"><i class="ri-search-line"></i></span>
-                                <input type="search" name="query" placeholder="Search for products.....">
+                                <input type="search" name="query" value="{{ query }}" placeholder="Search for products…">
                                 <button type="submit">Search</button>
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </header>
-    
+
     <main>
+        {# ── Hero Slider ──────────────────────────────────────────────────── #}
         <div class="slider">
             <div class="container">
                 <div class="wrapper">
                     <div class="myslider swiper">
                         <div class="swiper-wrapper">
+
                             <div class="swiper-slide">
                                 <div class="item">
                                     <div class="image object-cover">
-                                        <img src="{% static 'assets/slider/samsung.jpg' %}" alt="">
+                                        <img src="{% static 'assets/slider/samsung.jpg' %}" alt="Phones">
                                     </div>
                                     <div class="text-content flexcol">
                                         <h4>Phones</h4>
                                         <h2><span>Come and Get it!</span><br><span>Brand New Phones</span></h2>
-                                        <a href="#" class="primary-button">Shop Now</a>
+                                        <a href="{% url 'category' 'phones-tablets' %}" class="primary-button">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="swiper-slide">
                                 <div class="item">
                                     <div class="image object-cover">
-                                        <img src="{% static 'assets/slider/desktop.jpg' %}" alt="">
+                                        <img src="{% static 'assets/slider/desktop.jpg' %}" alt="Computing">
                                     </div>
                                     <div class="text-content flexcol">
                                         <h4>Computing</h4>
                                         <h2><span>Very Powerful Machines</span><br><span>Start Gaming Today</span></h2>
-                                        <a href="add-to-cart/<int:product_id>/" class="primary-button">Shop Now</a>
+                                        <a href="{% url 'category' 'computing' %}" class="primary-button">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="swiper-slide">
                                 <div class="item">
                                     <div class="image object-cover">
-                                        <img src="{% static 'assets/slider/laptops.jpg' %}" alt="">
+                                        <img src="{% static 'assets/slider/laptops.jpg' %}" alt="Laptops">
                                     </div>
                                     <div class="text-content flexcol">
                                         <h4>Laptops</h4>
-                                        <h2><span>Tap On It, Recieve It.</span><br><span>Brand New Laptops</span></h2>
-                                        <a href="add-to-cart/<int:product_id>/" class="primary-button">Shop Now</a>
+                                        <h2><span>Tap On It, Receive It.</span><br><span>Brand New Laptops</span></h2>
+                                        <a href="{% url 'category' 'laptops' %}" class="primary-button">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="swiper-slide">
                                 <div class="item">
                                     <div class="image object-cover">
-                                        <img src="{% static 'assets/slider/slider0.jpg' %}" alt="">
+                                        <img src="{% static 'assets/slider/slider0.jpg' %}" alt="Shoes">
                                     </div>
                                     <div class="text-content flexcol">
                                         <h4>Shoes</h4>
-                                        <h2><span>Come and Get it!</span><br><span>Brand New Shoes</span></h2>
-                                        <a href="add-to-cart/<int:product_id>/" class="primary-button">Shop Now</a>
+                                        <h2><span>Step Up Your Style</span><br><span>Brand New Shoes</span></h2>
+                                        <a href="{% url 'category' 'shoes' %}" class="primary-button">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <div class="swiper-pagination"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- slider -->
+        {# /Hero Slider #}
 
+        {# ── Brand Logos ──────────────────────────────────────────────────── #}
         <div class="brands">
             <div class="container">
                 <div class="wrapper flexitem">
-                    <div class="item"><a href="#"><img src="{% static 'assets/brands/hurley.png' %}" alt=""></a></div>
-                    <div class="item"><a href="#"><img src="{% static 'assets/brands/dng.png' %}" alt=""></a></div>
-                    <div class="item"><a href="#"><img src="{% static 'assets/brands/zara.png' %}" alt=""></a></div>
-                    <div class="item"><a href="#"><img src="{% static 'assets/brands/samsung.png' %}" alt=""></a></div>
-                    <div class="item"><a href="#"><img src="{% static 'assets/brands/oppo.png' %}" alt=""></a></div>
-                    <div class="item"><a href="#"><img src="{% static 'assets/brands/asus.png' %}" alt=""></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/hurley.png' %}" alt="Hurley"></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/dng.png' %}" alt="DNG"></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/zara.png' %}" alt="Zara"></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/samsung.png' %}" alt="Samsung"></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/oppo.png' %}" alt="Oppo"></a></div>
+                    <div class="item"><a href="#"><img src="{% static 'assets/brands/asus.png' %}" alt="Asus"></a></div>
                 </div>
             </div>
         </div>
 
+        {# ── Trending Products ─────────────────────────────────────────────── #}
         <div class="trending">
             <div class="container">
                 <div class="wrapper">
@@ -163,24 +175,24 @@
                     </div>
 
                     {% if not offer_product and not trending_row1 and not trending_row2 %}
-                        <p style="padding: 2rem 0; color: #999; text-align:center;">
-                            No trending products yet. Mark products as trending in the admin.
-                        </p>
+                    <p style="padding:2rem 0;color:#999;text-align:center;">
+                        No trending products yet. Mark products as trending in the admin.
+                    </p>
                     {% else %}
                     <div class="column">
                         <div class="flexwrap">
 
-                            {# ---- BIG OFFER CARD (left column) ---- #}
+                            {# BIG OFFER CARD #}
                             <div class="row products big">
                                 {% if offer_product %}
                                 {% with config=trending_config %}
                                 <div class="item offer-card" id="offerCard">
 
-                                    {# Countdown block #}
                                     {% if config.offer_ends_at %}
                                     <div class="offer">
                                         <p>Offer ends at</p>
-                                        <ul class="flexcenter countdown-timer" id="offerCountdownTimer" data-seconds="{{ offer_seconds_remaining }}">
+                                        <ul class="flexcenter countdown-timer" id="offerCountdownTimer"
+                                            data-seconds="{{ offer_seconds_remaining }}">
                                             <li id="cd-days"><span class="cd-num">00</span><span class="cd-label">d</span></li>
                                             <li id="cd-hours"><span class="cd-num">00</span><span class="cd-label">h</span></li>
                                             <li id="cd-mins"><span class="cd-num">00</span><span class="cd-label">m</span></li>
@@ -191,16 +203,17 @@
 
                                     <div class="media offer-media {% if offer_expired %}offer-expired{% endif %}">
                                         <div class="image">
-                                            <a href="{% url 'product_detail' offer_product.category.slug offer_product.slug %}">
+                                            {% if offer_expired %}
+                                            <img src="{{ offer_product.image.url }}" alt="{{ offer_product.name }}">
+                                            {% else %}
+                                            <a href="{{ offer_product.get_absolute_url }}">
                                                 <img src="{{ offer_product.image.url }}" alt="{{ offer_product.name }}">
                                             </a>
+                                            {% endif %}
                                         </div>
 
-                                        {# "OFFER ENDED" diagonal ribbon — shown server-side when expired #}
                                         {% if offer_expired %}
-                                        <div class="offer-ended-ribbon">
-                                            <span>OFFER<br>ENDED</span>
-                                        </div>
+                                        <div class="offer-ended-ribbon"><span>OFFER<br>ENDED</span></div>
                                         {% endif %}
 
                                         <div class="hoverable">
@@ -212,7 +225,7 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="{% url 'product_detail' offer_product.category.slug offer_product.slug %}" class="social-info">
+                                                    <a href="{{ offer_product.get_absolute_url }}" class="social-info">
                                                         <span><i class="ri-eye-line"></i></span>
                                                         <p class="hover-text">View more</p>
                                                     </a>
@@ -239,9 +252,7 @@
                                             <span class="mini-text">({{ offer_product.review_count|default:"0" }})</span>
                                         </div>
                                         <h3 class="main-links">
-                                            <a href="{% url 'product_detail' offer_product.category.slug offer_product.slug %}">
-                                                {{ offer_product.name }}
-                                            </a>
+                                            <a href="{{ offer_product.get_absolute_url }}">{{ offer_product.name }}</a>
                                         </h3>
                                         <div class="price">
                                             <span class="current">{{ offer_product.price|floatformat:0 }} UGX</span>
@@ -251,8 +262,8 @@
                                         </div>
                                         <div class="stock mini-text">
                                             <div class="qty">
-                                                <span>Stock: <strong class="qty-available">{{ offer_product.stock }}</strong></span>
-                                                <span>Sold: <strong class="qty-sold">{{ offer_product.units_sold }}</strong></span>
+                                                <span>Stock: <strong>{{ offer_product.stock }}</strong></span>
+                                                <span>Sold: <strong>{{ offer_product.units_sold }}</strong></span>
                                             </div>
                                             <div class="bar">
                                                 <div class="available" data-width="{{ offer_product.stock_percentage }}"></div>
@@ -263,52 +274,39 @@
                                 {% endwith %}
                                 {% endif %}
                             </div>
-                            {# ---- end big card ---- #}
+                            {# /BIG OFFER CARD #}
 
-                            {# ---- SMALL CARDS ROW 1 (up to 4) ---- #}
+                            {# SMALL CARDS ROW 1 #}
                             {% if trending_row1 %}
                             <div class="row products mini">
                                 {% for product in trending_row1 %}
                                 <div class="item">
                                     <div class="media">
                                         <div class="thumbnail object-cover">
-                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
-                                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                            <a href="{{ product.get_absolute_url }}">
+                                                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
                                             </a>
                                         </div>
                                         <div class="hoverable">
                                             <ul>
                                                 <li class="active">
-                                                    <a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a>
+                                                    <a href="#" class="social-info"><span><i class="ri-heart-line"></i></span><p class="hover-text">Wishlist</p></a>
                                                 </li>
                                                 <li>
-                                                    <a href="{% url 'product_detail' product.category.slug product.slug %}" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a>
+                                                    <a href="{{ product.get_absolute_url }}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a>
+                                                    <a href="#" class="social-info"><span><i class="ri-shopping-cart-line"></i></span><p class="hover-text">Add to Cart</p></a>
                                                 </li>
                                             </ul>
                                         </div>
                                         {% if product.discount_percentage %}
-                                        <div class="discount circle flexcenter">
-                                            <span>{{ product.discount_percentage }}%</span>
-                                        </div>
+                                        <div class="discount circle flexcenter"><span>{{ product.discount_percentage }}%</span></div>
                                         {% endif %}
                                     </div>
                                     <div class="content">
                                         <h3 class="main-links">
-                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
-                                                {{ product.name }}
-                                            </a>
+                                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                                         </h3>
                                         <div class="rating">
                                             <div class="stars"></div>
@@ -322,62 +320,46 @@
                                         </div>
                                         <div class="mini-text">
                                             <p>{{ product.units_sold }} sold</p>
-                                            {% if product.is_free_delivery %}<p>Free Delivery</p>{% endif %}
-                                            {% if product.stock <= 10 %}
-                                            <p class="stock-danger">Stock: {{ product.stock }} left</p>
-                                            {% endif %}
+                                            {% if product.is_free_delivery %}<p style="color:#10ac84;">Free Delivery</p>{% endif %}
+                                            {% if product.is_low_stock %}<p style="color:#e74c3c;">Only {{ product.stock }} left!</p>{% endif %}
                                         </div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             </div>
                             {% endif %}
-                            {# ---- end row 1 ---- #}
 
-                            {# ---- SMALL CARDS ROW 2 (up to 3 more, total 7 + offer = 8) ---- #}
+                            {# SMALL CARDS ROW 2 #}
                             {% if trending_row2 %}
                             <div class="row products mini">
                                 {% for product in trending_row2 %}
                                 <div class="item">
                                     <div class="media">
                                         <div class="thumbnail object-cover">
-                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
-                                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                            <a href="{{ product.get_absolute_url }}">
+                                                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
                                             </a>
                                         </div>
                                         <div class="hoverable">
                                             <ul>
                                                 <li class="active">
-                                                    <a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a>
+                                                    <a href="#" class="social-info"><span><i class="ri-heart-line"></i></span><p class="hover-text">Wishlist</p></a>
                                                 </li>
                                                 <li>
-                                                    <a href="{% url 'product_detail' product.category.slug product.slug %}" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a>
+                                                    <a href="{{ product.get_absolute_url }}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a>
+                                                    <a href="#" class="social-info"><span><i class="ri-shopping-cart-line"></i></span><p class="hover-text">Add to Cart</p></a>
                                                 </li>
                                             </ul>
                                         </div>
                                         {% if product.discount_percentage %}
-                                        <div class="discount circle flexcenter">
-                                            <span>{{ product.discount_percentage }}%</span>
-                                        </div>
+                                        <div class="discount circle flexcenter"><span>{{ product.discount_percentage }}%</span></div>
                                         {% endif %}
                                     </div>
                                     <div class="content">
                                         <h3 class="main-links">
-                                            <a href="{% url 'product_detail' product.category.slug product.slug %}">
-                                                {{ product.name }}
-                                            </a>
+                                            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                                         </h3>
                                         <div class="rating">
                                             <div class="stars"></div>
@@ -391,59 +373,72 @@
                                         </div>
                                         <div class="mini-text">
                                             <p>{{ product.units_sold }} sold</p>
-                                            {% if product.is_free_delivery %}<p>Free Delivery</p>{% endif %}
-                                            {% if product.stock <= 10 %}
-                                            <p class="stock-danger">Stock: {{ product.stock }} left</p>
-                                            {% endif %}
+                                            {% if product.is_free_delivery %}<p style="color:#10ac84;">Free Delivery</p>{% endif %}
+                                            {% if product.is_low_stock %}<p style="color:#e74c3c;">Only {{ product.stock }} left!</p>{% endif %}
                                         </div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             </div>
                             {% endif %}
-                            {# ---- end row 2 ---- #}
 
                         </div>
                     </div>
                     {% endif %}
+
                 </div>
             </div>
         </div>
-        <!-- /Trending Products -->
+        {# /Trending Products #}
 
+        {# ── All Products ─────────────────────────────────────────────────── #}
         <div class="features">
             <div class="container">
                 <div class="wrapper">
                     <div class="column">
                         <div class="sectop flexitem">
-                            <h2><span class="circle"></span><span>All Products</span></h2>
+                            <h2><span class="circle"></span>
+                                <span>{% if query %}Search results for "{{ query }}"{% else %}All Products{% endif %}</span>
+                            </h2>
                             <div class="second-links">
-                                <a href="#" class="view-all">View All<i class="ri-arrow-right-line"></i></a><br>
+                                <a href="#" class="view-all">View All<i class="ri-arrow-right-line"></i></a>
                             </div>
                         </div>
 
+                        {% if query and product_count == 0 %}
+                        <div style="padding:3rem;text-align:center;color:#999;">
+                            <i class="ri-search-line" style="font-size:3rem;display:block;margin-bottom:1rem;"></i>
+                            <p>No products found for "{{ query }}".</p>
+                            <a href="{% url 'store' %}" class="secondary-button" style="display:inline-block;margin-top:1rem;">Clear search</a>
+                        </div>
+                        {% else %}
                         <div class="products main flexwrap">
-                                                    
                             {% for product in products %}
                             <div class="item">
                                 <div class="media">
                                     <div class="thumbnail object-cover">
-                                        <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                        <a href="{{ product.get_absolute_url }}">
                                             {% if product.image %}
-                                                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
                                             {% else %}
-                                                <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
+                                            <img src="{% static 'assets/products/placeholder.jpg' %}" alt="{{ product.name }}">
                                             {% endif %}
                                         </a>
                                     </div>
                                     <div class="hoverable">
                                         <ul>
-                                            <li class="active"><a href="#" class="social-info"><span><i class="ri-heart-line"></i></span><p class="hover-text">Wishlist</p></a></li>
-                                            <li><a href="{% url 'product_detail' product.category.slug product.slug %}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a></li>
-                                            <li><a href="#" class="social-info"><span><i class="ri-shopping-cart-line"></i></span><p class="hover-text">Add to Cart</p></a></li>
+                                            <li class="active">
+                                                <a href="#" class="social-info"><span><i class="ri-heart-line"></i></span><p class="hover-text">Wishlist</p></a>
+                                            </li>
+                                            <li>
+                                                <a href="{{ product.get_absolute_url }}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="social-info"><span><i class="ri-shopping-cart-line"></i></span><p class="hover-text">Add to Cart</p></a>
+                                            </li>
                                         </ul>
                                     </div>
-                                    {% if product.discount_percentage > 0 %}
+                                    {% if product.discount_percentage %}
                                     <div class="discount circle flexcenter"><span>{{ product.discount_percentage }}%</span></div>
                                     {% endif %}
                                 </div>
@@ -452,37 +447,53 @@
                                         <div class="stars"></div>
                                         <span class="mini-text">({{ product.review_count }})</span>
                                     </div>
-                                    <h3><a href="{% url 'product_detail' product.category.slug product.slug %}">{{ product.name }}</a></h3>
+                                    <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
                                     <div class="price">
-                                        <span class="current">{{ product.price }}UGX</span>
+                                        <span class="current">{{ product.price|floatformat:0 }} UGX</span>
                                         {% if product.original_price > product.price %}
-                                        <span class="normal mini-text">{{ product.original_price }}UGX</span>
+                                        <span class="normal mini-text">{{ product.original_price|floatformat:0 }} UGX</span>
                                         {% endif %}
                                     </div>
-                                    
                                     <div class="footer">
-                                        <ul class="mini-text">
+                                        <ul class="mini-text" style="list-style:none;padding:0;">
                                             {% if product.is_free_delivery %}
-                                            <li style="color: #10ac84; list-style: none;">Free Delivery</li>
+                                            <li style="color:#10ac84;"><i class="ri-truck-line"></i> Free Delivery</li>
                                             {% endif %}
-                                            <li style="list-style: none;">{{ product.units_sold }} units sold</li>
+                                            <li>{{ product.units_sold }} units sold</li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             {% empty %}
-                                <div class="item" style="padding: 2em;">
-                                    <p>No products available right now.</p>
-                                </div>
+                            <div style="padding:2rem;text-align:center;width:100%;color:#999;">
+                                No products available right now.
+                            </div>
                             {% endfor %}
-                            
                         </div>
-                        
+
+                        {# Pagination #}
+                        {% if page_obj.has_other_pages %}
+                        <div class="pagination flexcenter" style="margin:2rem 0;gap:0.5rem;">
+                            {% if page_obj.has_previous %}
+                            <a href="?{% if query %}query={{ query }}&{% endif %}page={{ page_obj.previous_page_number }}" class="secondary-button">&laquo; Prev</a>
+                            {% endif %}
+                            <span style="padding:0 1rem;font-size:0.9rem;color:#666;">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                            {% if page_obj.has_next %}
+                            <a href="?{% if query %}query={{ query }}&{% endif %}page={{ page_obj.next_page_number }}" class="primary-button">Next &raquo;</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
         </div>
+        {# /All Products #}
 
+        {# ── Promotional Banners ───────────────────────────────────────────── #}
         <div class="banners">
             <div class="container">
                 <div class="wrapper">
@@ -491,46 +502,47 @@
                             <div class="row">
                                 <div class="item">
                                     <div class="image">
-                                        <img src="{% static 'assets/banner/banner1.jpg' %}" alt="">
+                                        <img src="{% static 'assets/banner/banner1.jpg' %}" alt="Furniture Sale">
                                     </div>
                                     <div class="text-content flexcol">
                                         <h4>Brutal Sale!</h4>
                                         <h3><span>Get the deal Now</span><br>Furniture</h3>
-                                        <a href="#" class="primary-button">Show Now</a>
+                                        <a href="{% url 'category' 'furniture' %}" class="primary-button">Shop Now</a>
                                     </div>
-                                    <a href="#" class="over-link"></a>
+                                    <a href="{% url 'category' 'furniture' %}" class="over-link"></a>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="item get-gray">
                                     <div class="image">
-                                        <img src="{% static 'assets/banner/banner2.jpg' %}" alt="">
+                                        <img src="{% static 'assets/banner/banner2.jpg' %}" alt="Office Wear">
                                     </div>
                                     <div class="text-content flexcol">
                                         <h4>Brutal Sale!</h4>
                                         <h3><span>Discount Everyday</span><br>Office Wear</h3>
-                                        <a href="#" class="primary-button">Show Now</a>
+                                        <a href="{% url 'category' 'fashion' %}" class="primary-button">Shop Now</a>
                                     </div>
-                                    <a href="#" class="over-link"></a>
+                                    <a href="{% url 'category' 'fashion' %}" class="over-link"></a>
                                 </div>
                             </div>
                         </div>
+
                         <div class="product-categories flexwrap">
                             <div class="row">
                                 <div class="item">
                                     <div class="image">
-                                        <img src="{% static 'assets/banner/lock1.jpg' %}" alt="">
+                                        <img src="{% static 'assets/banner/lock1.jpg' %}" alt="Security">
                                     </div>
                                     <div class="content mini-links">
-                                        <h4>Fashion</h4>
+                                        <h4>Security</h4>
                                         <ul class="flexcol">
                                             <li><a href="#">Cameras</a></li>
                                             <li><a href="#">Alarms</a></li>
                                             <li><a href="#">Password Locks</a></li>
-                                            <li><a href="#">Electic Fences</a></li>
+                                            <li><a href="#">Electric Fences</a></li>
                                         </ul>
                                         <div class="second-links">
-                                            <a href="{% url 'category' 'fashion' %}" class="view-all">View All...</a>
+                                            <a href="{% url 'category' 'security' %}" class="view-all">View All…</a>
                                         </div>
                                     </div>
                                 </div>
@@ -538,7 +550,7 @@
                             <div class="row">
                                 <div class="item">
                                     <div class="image">
-                                        <img src="{% static 'assets/banner/samsung.jpg' %}" alt="">
+                                        <img src="{% static 'assets/banner/samsung.jpg' %}" alt="Phones">
                                     </div>
                                     <div class="content mini-links">
                                         <h4>Phones</h4>
@@ -551,8 +563,7 @@
                                             <li><a href="#">Google Pixel</a></li>
                                         </ul>
                                         <div class="second-links">
-                                            <a href="{% url 'category' 'phones-tablets' %}" class="view-all">View All...</a>
-                                            </a>
+                                            <a href="{% url 'category' 'phones-tablets' %}" class="view-all">View All…</a>
                                         </div>
                                     </div>
                                 </div>
@@ -560,54 +571,58 @@
                             <div class="row">
                                 <div class="item">
                                     <div class="image">
-                                        <img src="{% static 'assets/banner/chair1.jpg' %}" alt="">
+                                        <img src="{% static 'assets/banner/chair1.jpg' %}" alt="Gaming">
                                     </div>
                                     <div class="content mini-links">
                                         <h4>Gaming</h4>
                                         <ul class="flexcol">
                                             <li><a href="#">Chairs</a></li>
                                             <li><a href="#">Gaming Pads</a></li>
-                                            <li><a href="#">Sony Play Stations</a></li>
+                                            <li><a href="#">PlayStation</a></li>
                                             <li><a href="#">Games</a></li>
                                             <li><a href="#">Wheels</a></li>
                                         </ul>
                                         <div class="second-links">
-                                            <a href="{% url 'category' 'gaming' %}" class="view-all">View All...</a>
-                                            </a>
+                                            <a href="{% url 'category' 'gaming' %}" class="view-all">View All…</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+        {# /Promotional Banners #}
 
+        {# ── Newsletter ───────────────────────────────────────────────────── #}
         <div class="newsletter">
             <div class="container">
                 <div class="wrapper">
                     <div class="box">
                         <div class="content">
                             <h3>Subscribe to our newsletter</h3>
-                            <p>Get E-mail updates on our latest updates and<strong> Special Offers</strong></p>
+                            <p>Get e-mail updates on our latest offers and <strong>Special Deals</strong></p>
                         </div>
-                        <form action="" class="search">
+                        <form action="#" class="search" method="post">
+                            {% csrf_token %}
                             <span class="icon-large"><i class="ri-mail-line"></i></span>
-                            <input type="mail" placeholder="Enter E-mail Address" required>
+                            <input type="email" name="email" placeholder="Enter your e-mail address" required>
                             <button type="submit">Sign Up</button>
                         </form>
                     </div>
                 </div>
                 <div class="accept">
-                    <input type="checkbox" id="accept">
-                    <label for="accept">I agree to DigitalCart's Privacy and Cookie Policy. You can unsubscribe from newsletters at any time.</label>
+                    <input type="checkbox" id="accept" required>
+                    <label for="accept">I agree to DigitalCart's Privacy and Cookie Policy. You can unsubscribe at any time.</label>
                 </div>
-                <div class="acc"><strong><a href="#">I accept the Legal Terms</a></strong></div>                    
+                <div class="acc"><strong><a href="#">I accept the Legal Terms</a></strong></div>
             </div>
         </div>
-        <!-- newsletter -->
+        {# /Newsletter #}
 
+        {# ── Footer widgets ───────────────────────────────────────────────── #}
         <div class="widgets">
             <div class="container">
                 <div class="wrapper">
@@ -619,7 +634,6 @@
                                     <li><a href="#">Chat with us</a></li>
                                     <li><a href="#">Help Center</a></li>
                                     <li><a href="#">Contact us</a></li>
-                                    <li><a href="#"> </a></li>
                                 </ul>
                             </div>
                             <div class="item mini-links">
@@ -639,16 +653,12 @@
                                 <h4>About DigitalCart</h4>
                                 <ul class="flexcol">
                                     <li><a href="#">About us</a></li>
-                                    <li><a href="#">DigitalCart Careers</a></li>
+                                    <li><a href="#">Careers</a></li>
                                     <li><a href="#">Terms and Conditions</a></li>
-                                    <li><a href="#">Store & Credit Terms & Conditions</a></li>
-                                    <li><a href="#">Dispute Resolution Policy</a></li>
-                                    <li><a href="#">Privacy policy Notice</a></li>
-                                    <li><a href="#">Return & Refund Policy</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Return &amp; Refund Policy</a></li>
                                     <li><a href="#">Cookie Notice</a></li>
                                     <li><a href="#">Flash Sales</a></li>
-                                    <li><a href="#">Cookie Notice</a></li>
-                                    <li><a href="#">DigitalCart Global</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -659,10 +669,8 @@
                                     <li><a href="#">Sell on DigitalCart</a></li>
                                     <li><a href="#">Vendor Hub</a></li>
                                     <li><a href="#">Become a Sales Consultant</a></li>
-                                    <li><a href="#">Become a Logistics Service Partner</a></li>
-                                    <li><a href="#">Become a DigitalCart Delivery Agent</a></li>
+                                    <li><a href="#">Become a Delivery Agent</a></li>
                                     <li><a href="#">DigitalCart B2B</a></li>
-                                    <li><a href="#">Become a DigitalCart Pickup Station Partner</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -674,7 +682,9 @@
                                     <li><a href="#">Egypt</a></li>
                                     <li><a href="#">Ghana</a></li>
                                     <li><a href="#">Morocco</a></li>
-                                    <li><a href="#">SouthAfrica</a></li>
+                                    <li><a href="#">South Africa</a></li>
+                                    <li><a href="#">Tanzania</a></li>
+                                    <li><a href="#">Rwanda</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -682,6 +692,8 @@
                 </div>
             </div>
         </div>
+        {# /Footer widgets #}
+
     </main>
 </div>
 {% endblock %}

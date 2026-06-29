@@ -2,99 +2,126 @@ from django.db import models
 from django.utils import timezone
 
 
+# ---------------------------------------------------------------------------
+# Category hierarchy
+# ---------------------------------------------------------------------------
+
 class Category(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    icon = models.CharField(max_length=100, blank=True, default='ri-grid-line')
-    slug = models.SlugField(max_length=100, unique=True)
+    name        = models.CharField(max_length=50, unique=True)
+    icon        = models.CharField(max_length=100, blank=True, default='ri-grid-line')
+    slug        = models.SlugField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-    menu_image = models.ImageField(upload_to='photos/categories', blank=True, null=True)
+    menu_image  = models.ImageField(upload_to='photos/categories', blank=True, null=True)
 
     class Meta:
-        verbose_name = 'category'
+        verbose_name        = 'category'
         verbose_name_plural = 'categories'
+        ordering            = ['name']
 
     def __str__(self):
         return self.name
+
+    def get_product_count(self):
+        """Returns count of available products in this category."""
+        return self.primary_products.filter(is_available=True).count()
 
 
 class SubCategory(models.Model):
     category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=100, unique=True)
+    name     = models.CharField(max_length=50)
+    slug     = models.SlugField(max_length=100, unique=True)
 
     class Meta:
         verbose_name_plural = 'subcategories'
+        ordering            = ['name']
 
     def __str__(self):
-        return self.name
+        return f"{self.category.name} → {self.name}"
 
 
 class SubSubCategory(models.Model):
     subcategory = models.ForeignKey(SubCategory, related_name='subsubcategories', on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=100, unique=True)
+    name        = models.CharField(max_length=50)
+    slug        = models.SlugField(max_length=100, unique=True)
 
     class Meta:
         verbose_name_plural = 'sub-subcategories'
+        ordering            = ['name']
 
     def __str__(self):
         return self.name
 
 
+# ---------------------------------------------------------------------------
+# Product
+# ---------------------------------------------------------------------------
+
+class ProductManager(models.Manager):
+    def available(self):
+        return self.filter(is_available=True)
+
+    def trending(self):
+        return self.available().filter(is_trending=True).order_by('trending_order', '-modified_date')
+
+
 class Product(models.Model):
     # Hierarchy
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='primary_products')
-    
+    category    = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='primary_products')
     additional_categories = models.ManyToManyField(
-        Category, 
-        blank=True, 
+        Category,
+        blank=True,
         related_name='extra_products',
-        help_text="Hold down Ctrl (or Cmd on Mac) to select multiple."
+        help_text='Hold down Ctrl (or Cmd on Mac) to select multiple.',
     )
-    
-    subcategory = models.ForeignKey(SubCategory, on_delete=models.CASCADE, blank=True, null=True)
-    subsubcategory = models.ForeignKey(SubSubCategory, on_delete=models.CASCADE, blank=True, null=True)
+    subcategory    = models.ForeignKey(SubCategory,    on_delete=models.SET_NULL, blank=True, null=True)
+    subsubcategory = models.ForeignKey(SubSubCategory, on_delete=models.SET_NULL, blank=True, null=True)
 
     # Core Details
-    name = models.CharField(max_length=200, unique=True)
-    slug = models.SlugField(max_length=200, unique=True)
+    name        = models.CharField(max_length=200, unique=True)
+    slug        = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='photos/products')
+    image       = models.ImageField(upload_to='photos/products')
 
     # Pricing
     original_price = models.DecimalField(max_digits=10, decimal_places=2)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price          = models.DecimalField(max_digits=10, decimal_places=2)
 
     # Inventory & Sales
-    stock = models.IntegerField()
+    stock      = models.IntegerField(default=0)
     units_sold = models.IntegerField(default=0)
 
     # Metadata & Filters
-    review_count = models.IntegerField(default=0)
+    review_count     = models.IntegerField(default=0)
     is_free_delivery = models.BooleanField(default=False)
-    is_available = models.BooleanField(default=True)
+    is_available     = models.BooleanField(default=True)
 
-    # --- TRENDING ---
-    is_trending = models.BooleanField(
+    # Trending
+    is_trending    = models.BooleanField(
         default=False,
-        help_text="Check to include this product in the Trending section."
+        help_text='Check to include this product in the Trending section.',
     )
     trending_order = models.PositiveIntegerField(
         default=0,
-        help_text="Controls display order in Trending (1 = first). Slots 2–8 are the small cards."
+        help_text='Controls display order in Trending (1 = first). Slots 2–8 are the small cards.',
     )
 
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date  = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
+
+    objects = ProductManager()
 
     class Meta:
         ordering = ['trending_order', '-created_date']
 
+    def __str__(self):
+        return self.name
+
+    # --- Computed properties ---
+
     @property
     def discount_percentage(self):
         if self.original_price > self.price:
-            discount = ((self.original_price - self.price) / self.original_price) * 100
-            return int(discount)
+            return int(((self.original_price - self.price) / self.original_price) * 100)
         return 0
 
     @property
@@ -105,13 +132,23 @@ class Product(models.Model):
             return 0
         return int((self.units_sold / total) * 100)
 
-    def __str__(self):
-        return self.name
+    @property
+    def is_in_stock(self):
+        return self.stock > 0
+
+    @property
+    def is_low_stock(self):
+        return 0 < self.stock <= 10
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('product_detail', args=[self.category.slug, self.slug])
 
 
 # ---------------------------------------------------------------------------
-# TrendingSection — a singleton-style config row for the offer product
+# TrendingSection — singleton-style config for the offer product + countdown
 # ---------------------------------------------------------------------------
+
 class TrendingSection(models.Model):
     """
     One active row controls:
@@ -125,20 +162,20 @@ class TrendingSection(models.Model):
         null=True,
         blank=True,
         related_name='offer_configs',
-        help_text="The product shown in the big left card with the countdown timer."
+        help_text='The product shown in the big left card with the countdown timer.',
     )
     offer_ends_at = models.DateTimeField(
         null=True,
         blank=True,
-        help_text="When this offer expires. Leave blank to hide the countdown."
+        help_text='When this offer expires. Leave blank to hide the countdown.',
     )
     is_active = models.BooleanField(
         default=True,
-        help_text="Only one TrendingSection should be active at a time."
+        help_text='Only one TrendingSection should be active at a time.',
     )
 
     class Meta:
-        verbose_name = 'Trending Section Config'
+        verbose_name        = 'Trending Section Config'
         verbose_name_plural = 'Trending Section Config'
 
     def __str__(self):
@@ -152,7 +189,7 @@ class TrendingSection(models.Model):
 
     @property
     def seconds_remaining(self):
-        """Returns total seconds left (>=0) for use in the JS countdown."""
+        """Returns total seconds left (≥0) for the JS countdown."""
         if self.offer_ends_at is None:
             return 0
         delta = self.offer_ends_at - timezone.now()
@@ -160,30 +197,31 @@ class TrendingSection(models.Model):
 
 
 # ---------------------------------------------------------------------------
-# Product gallery & variants — unchanged
+# Product gallery & variants
 # ---------------------------------------------------------------------------
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='photos/products/gallery')
+    image   = models.ImageField(upload_to='photos/products/gallery')
 
     def __str__(self):
         return f"Gallery image for {self.product.name}"
 
 
-variation_category_choices = (
-    ('color', 'color'),
-    ('size', 'size'),
-    ('storage', 'storage'),
-    ('ram', 'ram'),
+VARIATION_CATEGORY_CHOICES = (
+    ('color',   'Color'),
+    ('size',    'Size'),
+    ('storage', 'Storage'),
+    ('ram',     'RAM'),
 )
 
 
 class Variation(models.Model):
-    product = models.ForeignKey(Product, related_name='variations', on_delete=models.CASCADE)
-    variation_category = models.CharField(max_length=100, choices=variation_category_choices)
-    variation_value = models.CharField(max_length=100)
-    is_active = models.BooleanField(default=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    product            = models.ForeignKey(Product, related_name='variations', on_delete=models.CASCADE)
+    variation_category = models.CharField(max_length=100, choices=VARIATION_CATEGORY_CHOICES)
+    variation_value    = models.CharField(max_length=100)
+    is_active          = models.BooleanField(default=True)
+    created_date       = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.variation_value
+        return f"{self.get_variation_category_display()}: {self.variation_value}"

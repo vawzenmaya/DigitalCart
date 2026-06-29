@@ -3,15 +3,18 @@
 
 {% block content %}
 <div id="page" class="page-category">
+
+    {# ── Secondary header ─────────────────────────────────────────────────── #}
     <header>
         <div class="header-main mobile-hide">
             <div class="container">
                 <div class="wrapper flexitem">
+
                     <div class="left">
                         <div class="dpt-cat">
                             <div class="dpt-head">
                                 <div class="main-text">All Categories</div>
-                                <div class="mini-text mobile-hide">Total of {{ product_count }} Products</div>
+                                <div class="mini-text mobile-hide">{{ product_count }} Product{{ product_count|pluralize }}</div>
                                 <a href="#" class="dpt-trigger mobile-hide">
                                     <i class="ri-menu-3-line ri-xl"></i>
                                     <i class="ri-close-line ri-xl"></i>
@@ -19,604 +22,346 @@
                             </div>
                             <div class="dpt-menu">
                                 <ul class="second-links">
-
-                                    {% for category in categories %}
-                                    <li class="has-child">
-                                        <a href="#" style="display: flex; align-items: center;">
-                                             <div class="icon-large"><i class="{{ category.icon }}"></i></div>
-                                            {{ category.name }}
+                                    {% for cat in categories %}
+                                    <li class="has-child{% if cat.slug == current_category.slug %} active{% endif %}">
+                                        <a href="{% url 'category' cat.slug %}" style="display:flex;align-items:center;">
+                                            <div class="icon-large"><i class="{{ cat.icon }}"></i></div>
+                                            {{ cat.name }}
                                             <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
-                                            <span style="font-size: 14px; font-weight: 500;">{{ category.product_set.count }}</span>
                                         </a>
-
                                         <div class="mega"
-                                            {% if category.menu_image %}
-                                                style="z-index: 999; background-color: #cccaca; min-height: 400px; background-image: url('{{ category.menu_image.url }}'); background-size: cover; background-position: right center;"
+                                            {% if cat.menu_image %}
+                                                style="z-index:999;background-image:url('{{ cat.menu_image.url }}');background-size:cover;background-position:right center;min-height:400px;"
                                             {% else %}
-                                                style="z-index: 999; background-color: #ffffff; min-height: 400px;"
+                                                style="z-index:999;background-color:#fff;min-height:400px;"
                                             {% endif %}>
-
-                                            <div class="mega-subcats" style="position: relative; z-index: 2; display: flex; flex-direction: row; gap: 2rem; align-items: flex-start;">
-
-                                                {% for sub in category.subcategories.all %}
-                                                    <div class="mega-sub-item" style="min-width: 160px; max-width: 200px; flex-shrink: 0;">
-                                                        <h4 style="margin-bottom: 10px; color: var(--secondary-dark-color); text-transform: uppercase; font-size: 13px; font-weight: 600;">
-                                                            {{ sub.name }}
-                                                        </h4>
-                                                        <ul style="list-style: none; padding: 0; margin: 0;">
-                                                            {% for subsub in sub.subsubcategories.all %}
-                                                                <li style="line-height: 2em;"><a href="#" style="font-size: 13px;">{{ subsub.name }}</a></li>
-                                                            {% empty %}
-                                                                <li><a href="#" style="color: #636161; font-style: italic; font-size: 13px;">More coming soon...</a></li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </div>
+                                            <div class="mega-subcats" style="position:relative;z-index:2;display:flex;flex-direction:row;gap:2rem;align-items:flex-start;">
+                                                {% for sub in cat.subcategories.all %}
+                                                <div class="mega-sub-item" style="min-width:160px;max-width:200px;flex-shrink:0;">
+                                                    <h4 style="margin-bottom:10px;color:var(--secondary-dark-color);text-transform:uppercase;font-size:13px;font-weight:600;">
+                                                        <a href="{% url 'category' cat.slug %}?sub={{ sub.slug }}">{{ sub.name }}</a>
+                                                    </h4>
+                                                    <ul style="list-style:none;padding:0;margin:0;">
+                                                        {% for subsub in sub.subsubcategories.all %}
+                                                        <li style="line-height:2em;">
+                                                            <a href="{% url 'category' cat.slug %}?sub={{ sub.slug }}&subsub={{ subsub.slug }}" style="font-size:13px;">
+                                                                {{ subsub.name }}
+                                                            </a>
+                                                        </li>
+                                                        {% empty %}
+                                                        <li><a href="#" style="color:#999;font-style:italic;font-size:13px;">More coming soon…</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
                                                 {% empty %}
-                                                    <div class="mega-sub-item">
-                                                        <p style="color: #999; font-style: italic;">No subcategories added in Admin yet.</p>
-                                                    </div>
+                                                <div class="mega-sub-item">
+                                                    <p style="color:#999;font-style:italic;">No subcategories yet.</p>
+                                                </div>
                                                 {% endfor %}
-
                                             </div>
                                         </div>
                                     </li>
                                     {% endfor %}
-
                                 </ul>
                             </div>
                         </div>
                     </div>
+
                     <div class="right">
                         <div class="search box">
                             <form action="" class="search" method="get">
+                                {% if active_sub %}<input type="hidden" name="sub" value="{{ active_sub.slug }}">{% endif %}
+                                {% if current_sort != 'newest' %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
                                 <span class="icon-large"><i class="ri-search-line"></i></span>
-                                <input type="search" name="query" placeholder="Search for products.....">
+                                <input type="search" name="query" value="{{ query }}" placeholder="Search in {{ current_category.name }}…">
                                 <button type="submit">Search</button>
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
-        </div>       
+        </div>
     </header>
+
     <main>
         <div class="single-category">
             <div class="container">
                 <div class="wrapper">
                     <div class="column">
                         <div class="holder">
+
+                            {# ── Sidebar ──────────────────────────────────────────────────────── #}
                             <div class="row sidebar">
                                 <div class="filter">
+
+                                    {# Subcategories #}
+                                    {% if current_category.subcategories.all %}
                                     <div class="filter-block">
-                                        <h4>Category</h4>
+                                        <h4>{{ current_category.name }}</h4>
                                         <ul>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="bags">
-                                                <label for="bags">
-                                                    <span class="checked"></span>
-                                                    <span>Bags</span>
-                                                </label>
-                                                <span class="count">10</span>
+                                            <li class="{% if not active_sub %}active{% endif %}">
+                                                <a href="{% url 'category' current_category.slug %}">All</a>
                                             </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="clothings">
-                                                <label for="clothings">
-                                                    <span class="checked"></span>
-                                                    <span>Clothings</span>
-                                                </label>
-                                                <span class="count">10</span>
+                                            {% for sub in current_category.subcategories.all %}
+                                            <li class="{% if active_sub.slug == sub.slug %}active{% endif %}">
+                                                <a href="{% url 'category' current_category.slug %}?sub={{ sub.slug }}">
+                                                    {{ sub.name }}
+                                                </a>
+                                                {% if active_sub.slug == sub.slug and sub.subsubcategories.all %}
+                                                <ul style="padding-left:1rem;margin-top:0.3rem;">
+                                                    {% for subsub in sub.subsubcategories.all %}
+                                                    <li class="{% if active_subsub.slug == subsub.slug %}active{% endif %}">
+                                                        <a href="{% url 'category' current_category.slug %}?sub={{ sub.slug }}&subsub={{ subsub.slug }}" style="font-size:12px;">
+                                                            {{ subsub.name }}
+                                                        </a>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% endif %}
                                             </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="phones">
-                                                <label for="phones">
-                                                    <span class="checked"></span>
-                                                    <span>Phones</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="shoes">
-                                                <label for="shoes">
-                                                    <span class="checked"></span>
-                                                    <span>Shoes</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="jewerly">
-                                                <label for="jewerly">
-                                                    <span class="checked"></span>
-                                                    <span>Jewerly</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="laptops">
-                                                <label for="laptops">
-                                                    <span class="checked"></span>
-                                                    <span>Laptops</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="furniture">
-                                                <label for="furniture">
-                                                    <span class="checked"></span>
-                                                    <span>Furniture</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
+                                            {% endfor %}
                                         </ul>
                                     </div>
-                                    <div class="filter-block">
-                                        <h4>Brands</h4>
-                                        <ul>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="nike">
-                                                <label for="nike">
-                                                    <span class="checked"></span>
-                                                    <span>Nike</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="louis-vuitton">
-                                                <label for="louis-vuitton">
-                                                    <span class="checked"></span>
-                                                    <span>Louis Vuitton</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="hermes">
-                                                <label for="hermes">
-                                                    <span class="checked"></span>
-                                                    <span>Hermes</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="gucci">
-                                                <label for="gucci">
-                                                    <span class="checked"></span>
-                                                    <span>Gucci</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                            <li>
-                                                <input type="checkbox" name="checkbox" id="zara">
-                                                <label for="zara">
-                                                    <span class="checked"></span>
-                                                    <span>Zara</span>
-                                                </label>
-                                                <span class="count">10</span>
-                                            </li>
-                                        </ul>
+                                    {% endif %}
+
+                                    {# Price range #}
+                                    <div class="filter-block pricing">
+                                        <h4>Price (UGX)</h4>
+                                        <form method="get" id="price-filter-form">
+                                            {% if active_sub %}<input type="hidden" name="sub" value="{{ active_sub.slug }}">{% endif %}
+                                            {% if active_subsub %}<input type="hidden" name="subsub" value="{{ active_subsub.slug }}">{% endif %}
+                                            {% if current_sort != 'newest' %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
+                                            {% if query %}<input type="hidden" name="query" value="{{ query }}">{% endif %}
+                                            <div class="byprice">
+                                                <div class="range-track">
+                                                    <input type="range" id="price-range" name="price_max"
+                                                           value="{{ price_max|default:'90000000' }}"
+                                                           min="1000" max="90000000" step="5000"
+                                                           oninput="document.getElementById('price-display').textContent = 'UGX ' + Number(this.value).toLocaleString()">
+                                                </div>
+                                                <div class="price-range">
+                                                    <span class="price-form">UGX 1,000</span>
+                                                    <span class="price-to" id="price-display">UGX {{ price_max|default:'90,000,000' }}</span>
+                                                </div>
+                                                <button type="submit" class="secondary-button" style="margin-top:0.5rem;width:100%;">Apply</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="filter-block products">
-                                        <h4>Color</h4>
-                                        <ul class="bycolor variant flexitem">
-                                            <li>
-                                                <input type="radio" name="color" id="color1">
-                                                <label for="color1" class="circle"></label>
-                                            </li>
-                                            <li>
-                                                <input type="radio" name="color" id="color2">
-                                                <label for="color2" class="circle"></label>
-                                            </li>
-                                            <li>
-                                                <input type="radio" name="color" id="color3">
-                                                <label for="color3" class="circle"></label>
-                                            </li>
-                                            <li>
-                                                <input type="radio" name="color" id="color4">
-                                                <label for="color4" class="circle"></label>
-                                            </li>
-                                            <li>
-                                                <input type="radio" name="color" id="color5">
-                                                <label for="color5" class="circle"></label>
-                                            </li>
-                                        </ul>
-                                    </div>
+
+                                    {# Discount filter — build URLs without active_sub.slug in string concat #}
                                     <div class="filter-block">
                                         <h4>Discount</h4>
                                         <ul>
                                             <li>
-                                                <input type="checkbox" name="checkbox" id="all">
-                                                <label for="all">
-                                                    <span class="checked"></span>
-                                                    <span>Show all</span>
-                                                </label>
+                                                <a href="{% url 'category' current_category.slug %}?sort={{ current_sort }}{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}"
+                                                   class="{% if not discount_filter %}active-filter{% endif %}">Show all</a>
                                             </li>
                                             <li>
-                                                <input type="checkbox" name="checkbox" id="with-discount">
-                                                <label for="with-discount">
-                                                    <span class="checked"></span>
-                                                    <span>With Discount</span>
-                                                </label>
-                                                <span class="count">10</span>
+                                                <a href="{% url 'category' current_category.slug %}?sort={{ current_sort }}&discount=with{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}"
+                                                   class="{% if discount_filter == 'with' %}active-filter{% endif %}">On Sale</a>
                                             </li>
                                             <li>
-                                                <input type="checkbox" name="checkbox" id="without-discount">
-                                                <label for="without-discount">
-                                                    <span class="checked"></span>
-                                                    <span>Without Discount</span>
-                                                </label>
-                                                <span class="count">10</span>
+                                                <a href="{% url 'category' current_category.slug %}?sort={{ current_sort }}&discount=without{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}"
+                                                   class="{% if discount_filter == 'without' %}active-filter{% endif %}">Full Price</a>
                                             </li>
                                         </ul>
                                     </div>
-                                    <div class="filter-block pricing">
-                                        <h4>Price</h4>
-                                        <div class="byprice">
-                                            <div class="range-track">
-                                                <input type="range" value="2000000" min="1000" max="90000000">
-                                            </div>
-                                            <div class="price-range">
-                                                <span class="price-form">UGX 1000</span>
-                                                <span class="price-to">UGX 1000000</span>
-                                            </div>
-                                        </div>
+
+                                    {# Free delivery filter #}
+                                    <div class="filter-block">
+                                        <h4>Delivery</h4>
+                                        <ul>
+                                            <li>
+                                                <a href="{% url 'category' current_category.slug %}?sort={{ current_sort }}&free_delivery=1{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}"
+                                                   {% if request.GET.free_delivery %}class="active-filter"{% endif %}>
+                                                    <i class="ri-truck-line"></i> Free Delivery only
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
+
                                 </div>
                             </div>
+                            {# ── end sidebar ──────────────────────────────────────────────────── #}
+
+                            {# ── Main section ─────────────────────────────────────────────────── #}
                             <div class="section">
                                 <div class="row">
+
+                                    {# Breadcrumb #}
                                     <div class="cat-head">
                                         <div class="breadcrumb">
                                             <ul class="flexitem">
-                                                <li><a href="">Home</a></li>
-                                                <li>Category Name</li>
+                                                <li><a href="{% url 'store' %}">Home</a></li>
+                                                <li>
+                                                    {% if active_sub or active_subsub %}
+                                                        <a href="{% url 'category' current_category.slug %}">{{ current_category.name }}</a>
+                                                    {% else %}
+                                                        {{ current_category.name }}
+                                                    {% endif %}
+                                                </li>
+                                                {% if active_sub %}
+                                                <li>
+                                                    {% if active_subsub %}
+                                                        <a href="{% url 'category' current_category.slug %}?sub={{ active_sub.slug }}">{{ active_sub.name }}</a>
+                                                    {% else %}
+                                                        {{ active_sub.name }}
+                                                    {% endif %}
+                                                </li>
+                                                {% endif %}
+                                                {% if active_subsub %}
+                                                <li>{{ active_subsub.name }}</li>
+                                                {% endif %}
                                             </ul>
                                         </div>
-                                        <!-- <div class="page-title">
-                                            <h1>Category Name</h1>
-                                        </div> -->
                                     </div>
-                                    <!-- <div class="cat-description">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae velit quos nisi sed! Vero asperiores iure delectus est impedit cum architecto. Dicta quisquam amet dolores. Laudantium, rem consequuntur perspiciatis qui et veniam ad consectetur rerum cumque sapiente laborum, distinctio nulla, earum soluta saepe iusto veritatis culpa recusandae perferendis impedit! Aliquid adipisci quis voluptate non eligendi doloribus obcaecati consequuntur eum natus praesentium ab, placeat, saepe laborum doloremque ipsam nobis voluptatibus, autem nulla officiis quibusdam ad. Deleniti?</p>
-                                    </div> -->
+
+                                    {# Sort controls — use {% url %} tag so no raw string concat with potentially-None slugs #}
                                     <div class="cat-navigation flexitem">
-                                        <div class="item-filter dessktop-hide">
+                                        <div class="item-filter desktop-hide">
                                             <a href="#" class="filter-trigger label">
                                                 <i class="ri-menu-2-line ri-2x"></i>
                                                 <span>Filter</span>
                                             </a>
                                         </div>
+
                                         <div class="item-sortir">
                                             <div class="label">
-                                                <span class="modile-hide">Sort by default</span>
-                                                <div class="desktop-hide">Default</div>
+                                                <span class="mobile-hide">Sort: {{ current_sort|title }}</span>
+                                                <div class="desktop-hide">Sort</div>
                                                 <i class="ri-arrow-down-s-line"></i>
                                             </div>
                                             <ul>
-                                                <li>Default</li>
-                                                <li>Price Low to High</li>
-                                                <li>Price High to Low</li>
-                                                <li>Populality</li>
+                                                <li{% if current_sort == 'newest' %} class="active"{% endif %}>
+                                                    <a href="{% url 'category' current_category.slug %}?sort=newest{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}{% if query %}&query={{ query }}{% endif %}">Newest</a>
+                                                </li>
+                                                <li{% if current_sort == 'price_asc' %} class="active"{% endif %}>
+                                                    <a href="{% url 'category' current_category.slug %}?sort=price_asc{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}{% if query %}&query={{ query }}{% endif %}">Price: Low → High</a>
+                                                </li>
+                                                <li{% if current_sort == 'price_desc' %} class="active"{% endif %}>
+                                                    <a href="{% url 'category' current_category.slug %}?sort=price_desc{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}{% if query %}&query={{ query }}{% endif %}">Price: High → Low</a>
+                                                </li>
+                                                <li{% if current_sort == 'popular' %} class="active"{% endif %}>
+                                                    <a href="{% url 'category' current_category.slug %}?sort=popular{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}{% if query %}&query={{ query }}{% endif %}">Popularity</a>
+                                                </li>
+                                                <li{% if current_sort == 'discount' %} class="active"{% endif %}>
+                                                    <a href="{% url 'category' current_category.slug %}?sort=discount{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}{% if query %}&query={{ query }}{% endif %}">Biggest Discount</a>
+                                                </li>
                                             </ul>
                                         </div>
+
                                         <div class="item-perpage mobile-hide">
-                                            <div class="label">Items 10 per page</div>
-                                            <div class="desktop-hide">10</div>
-                                        </div>
-                                        <div class="item-options">
-                                            <div class="label">
-                                                <span class="modile-hide">Show 10 per page</span>
-                                                <div class="desktop-hide">10</div>
-                                                <i class="ri-arrow-down-s-line"></i>
-                                            </div>
-                                            <ul>
-                                                <li>10</li>
-                                                <li>20</li>
-                                                <li>30</li>
-                                                <li>ALL</li>
-                                            </ul>
+                                            <span class="mini-text">{{ product_count }} result{{ product_count|pluralize }}</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="products main flexwrap">
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/ironman.jpg' %}" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">IronMan shoes directly from Stark Industries.</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
-                                        </div>
+
+                                    {# Search hint #}
+                                    {% if query %}
+                                    <div style="padding:0.5rem 0;font-size:0.9rem;color:#666;">
+                                        Showing results for "<strong>{{ query }}</strong>"
+                                        — <a href="{% url 'category' current_category.slug %}">Clear</a>
                                     </div>
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/louis.jpg' %}" alt="">
-                                                </a>
+                                    {% endif %}
+
+                                    {# ── Product grid ─────────────────────────────────────────── #}
+                                    <div class="products main flexwrap">
+                                        {% for product in products %}
+                                        <div class="item">
+                                            <div class="media">
+                                                <div class="thumbnail object-cover">
+                                                    <a href="{% url 'product_detail' product.category.slug product.slug %}">
+                                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+                                                    </a>
+                                                </div>
+                                                <div class="hoverable">
+                                                    <ul>
+                                                        <li class="active">
+                                                            <a href="#" class="social-info">
+                                                                <span><i class="ri-heart-line"></i></span>
+                                                                <p class="hover-text">Wishlist</p>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{% url 'product_detail' product.category.slug product.slug %}" class="social-info">
+                                                                <span><i class="ri-eye-line"></i></span>
+                                                                <p class="hover-text">View more</p>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" class="social-info">
+                                                                <span><i class="ri-shopping-cart-line"></i></span>
+                                                                <p class="hover-text">Add to Cart</p>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                {% if product.discount_percentage %}
+                                                <div class="discount circle flexcenter">
+                                                    <span>{{ product.discount_percentage }}%</span>
+                                                </div>
+                                                {% endif %}
+                                                {% if product.is_low_stock %}
+                                                <div style="position:absolute;top:8px;left:8px;background:#e74c3c;color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;">
+                                                    Only {{ product.stock }} left!
+                                                </div>
+                                                {% endif %}
                                             </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
+                                            <div class="content">
+                                                <div class="rating">
+                                                    <div class="stars"></div>
+                                                    <span class="mini-text">({{ product.review_count }})</span>
+                                                </div>
+                                                <h3><a href="{% url 'product_detail' product.category.slug product.slug %}">{{ product.name }}</a></h3>
+                                                <div class="price">
+                                                    <span class="current">{{ product.price|floatformat:0 }} UGX</span>
+                                                    {% if product.original_price != product.price %}
+                                                    <span class="normal mini-text">{{ product.original_price|floatformat:0 }} UGX</span>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="footer">
+                                                    <ul class="mini-text" style="list-style:none;padding:0;">
+                                                        {% if product.is_free_delivery %}
+                                                        <li style="color:#10ac84;"><i class="ri-truck-line"></i> Free Delivery</li>
+                                                        {% endif %}
+                                                        <li>{{ product.units_sold }} units sold</li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
                                         </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">Louis vuitton yellow brown unisex zipper hoodie premium outfit for men women luxury brand</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
+                                        {% empty %}
+                                        <div style="padding:3rem;text-align:center;width:100%;color:#999;">
+                                            <i class="ri-search-line" style="font-size:3rem;display:block;margin-bottom:1rem;"></i>
+                                            <p>No products found{% if query %} for "{{ query }}"{% endif %}.</p>
+                                            {% if query or active_sub or discount_filter %}
+                                            <a href="{% url 'category' current_category.slug %}" class="secondary-button" style="display:inline-block;margin-top:1rem;">Clear filters</a>
+                                            {% endif %}
                                         </div>
+                                        {% endfor %}
                                     </div>
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/puma.jpg' %}" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">Elevate Your Look with These Trendy Puma Trousers</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
-                                        </div>
+                                    {# ── end product grid ─────────────────────────────────────── #}
+
+                                    {# Pagination #}
+                                    {% if page_obj.has_other_pages %}
+                                    <div class="pagination flexcenter" style="margin:2rem 0;gap:0.5rem;">
+                                        {% if page_obj.has_previous %}
+                                        <a href="{% url 'category' current_category.slug %}?sort={{ current_sort }}&page={{ page_obj.previous_page_number }}{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}{% if query %}&query={{ query }}{% endif %}"
+                                           class="secondary-button">&laquo; Prev</a>
+                                        {% endif %}
+                                        <span style="padding:0 1rem;font-size:0.9rem;color:#666;">
+                                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                                        </span>
+                                        {% if page_obj.has_next %}
+                                        <a href="{% url 'category' current_category.slug %}?sort={{ current_sort }}&page={{ page_obj.next_page_number }}{% if active_sub %}&sub={{ active_sub.slug }}{% endif %}{% if query %}&query={{ query }}{% endif %}"
+                                           class="primary-button">Next &raquo;</a>
+                                        {% endif %}
                                     </div>
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/samsung1.jpg' %}" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">Galaxy S22 Ultra 512GB ROM 16GB RAM</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/spider.jpg' %}" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">Spider hoodies to keep you warm</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/watch1.jpg' %}" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">Devon Watch, Water, Dust and Shock resistant</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/dress.jpg' %}" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">Lauriell Bright Orange Wrap Front Crepe Midi Dress</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="media">
-                                            <div class="thumbnail object-cover">
-                                                <a href="#">
-                                                    <img src="{% static 'assets/products/dress2.jpg' %}" alt="">
-                                                </a>
-                                            </div>
-                                            <div class="hoverable">
-                                                <ul>
-                                                    <li class="active"><a href="#" class="social-info">
-                                                        <span><i class="ri-heart-line"></i></span>
-                                                        <p class="hover-text">Wishlist</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-eye-line"></i></span>
-                                                        <p class="hover-text">View more</p>
-                                                    </a></li>
-                                                    <li><a href="#" class="social-info">
-                                                        <span><i class="ri-shopping-cart-line"></i></span>
-                                                        <p class="hover-text">Add to Cart</p>
-                                                    </a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="discount circle flexcenter"><span>50%</span></div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="rating">
-                                                <div class="stars"></div>
-                                                <span class="mini-text">(17,098)</span>
-                                            </div>
-                                            <h3><a href="#">HomRain Women's Elegant Floral Lace Dress Off The Shoulder High Low Hem Dresses for Wedding for Cocktail for Party</a></h3>
-                                            <div class="price">
-                                                <span class="current">2,500,000UGX</span>
-                                                <span class="normal mini-text">5000,000UGX</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="load-more flexcenter">
-                                    <a href="" class="secondary-button">Load more</a>
+                                    {% endif %}
+
                                 </div>
                             </div>
+                            {# ── end main section ─────────────────────────────────────────────── #}
+
                         </div>
                     </div>
                 </div>
