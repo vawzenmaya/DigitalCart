@@ -22,11 +22,11 @@
 
                                     {% for category in categories %}
                                     <li class="has-child">
-                                        <a href="#" style="display: flex; align-items: center;">
+                                        <a href="{% url 'category' category.slug %}" style="display: flex; align-items: center;">
                                              <div class="icon-large"><i class="{{ category.icon }}"></i></div>
                                             {{ category.name }}
                                             <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
-                                            <span style="font-size: 14px; font-weight: 500;">{{ category.product_set.count }}</span>
+                                            <span style="font-size: 14px; font-weight: 500;">{{ category.get_product_count }}</span>
                                         </a>
 
                                         <div class="mega"

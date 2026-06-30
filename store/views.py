@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, ExpressionWrapper, F, BooleanField
 from .models import Product, Category, SubCategory, SubSubCategory, TrendingSection
 
 
@@ -42,7 +42,6 @@ def _build_trending_context():
 def store(request):
     categories = Category.objects.prefetch_related('subcategories__subsubcategories').all()
 
-    # Search
     query = request.GET.get('query', '').strip()
     products = Product.objects.filter(is_available=True)
     if query:
@@ -54,7 +53,6 @@ def store(request):
     products = products.order_by('-created_date')
     product_count = products.count()
 
-    # Pagination — 20 per page on store
     paginator = Paginator(products, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -103,13 +101,12 @@ def category(request, category_slug):
             Q(name__icontains=query) | Q(description__icontains=query)
         )
 
-    # --- Discount filter ---
+    # --- Discount filter (pure ORM — no raw SQL) ---
     discount_filter = request.GET.get('discount', '')
     if discount_filter == 'with':
-        # Products where price < original_price
-        products = products.extra(where=['price < original_price'])
+        products = products.filter(price__lt=F('original_price'))
     elif discount_filter == 'without':
-        products = products.extra(where=['price >= original_price'])
+        products = products.filter(price__gte=F('original_price'))
 
     # --- Free delivery filter ---
     if request.GET.get('free_delivery'):
@@ -133,7 +130,7 @@ def category(request, category_slug):
         'price_asc':  'price',
         'price_desc': '-price',
         'popular':    '-units_sold',
-        'discount':   '-original_price',   # proxy: high original = big discount likely
+        'discount':   '-original_price',
     }
     sort = request.GET.get('sort', 'newest')
     products = products.order_by(SORT_MAP.get(sort, '-created_date'))
@@ -176,6 +173,9 @@ def product_detail(request, category_slug, product_slug):
         slug=product_slug,
     )
 
+    # These are needed by the shared dpt-cat header partial
+    categories = Category.objects.prefetch_related('subcategories__subsubcategories').all()
+
     related_products = (
         Product.objects
         .filter(category=product.category, is_available=True)
@@ -192,5 +192,7 @@ def product_detail(request, category_slug, product_slug):
         'product': product,
         'related_products': related_products,
         'variations': variations,
+        'categories': categories,
+        'product_count': Product.objects.filter(is_available=True).count(),
     }
     return render(request, 'store/product_detail.html', context)

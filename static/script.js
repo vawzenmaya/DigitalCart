@@ -44,7 +44,6 @@
         toggle.addEventListener('click', function (e) {
             e.preventDefault();
             const parent = this.closest('.has-child');
-            // Collapse all siblings first
             document.querySelectorAll('.has-child').forEach((el) => {
                 if (el !== parent) el.classList.remove('expand');
             });
@@ -93,7 +92,7 @@
 // 6. Department menu toggle (category / product pages)
 // =============================================================
 (function initDptMenu() {
-    const page      = document.getElementById('page');   // #page — what the CSS targets
+    const page      = document.getElementById('page');
     const dptButton = document.querySelector('.dpt-cat .dpt-trigger');
     if (!page || !dptButton) return;
 
@@ -102,7 +101,6 @@
         page.classList.toggle('showdpt');
     });
 
-    // Close when clicking anywhere outside the dpt-cat panel
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.dpt-cat') && page.classList.contains('showdpt')) {
             page.classList.remove('showdpt');
@@ -197,9 +195,9 @@
     function pad(n) { return String(n).padStart(2, '0'); }
 
     function render(s) {
-        const d = Math.floor(s / 86400);
-        const h = Math.floor((s % 86400) / 3600);
-        const m = Math.floor((s % 3600) / 60);
+        const d   = Math.floor(s / 86400);
+        const h   = Math.floor((s % 86400) / 3600);
+        const m   = Math.floor((s % 3600) / 60);
         const sec = s % 60;
         if (dEl) dEl.querySelector('.cd-num').textContent = pad(d);
         if (hEl) hEl.querySelector('.cd-num').textContent = pad(h);
@@ -264,9 +262,189 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
 (function initSortDropdown() {
     document.querySelectorAll('.item-sortir ul li a').forEach((link) => {
         link.addEventListener('click', function (e) {
-            // Only intercept if it already has an href (the template sets them)
             if (this.getAttribute('href') && this.getAttribute('href') !== '#') return;
             e.preventDefault();
         });
     });
+})();
+
+
+// =============================================================
+// 13. Quantity +/- controls (product detail & cart)
+// =============================================================
+(function initQtyControls() {
+    document.querySelectorAll('.qty-control').forEach((ctrl) => {
+        const input   = ctrl.querySelector('input[type="number"], input[type="text"]');
+        const minusBtn = ctrl.querySelector('.minus');
+        const plusBtn  = ctrl.querySelector('.plus');
+        if (!input) return;
+
+        const getMax = () => parseInt(input.max || '9999', 10);
+        const getMin = () => parseInt(input.min || '1', 10);
+
+        minusBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const val = parseInt(input.value, 10) || 1;
+            if (val > getMin()) {
+                input.value = val - 1;
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+
+        plusBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const val = parseInt(input.value, 10) || 1;
+            if (val < getMax()) {
+                input.value = val + 1;
+                input.dispatchEvent(new Event('change'));
+            }
+        });
+
+        // Guard against manual out-of-range input
+        input.addEventListener('change', () => {
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || val < getMin()) val = getMin();
+            if (val > getMax()) val = getMax();
+            input.value = val;
+        });
+    });
+})();
+
+
+// =============================================================
+// 14. Toast notification system
+// =============================================================
+(function initToasts() {
+    window.showToast = function (message, type = 'info', duration = 3000) {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.cssText =
+                'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;' +
+                'display:flex;flex-direction:column;gap:0.5rem;';
+            document.body.appendChild(container);
+        }
+
+        const colors = {
+            success: '#10ac84',
+            error:   '#e74c3c',
+            info:    '#794afa',
+            warning: '#f39c12',
+        };
+
+        const toast = document.createElement('div');
+        toast.style.cssText =
+            `background:${colors[type] || colors.info};color:#fff;` +
+            'padding:0.75rem 1.25rem;border-radius:8px;font-size:13px;' +
+            'box-shadow:0 4px 16px rgba(0,0,0,0.2);max-width:320px;' +
+            'opacity:0;transform:translateX(20px);' +
+            'transition:opacity 0.25s,transform 0.25s;';
+        toast.textContent = message;
+        container.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(0)';
+        });
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(20px)';
+            setTimeout(() => toast.remove(), 300);
+        }, duration);
+    };
+})();
+
+
+// =============================================================
+// 15. "Add to Cart" / Wishlist hover-button feedback
+// =============================================================
+(function initCartWishlistButtons() {
+    // Wishlist buttons
+    document.querySelectorAll('.social-info').forEach((btn) => {
+        const icon = btn.querySelector('i');
+        if (!icon) return;
+
+        if (icon.classList.contains('ri-heart-line')) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                icon.classList.replace('ri-heart-line', 'ri-heart-fill');
+                btn.closest('li')?.classList.add('active');
+                window.showToast?.('Added to Wishlist', 'success');
+            });
+        }
+
+        if (icon.classList.contains('ri-shopping-cart-line')) {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.showToast?.('Added to Cart', 'success');
+            });
+        }
+    });
+
+    // Detail page "Add to Cart" button
+    const addToCartBtn = document.querySelector('.button-cart button:not([disabled])');
+    addToCartBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.showToast?.('Added to Cart!', 'success');
+    });
+})();
+
+
+// =============================================================
+// 16. Share button — Web Share API with clipboard fallback
+// =============================================================
+(function initShareButton() {
+    const shareLinks = document.querySelectorAll('a[data-share], a[onclick*="clipboard"]');
+    shareLinks.forEach((btn) => {
+        // Strip the inline onclick and replace with proper handler
+        btn.removeAttribute('onclick');
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const url   = window.location.href;
+            const title = document.title;
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title, url });
+                } catch (_) { /* user cancelled */ }
+            } else {
+                try {
+                    await navigator.clipboard.writeText(url);
+                    window.showToast?.('Link copied to clipboard!', 'info');
+                } catch (_) {
+                    window.showToast?.('Copy this link: ' + url, 'info', 5000);
+                }
+            }
+        });
+    });
+})();
+
+
+// =============================================================
+// 17. Back-to-top button
+// =============================================================
+(function initBackToTop() {
+    const btn = document.createElement('button');
+    btn.id = 'back-to-top';
+    btn.innerHTML = '<i class="ri-arrow-up-line"></i>';
+    btn.setAttribute('aria-label', 'Back to top');
+    btn.style.cssText =
+        'position:fixed;bottom:5rem;right:1.5rem;z-index:999;' +
+        'width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;' +
+        'background:var(--secondary-dark-color);color:#fff;font-size:1.2rem;' +
+        'display:flex;align-items:center;justify-content:center;' +
+        'opacity:0;transform:translateY(10px);' +
+        'transition:opacity 0.3s,transform 0.3s;box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+    document.body.appendChild(btn);
+
+    const toggle = () => {
+        const visible = window.scrollY > 400;
+        btn.style.opacity  = visible ? '1' : '0';
+        btn.style.transform = visible ? 'translateY(0)' : 'translateY(10px)';
+        btn.style.pointerEvents = visible ? 'auto' : 'none';
+    };
+
+    window.addEventListener('scroll', toggle, { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 })();
