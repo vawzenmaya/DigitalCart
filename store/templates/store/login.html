@@ -1,0 +1,63 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}Sign In — DigitalCart{% endblock %}
+
+{% block content %}
+<div id="page" class="page-auth">
+    <main>
+        <div class="container" style="max-width:440px;padding:4rem 1rem;">
+            <div class="wrapper">
+
+                <div class="page-title" style="text-align:center;margin-bottom:2rem;">
+                    <h1>Sign In</h1>
+                    <p class="mini-text">Log in to view your cart and place orders</p>
+                </div>
+
+                {% if messages %}
+                <div style="margin-bottom:1.5rem;">
+                    {% for message in messages %}
+                    <div style="padding:0.75rem 1rem;border-radius:6px;font-size:13px;margin-bottom:0.5rem;
+                        background:{% if message.tags == 'error' %}#fdecea{% else %}#eafaf1{% endif %};
+                        color:{% if message.tags == 'error' %}#c0392b{% else %}#10ac84{% endif %};">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if form.non_field_errors %}
+                <div style="padding:0.75rem 1rem;border-radius:6px;font-size:13px;margin-bottom:1rem;background:#fdecea;color:#c0392b;">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <form method="post" class="flexcol" style="gap:1.2rem;">
+                    {% csrf_token %}
+                    {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
+
+                    <div>
+                        <label for="id_username" style="display:block;font-size:13px;font-weight:600;margin-bottom:0.4rem;">Username</label>
+                        <input type="text" name="username" id="id_username" required autofocus
+                               style="width:100%;padding:0.8em 1em;border:1px solid var(--border-color);border-radius:6px;font-size:0.95em;">
+                    </div>
+
+                    <div>
+                        <label for="id_password" style="display:block;font-size:13px;font-weight:600;margin-bottom:0.4rem;">Password</label>
+                        <input type="password" name="password" id="id_password" required
+                               style="width:100%;padding:0.8em 1em;border:1px solid var(--border-color);border-radius:6px;font-size:0.95em;">
+                    </div>
+
+                    <button type="submit" class="primary-button" style="width:100%;text-align:center;">Sign In</button>
+                </form>
+
+                <p style="text-align:center;margin-top:1.5rem;font-size:13px;color:var(--light-text-color);">
+                    Don't have an account?
+                    <a href="{% url 'register' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" style="color:var(--primary-color);font-weight:600;">Create one</a>
+                </p>
+
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
