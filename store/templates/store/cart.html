@@ -107,217 +107,84 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% if not cart_items %}
                                             <tr>
-                                                <td class="flexitem">
-                                                    <div class="thumbnail object-cover">
-                                                        <a href=""><img src="{% static 'assets/products/puma.jpg' %}" alt=""></a>
-                                                    </div>
-                                                    <div class="content">
-                                                        <strong><a href="">Trendy Puma Trousers</a></strong>
-                                                        <p>Color: Black</p>
-                                                    </div>
+                                                <td colspan="5" style="text-align:center; padding: 3rem;">
+                                                    <h3>Your cart is empty!</h3>
+                                                    <p style="margin-top: 1rem;"><a href="{% url 'store' %}" class="primary-button">Continue Shopping</a></p>
                                                 </td>
-                                                <td>80000UGX</td>
-                                                <td>
-                                                    <div class="qty-control flexitem">
-                                                        <button class="minus">-</button>
-                                                        <input type="text" value="2" min="1">
-                                                        <button class="plus">+</button>
-                                                    </div>
-                                                </td>
-                                                <td>160000UGX</td>
-                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
                                             </tr>
-                                            <tr>
-                                                <td class="flexitem">
-                                                    <div class="thumbnail object-cover">
-                                                        <a href=""><img src="{% static 'assets/products/samsung1.jpg' %}" alt=""></a>
-                                                    </div>
-                                                    <div class="content">
-                                                        <strong><a href="">Galaxy S22 Ultra 512GB ROM 16GB RAMs</a></strong>
-                                                        <p>Color: Black</p>
-                                                    </div>
-                                                </td>
-                                                <td>2,500,000UGX</td>
-                                                <td>
-                                                    <div class="qty-control flexitem">
-                                                        <button class="minus">-</button>
-                                                        <input type="text" value="1" min="1">
-                                                        <button class="plus">+</button>
-                                                    </div>
-                                                </td>
-                                                <td>2,500,000UGX</td>
-                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="flexitem">
-                                                    <div class="thumbnail object-cover">
-                                                        <a href=""><img src="{% static 'assets/products/spider.jpg' %}" alt=""></a>
-                                                    </div>
-                                                    <div class="content">
-                                                        <strong><a href="">Spider hoodies to keep you warm</a></strong>
-                                                        <p>Color: Black</p>
-                                                    </div>
-                                                </td>
-                                                <td>80000UGX</td>
-                                                <td>
-                                                    <div class="qty-control flexitem">
-                                                        <button class="minus">-</button>
-                                                        <input type="text" value="1" min="1">
-                                                        <button class="plus">+</button>
-                                                    </div>
-                                                </td>
-                                                <td>80000UGX</td>
-                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="flexitem">
-                                                    <div class="thumbnail object-cover">
-                                                        <a href=""><img src="{% static 'assets/products/watch1.jpg' %}" alt=""></a>
-                                                    </div>
-                                                    <div class="content">
-                                                        <strong><a href="">Devon Watch, Water, Dust and Shock resistant</a></strong>
-                                                        <p>Color: Black</p>
-                                                    </div>
-                                                </td>
-                                                <td>180000UGX</td>
-                                                <td>
-                                                    <div class="qty-control flexitem">
-                                                        <button class="minus">-</button>
-                                                        <input type="text" value="1" min="1">
-                                                        <button class="plus">+</button>
-                                                    </div>
-                                                </td>
-                                                <td>18000UGX</td>
-                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="flexitem">
-                                                    <div class="thumbnail object-cover">
-                                                        <a href=""><img src="{% static 'assets/products/dress.jpg' %}" alt=""></a>
-                                                    </div>
-                                                    <div class="content">
-                                                        <strong><a href="">Lauriell Bright Orange Wrap Front Crepe Midi Dress</a></strong>
-                                                        <p>Color: Black</p>
-                                                    </div>
-                                                </td>
-                                                <td>80000UGX</td>
-                                                <td>
-                                                    <div class="qty-control flexitem">
-                                                        <button class="minus">-</button>
-                                                        <input type="text" value="2" min="1">
-                                                        <button class="plus">+</button>
-                                                    </div>
-                                                </td>
-                                                <td>160000UGX</td>
-                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="flexitem">
-                                                    <div class="thumbnail object-cover">
-                                                        <a href=""><img src="{% static 'assets/products/dress2.jpg' %}" alt=""></a>
-                                                    </div>
-                                                    <div class="content">
-                                                        <strong><a href="">HomRain Women's Elegant Floral Lace Dress Off The Shoulder High Low Hem Dresses for Wedding for Cocktail for Party</a></strong>
-                                                        <p>Color: Black</p>
-                                                    </div>
-                                                </td>
-                                                <td>3500UGX</td>
-                                                <td>
-                                                    <div class="qty-control flexitem">
-                                                        <button class="minus">-</button>
-                                                        <input type="text" value="1" min="1">
-                                                        <button class="plus">+</button>
-                                                    </div>
-                                                </td>
-                                                <td>35000UGX</td>
-                                                <td><a href="" class="item-remove"><i class="ri-close-line"></i></a></td>
-                                            </tr>
+                                            {% else %}
+                                                {% for item in cart_items %}
+                                                <tr>
+                                                    <td class="flexitem">
+                                                        <div class="thumbnail object-cover">
+                                                            <a href="{{ item.product.get_absolute_url }}"><img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"></a>
+                                                        </div>
+                                                        <div class="content">
+                                                            <strong><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a></strong>
+                                                            {% if item.variations.all %}
+                                                                {% for var in item.variations.all %}
+                                                                    <p style="text-transform: capitalize; font-size: 13px; color: #7c899a;">{{ var.variation_category }}: {{ var.variation_value }}</p>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ item.product.price|floatformat:0 }} UGX</td>
+                                                    <td>
+                                                        <div class="qty-control flexitem" style="border: none; margin: 0;">
+                                                            <!-- Decrement Button -->
+                                                            <a href="{% url 'remove_cart_item' item.id %}" class="minus circle" style="display:flex;align-items:center;justify-content:center;text-decoration:none;width:32px;height:32px;background:#f2f3f5;color:black;">-</a>
+                                                            
+                                                            <input type="text" value="{{ item.quantity }}" readonly style="width:32px;text-align:center;border:none;background:transparent;">
+                                                            
+                                                            <!-- Increment Button (needs hidden inputs for variations to match backend logic) -->
+                                                            <form action="{% url 'add_cart' item.product.id %}" method="POST" style="margin:0;padding:0;display:flex;">
+                                                                {% csrf_token %}
+                                                                {% for var in item.variations.all %}
+                                                                    <input type="hidden" name="{{ var.variation_category }}" value="{{ var.variation_value }}">
+                                                                {% endfor %}
+                                                                <button type="submit" class="plus circle" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:none;cursor:pointer;background:#f2f3f5;color:black;">+</button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ item.sub_total|floatformat:0 }} UGX</td>
+                                                    <td><a href="{% url 'delete_cart_item' item.id %}" class="item-remove" onclick="return confirm('Are you sure you want to remove this item?');"><i class="ri-close-line"></i></a></td>
+                                                </tr>
+                                                {% endfor %}
+                                            {% endif %}
                                         </tbody>
                                     </table>
                                 </div>
                             </form>
+                            
+                            <!-- Cart Summary Panel -->
                             <div class="cart-summary styled">
                                 <div class="item">
                                     <div class="coupon">
                                         <input type="text" placeholder="Enter Coupon">
                                         <button>Apply</button>
                                     </div>
-                                    <div class="shipping-rate collapse">
-                                        <div class="has-child expand">
-                                            <a href="" class="icon-small">Shipping and Tax</a>
-                                            <div class="content">
-                                                <div class="district">
-                                                    <form action="">
-                                                        <label for="district">District</label>
-                                                        <select name="district" id="district">
-                                                            <option value=""></option>
-                                                            <option value="1" selected = "selected" >Kampala</option>
-                                                            <option value="2">Wakiso</option>
-                                                            <option value="3">Jinja</option>
-                                                            <option value="4">Entebbe</option>
-                                                            <option value="5">Mukono</option>
-                                                        </select>
-                                                    </form>
-                                                </div>
-                                                <div class="parish">
-                                                    <form action="">
-                                                        <label for="parish">Parish</label>
-                                                        <select name="parish" id="parish">
-                                                            <option value="">Select Parish</option>
-                                                            <option value="1" selected = "selected" >Salama</option>
-                                                            <option value="2">Munyonyo</option>
-                                                            <option value="3">Masajja</option>
-                                                            <option value="4">Busabala</option>
-                                                            <option value="5">Makindye</option>
-                                                        </select>
-                                                    </form>
-                                                </div>
-                                                <div class="postal-code">
-                                                    <form action="">
-                                                        <label for="postal">Zip/Postal Code</label>
-                                                        <input type="number" name="postal" id="postal">
-                                                    </form>
-                                                </div>
-                                                <div class="rate-options variant">
-                                                    <form action="">
-                                                        <p>
-                                                            <span>Flat: 10000000UGX</span>
-                                                            <input type="radio" name="rate-option" id="flat" checked>
-                                                            <label for="flat" class="circle"></label>
-                                                        </p>
-                                                        <p>
-                                                            <span>Best: 00UGX</span>
-                                                            <input type="radio" name="rate-option" id="best">
-                                                            <label for="best" class="circle"></label>
-                                                        </p>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="cart-total">
+                                    <div class="cart-total" style="margin-top: 2rem;">
                                         <table>
                                             <tbody>
                                                 <tr>
                                                     <th>Subtotal</th>
-                                                    <td>6700000UGX</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Discount</th>
-                                                    <td>10000UGX</td>
+                                                    <td>{{ total|floatformat:0 }} UGX</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Shipping <span class="mini-text">(Flat)</span></th>
-                                                    <td>1000000UGX</td>
+                                                    <td>{{ shipping|floatformat:0 }} UGX</td>
                                                 </tr>
                                                 <tr class="grand-total">
                                                     <th>TOTAL</th>
-                                                    <td><strong>12300000UGX</strong></td>
+                                                    <td><strong>{{ grand_total|floatformat:0 }} UGX</strong></td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <a href="" class="secondary-button">Checkout</a>
+                                        {% if cart_items %}
+                                            <a href="#" class="secondary-button">Proceed to Checkout</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

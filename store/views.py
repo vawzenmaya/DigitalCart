@@ -7,6 +7,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import CustomUserCreationForm
+from django.contrib.auth.decorators import login_required
+from .models import Cart, CartItem, Variation
 
 
 # ---------------------------------------------------------------------------
@@ -242,3 +244,105 @@ def logout_view(request):
     logout(request)
     messages.info(request, "You have been successfully logged out.")
     return redirect('store')
+
+# ---------------------------------------------------------------------------
+# Cart Views
+# ---------------------------------------------------------------------------
+
+@login_required(login_url='login')
+def cart(request):
+    cart_obj, created = Cart.objects.get_or_create(user=request.user)
+    cart_items = CartItem.objects.filter(cart=cart_obj, is_active=True).order_by('id')
+    
+    total = sum(item.product.price * item.quantity for item in cart_items)
+    quantity = sum(item.quantity for item in cart_items)
+    
+    # Flat shipping fee placeholder as per your HTML
+    shipping = 10000 
+    grand_total = total + shipping if total > 0 else 0
+
+    context = {
+        'cart_items': cart_items,
+        'total': total,
+        'quantity': quantity,
+        'shipping': shipping,
+        'grand_total': grand_total,
+    }
+    return render(request, 'store/cart.html', context)
+
+@login_required(login_url='login')
+def add_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart_obj, _ = Cart.objects.get_or_create(user=request.user)
+    product_variations = []
+
+    if request.method == 'POST':
+        # Grab quantity from the form, default to 1
+        qty = int(request.POST.get('quantity', 1))
+        
+        # Loop through POST data to find matching variations
+        for item in request.POST:
+            key = item
+            value = request.POST[key]
+            try:
+                variation = Variation.objects.get(
+                    product=product, 
+                    variation_category__iexact=key, 
+                    variation_value__iexact=value
+                )
+                product_variations.append(variation)
+            except Variation.DoesNotExist:
+                pass
+    else:
+        qty = 1
+
+    # Check if this exact product with these exact variations is already in the cart
+    cart_items = CartItem.objects.filter(product=product, cart=cart_obj)
+    
+    if cart_items.exists():
+        existing_var_lists = []
+        id_list = []
+        for item in cart_items:
+            existing_variations = list(item.variations.all())
+            existing_var_lists.append(existing_variations)
+            id_list.append(item.id)
+
+        if product_variations in existing_var_lists:
+            # Increase quantity of the existing exact match
+            index = existing_var_lists.index(product_variations)
+            item_id = id_list[index]
+            item = CartItem.objects.get(product=product, id=item_id)
+            item.quantity += qty
+            item.save()
+        else:
+            # Create a new cart item for the new variation
+            item = CartItem.objects.create(product=product, quantity=qty, cart=cart_obj)
+            if product_variations:
+                item.variations.add(*product_variations)
+            item.save()
+    else:
+        # Product not in cart at all, create new
+        cart_item = CartItem.objects.create(product=product, quantity=qty, cart=cart_obj)
+        if product_variations:
+            cart_item.variations.add(*product_variations)
+        cart_item.save()
+
+    return redirect('cart')
+
+@login_required(login_url='login')
+def remove_cart_item(request, item_id):
+    """Decreases quantity by 1. Removes item if quantity reaches 0."""
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()
+    return redirect('cart')
+
+@login_required(login_url='login')
+def delete_cart_item(request, item_id):
+    """Completely deletes the item regardless of quantity."""
+    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    cart_item.delete()
+    return redirect('cart')

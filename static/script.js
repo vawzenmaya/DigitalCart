@@ -283,6 +283,9 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
         const getMin = () => parseInt(input.min || '1', 10);
 
         minusBtn?.addEventListener('click', (e) => {
+            // Allow links to work on the cart page
+            if (minusBtn.tagName === 'A' || minusBtn.type === 'submit') return;
+            
             e.preventDefault();
             const val = parseInt(input.value, 10) || 1;
             if (val > getMin()) {
@@ -292,6 +295,9 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
         });
 
         plusBtn?.addEventListener('click', (e) => {
+            // Allow form submissions to work on the cart page
+            if (plusBtn.tagName === 'A' || plusBtn.type === 'submit') return;
+            
             e.preventDefault();
             const val = parseInt(input.value, 10) || 1;
             if (val < getMax()) {
@@ -383,13 +389,12 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
         }
     });
 
-    // Detail page "Add to Cart" button
-    const addToCartBtn = document.querySelector('.button-cart button:not([disabled])');
-    addToCartBtn?.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.showToast?.('Added to Cart!', 'success');
+    // Detail page "Add to Cart" form submission
+    const cartForm = document.querySelector('.single-product form');
+    cartForm?.addEventListener('submit', () => {
+        window.showToast?.('Adding to Cart...', 'success');
     });
-})();
+});
 
 
 // =============================================================

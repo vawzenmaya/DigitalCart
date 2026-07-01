@@ -183,57 +183,64 @@
                                                 {% endif %}
                                             </div>
 
-                                            {# ── DB-driven variations ──────────────────────────── #}
-                                            {% if variations %}
-                                            <div class="variations">
-                                                {% for var_type, var_list in variations.items %}
-                                                <div class="{{ var_type }}s" style="margin-bottom:1rem;">
-                                                    <p style="text-transform:capitalize;font-weight:600;margin-bottom:0.4rem;">{{ var_type }}</p>
-                                                    <div class="variant">
-                                                        {% for v in var_list %}
-                                                        <p>
-                                                            <input type="radio" name="{{ var_type }}" id="var-{{ var_type }}-{{ forloop.counter }}" value="{{ v.variation_value }}">
-                                                            <label for="var-{{ var_type }}-{{ forloop.counter }}" class="circle">
-                                                                <span>{{ v.variation_value }}</span>
-                                                            </label>
-                                                        </p>
-                                                        {% endfor %}
+                                            {# ── DB-driven variations & Cart Form ──────────────────────────── #}
+                                            <form action="{% url 'add_cart' product.id %}" method="POST">
+                                                {% csrf_token %}
+                                                
+                                                {% if variations %}
+                                                <div class="variations">
+                                                    {% for var_type, var_list in variations.items %}
+                                                    <div class="{{ var_type }}s" style="margin-bottom:1rem;">
+                                                        <p style="text-transform:capitalize;font-weight:600;margin-bottom:0.4rem;">{{ var_type }}</p>
+                                                        <div class="variant">
+                                                            {% for v in var_list %}
+                                                            <p>
+                                                                <!-- Added 'required' so users must select an option -->
+                                                                <input type="radio" name="{{ var_type }}" id="var-{{ var_type }}-{{ forloop.counter }}" value="{{ v.variation_value }}" required>
+                                                                <label for="var-{{ var_type }}-{{ forloop.counter }}" class="circle">
+                                                                    <span>{{ v.variation_value }}</span>
+                                                                </label>
+                                                            </p>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+
+                                                <div class="actions">
+                                                    <div class="qty-control flexitem">
+                                                        <button class="minus circle" type="button">-</button>
+                                                        <!-- Added name="quantity" so the backend can read the value -->
+                                                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" id="qty-input" style="width:48px;text-align:center;">
+                                                        <button class="plus circle" type="button">+</button>
+                                                    </div>
+                                                    <div class="button-cart">
+                                                        <!-- Changed to type="submit" -->
+                                                        <button type="submit" class="primary-button" {% if not product.is_in_stock %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
+                                                            {% if product.is_in_stock %}Add to Cart{% else %}Out of Stock{% endif %}
+                                                        </button>
+                                                    </div>
+                                                    <div class="wish-share">
+                                                        <ul class="flexitem second-links">
+                                                            <li>
+                                                                <a href="#">
+                                                                    <span class="icon-large"><i class="ri-heart-line"></i></span>
+                                                                    <span>Wishlist</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" data-share>
+                                                                    <span class="icon-large"><i class="ri-share-line"></i></span>
+                                                                    <span>Share</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </div>
-                                                {% endfor %}
-                                            </div>
-                                            {% endif %}
-                                            {# ── end variations ────────────────────────────────── #}
-
-                                            <div class="actions">
-                                                <div class="qty-control flexitem">
-                                                    <button class="minus circle" type="button">-</button>
-                                                    <input type="number" value="1" min="1" max="{{ product.stock }}" id="qty-input" style="width:48px;text-align:center;">
-                                                    <button class="plus circle" type="button">+</button>
-                                                </div>
-                                                <div class="button-cart">
-                                                    <button class="primary-button" {% if not product.is_in_stock %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
-                                                        {% if product.is_in_stock %}Add to Cart{% else %}Out of Stock{% endif %}
-                                                    </button>
-                                                </div>
-                                                <div class="wish-share">
-                                                    <ul class="flexitem second-links">
-                                                        <li>
-                                                            <a href="#">
-                                                                <span class="icon-large"><i class="ri-heart-line"></i></span>
-                                                                <span>Wishlist</span>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" data-share>
-                                                                <span class="icon-large"><i class="ri-share-line"></i></span>
-                                                                <span>Share</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-
+                                            </form>
+                                            {# ── end variations & Cart Form ────────────────────────────────── #}
+                                            
                                             {# ── Collapsible info panels ──────────────────────── #}
                                             <div class="description collapse">
                                                 <ul>
