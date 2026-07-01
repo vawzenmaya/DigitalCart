@@ -2,6 +2,11 @@ from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q, ExpressionWrapper, F, BooleanField
 from .models import Product, Category, SubCategory, SubSubCategory, TrendingSection
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .forms import CustomUserCreationForm
 
 
 # ---------------------------------------------------------------------------
@@ -196,3 +201,44 @@ def product_detail(request, category_slug, product_slug):
         'product_count': Product.objects.filter(is_available=True).count(),
     }
     return render(request, 'store/product_detail.html', context)
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('store')
+        
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f"Welcome to DigitalCart, {user.username}! Your account has been created.")
+            next_url = request.GET.get('next', 'store')
+            return redirect(next_url)
+    else:
+        form = CustomUserCreationForm()
+        
+    return render(request, 'store/register.html', {'form': form})
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('store')
+        
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, f"Welcome back, {user.username}!")
+            next_url = request.GET.get('next', 'store')
+            return redirect(next_url)
+        else:
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+        
+    return render(request, 'store/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, "You have been successfully logged out.")
+    return redirect('store')
