@@ -6,54 +6,54 @@
 {% block content %}
 <div id="page" class="page-auth">
     <main>
-        <div class="container" style="max-width:440px;padding:4rem 1rem;">
+        <div class="container">
             <div class="wrapper">
 
-                <div class="page-title" style="text-align:center;margin-bottom:2rem;">
+                <div class="page-title">
                     <h1>Create Account</h1>
                     <p class="mini-text">Sign up to start shopping on DigitalCart</p>
                 </div>
 
                 {% if form.non_field_errors %}
-                <div style="padding:0.75rem 1rem;border-radius:6px;font-size:13px;margin-bottom:1rem;background:#fdecea;color:#c0392b;">
+                <div class="auth-alert error">
                     {{ form.non_field_errors }}
                 </div>
                 {% endif %}
 
-                <form method="post" class="flexcol" style="gap:1.2rem;">
+                <form method="post" class="flexcol auth-form">
                     {% csrf_token %}
                     {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
 
-                    <div>
-                        <label for="id_username" style="display:block;font-size:13px;font-weight:600;margin-bottom:0.4rem;">Username</label>
+                    <div class="auth-field">
+                        <label for="id_username">Username</label>
                         {{ form.username }}
                         {% if form.username.errors %}
-                        <p style="color:#c0392b;font-size:12px;margin-top:0.3rem;">{{ form.username.errors|striptags }}</p>
+                        <p class="field-error">{{ form.username.errors|striptags }}</p>
                         {% endif %}
                     </div>
 
-                    <div>
-                        <label for="id_password1" style="display:block;font-size:13px;font-weight:600;margin-bottom:0.4rem;">Password</label>
+                    <div class="auth-field">
+                        <label for="id_password1">Password</label>
                         {{ form.password1 }}
                         {% if form.password1.errors %}
-                        <p style="color:#c0392b;font-size:12px;margin-top:0.3rem;">{{ form.password1.errors|striptags }}</p>
+                        <p class="field-error">{{ form.password1.errors|striptags }}</p>
                         {% endif %}
                     </div>
 
-                    <div>
-                        <label for="id_password2" style="display:block;font-size:13px;font-weight:600;margin-bottom:0.4rem;">Confirm Password</label>
+                    <div class="auth-field">
+                        <label for="id_password2">Confirm Password</label>
                         {{ form.password2 }}
                         {% if form.password2.errors %}
-                        <p style="color:#c0392b;font-size:12px;margin-top:0.3rem;">{{ form.password2.errors|striptags }}</p>
+                        <p class="field-error">{{ form.password2.errors|striptags }}</p>
                         {% endif %}
                     </div>
 
-                    <button type="submit" class="primary-button" style="width:100%;text-align:center;">Create Account</button>
+                    <button type="submit" class="primary-button auth-submit">Create Account</button>
                 </form>
 
-                <p style="text-align:center;margin-top:1.5rem;font-size:13px;color:var(--light-text-color);">
+                <p class="auth-switch">
                     Already have an account?
-                    <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" style="color:var(--primary-color);font-weight:600;">Sign in</a>
+                    <a href="{% url 'login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">Sign in</a>
                 </p>
 
             </div>
