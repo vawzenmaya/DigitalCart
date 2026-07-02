@@ -1176,6 +1176,13 @@ b. Breadcrumb */
   font-size: var(--font-small);
   margin-bottom: 2em;
 }
+.breadcrumb ul {
+  flex-wrap: nowrap;
+}
+.breadcrumb li:not(:last-child) {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 .breadcrumb li:not(:last-child)::after {
   content: '/';
   padding: 0 0.35em;
@@ -1184,7 +1191,8 @@ b. Breadcrumb */
   display: block;
   white-space: nowrap;
   overflow: hidden;
-
+  min-width: 0;
+  flex-shrink: 1;
   text-overflow: ellipsis;
   color: var(--light-text-color);
 }
@@ -1277,14 +1285,6 @@ d. Product decription*/
   position: relative;
   margin: 0 0.5em 0.5em;
 }
-.products :where(.variant, .actions) .circle {
-  display: block;
-  position: static;
-  top: 0;
-  margin: 0;
-  cursor: pointer;
-  z-index: 1;
-}
 :where(.products .variant, .filter-block:not(.pricing)) input {
   clip: rect(0,0,0,0);
   overflow: hidden;
@@ -1292,41 +1292,41 @@ d. Product decription*/
   height: 0;
   width: 0;
 }
-.products .colors .variant label ::before {
-  opacity: 1;
-}
-.products .variant label[for="color1"]::before {
-  background-color: #e90909;
-}
-.products .variant label[for="color2"]::before {
-  background-color: #7d04e0;
-}
-.products .variant label[for="color3"]::before {
-  background-color: #e009ab;
-}
-.single-product .variant form p input:checked + label {
-  background-color: transparent;
-  border: 3px solid var(--dark-color);
-  color: var(--white-color);
-}
-
-.products .sizes .variant label ::before {
-  background-color: var(--white-color);
-}
-.products .sizes .variant label span {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--percent100);
-  height: var(--percent100);
-  font-size: 0.65em;
+/* Generic variation swatch/chip — works for any variation type
+   (color, size, storage, ram, etc.), not just hardcoded names */
+.products .variant label.circle {
+  position: static;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
+  top: 0;
+  margin: 0;
+  min-width: 44px;
+  height: 40px;
+  padding: 0 0.9em;
+  border-radius: 20px;
+  background-color: var(--light-bg-color);
+  border: 1px solid var(--border-color);
+  font-size: 0.8em;
+  font-weight: var(--fw6);
+  text-align: center;
+  cursor: pointer;
+  z-index: 1;
+  transition: var(--trans-background-color);
 }
-.single-product .sizes .variant form p input:checked + label::before {
+.products .actions .circle {
+  display: block;
+  position: static;
+  top: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+.single-product .variant form p input:checked + label.circle {
   background-color: var(--dark-color);
-  opacity: 1;
+  border-color: var(--dark-color);
+  color: var(--white-color);
 }
 
 .products .actions {
@@ -1500,18 +1500,18 @@ f. Product review form */
 .review-form form {
   margin-top: 2.5em;
 }
-form p {
+.review-form form p {
   display: flex;
   flex-direction: column;
   margin-bottom: 2em;
 }
-form :where(input, textarea) {
+.review-form form :where(input, textarea) {
   line-height: 1;
   padding: 1em;
   border: 1px solid var(--border-color);
   outline: 0;
 }
-form label {
+.review-form form label {
   font-weight: var(--fw5);
   margin-bottom: 0.5em;
   text-transform: uppercase;
@@ -2505,73 +2505,4 @@ input[type="range"]::-webkit-slider-thumb {
     padding-left: 2.5em;
     margin-top: 0;
   }
-}
-
-/*
-Auth Pages (login / register)
-*/
-.page-auth main {
-  padding: 4rem 0;
-}
-.page-auth .container {
-  max-width: 440px;
-}
-.page-auth .page-title {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-.page-auth .page-title .mini-text {
-  margin-top: 0.4em;
-}
-.auth-alert {
-  padding: 0.75em 1em;
-  border-radius: 6px;
-  font-size: var(--font-small);
-  margin-bottom: 0.5em;
-}
-.auth-alert.success {
-  background-color: #eafaf1;
-  color: #10ac84;
-}
-.auth-alert.error {
-  background-color: #fdecea;
-  color: #c0392b;
-}
-.auth-form {
-  gap: 1.2em;
-}
-.auth-field label {
-  display: block;
-  font-size: var(--font-small);
-  font-weight: var(--fw6);
-  margin-bottom: 0.4em;
-}
-.auth-field input,
-.page-auth input[type="text"],
-.page-auth input[type="password"] {
-  width: var(--percent100);
-  padding: 0.8em 1em;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 0.95em;
-  font-family: inherit;
-}
-.auth-field .field-error {
-  color: #c0392b;
-  font-size: 12px;
-  margin-top: 0.3em;
-}
-.auth-submit {
-  width: var(--percent100);
-  text-align: center;
-}
-.auth-switch {
-  text-align: center;
-  margin-top: 1.5em;
-  font-size: var(--font-small);
-  color: var(--light-text-color);
-}
-.auth-switch a {
-  color: var(--primary-color);
-  font-weight: var(--fw6);
 }
