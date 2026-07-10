@@ -1,0 +1,663 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}About Us — DigitalCart{% endblock %}
+
+{% block content %}
+<style>
+/* ── About page styles — all scoped under .page-about ─────────────────────
+   Uses only the CSS variables already defined in style.css.
+   Zero overrides to global selectors. Safe to drop in without touching
+   existing pages.
+   ──────────────────────────────────────────────────────────────────────── */
+
+.page-about {
+    font-family: "Rubik", sans-serif;
+}
+
+/* Hero */
+.about-hero {
+    background-color: var(--secondary-dark-color);
+    color: var(--white-color);
+    padding: 5rem 0 4rem;
+    position: relative;
+    overflow: hidden;
+}
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    opacity: 0.08;
+}
+.about-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 10%;
+    width: 250px; height: 250px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    opacity: 0.07;
+}
+.about-hero .wrapper {
+    position: relative;
+    z-index: 1;
+}
+.about-hero .eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+.about-hero h1 {
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+}
+.about-hero h1 span {
+    color: var(--primary-color);
+}
+.about-hero p.lead {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.75);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+.about-hero .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Stats strip */
+.about-stats {
+    background-color: var(--primary-color);
+    padding: 2rem 0;
+}
+.about-stats .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 1.5rem;
+    text-align: center;
+}
+.about-stats .stat-item {
+    color: var(--white-color);
+}
+.about-stats .stat-number {
+    font-family: "Poppins", sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+    display: block;
+}
+.about-stats .stat-label {
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+/* Story section */
+.about-story {
+    padding: 5rem 0;
+}
+.about-story .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    align-items: center;
+}
+.about-story .text-col {
+    flex: 1 1 320px;
+}
+.about-story .image-col {
+    flex: 1 1 320px;
+}
+.about-story .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--secondary-color);
+    margin-bottom: 0.75rem;
+    display: block;
+}
+.about-story h2 {
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: var(--secondary-dark-color);
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+}
+.about-story p {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 1rem;
+}
+.about-story .story-image-wrap {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+}
+.about-story .story-image-wrap img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    display: block;
+}
+.about-story .image-badge {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    background: var(--white-color);
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.about-story .image-badge i {
+    font-size: 1.75rem;
+    color: var(--primary-color);
+}
+.about-story .image-badge strong {
+    display: block;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--secondary-dark-color);
+}
+.about-story .image-badge span {
+    font-size: 11px;
+    color: var(--light-text-color);
+}
+
+/* Values section */
+.about-values {
+    background-color: var(--light-bg-color);
+    padding: 5rem 0;
+}
+.about-values .sectop {
+    margin-bottom: 3rem;
+}
+.about-values .sectop h2 {
+    position: relative;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+.about-values .sectop h2 span:not(.circle) {
+    padding: 0 0 0 2em;
+}
+.about-values .sectop h2 .circle {
+    top: -5px;
+}
+.values-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+.value-card {
+    flex: 1 1 220px;
+    background: var(--white-color);
+    border-radius: 10px;
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--border-color);
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+.value-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    transform: translateY(-4px);
+}
+.value-card .value-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    background: var(--light-bg-color);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 1.25rem;
+    transition: background 0.3s, color 0.3s;
+}
+.value-card:hover .value-icon {
+    background: var(--secondary-color);
+    color: var(--white-color);
+}
+.value-card h4 {
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--secondary-dark-color);
+    margin-bottom: 0.5rem;
+}
+.value-card p {
+    font-size: 13px;
+    color: var(--light-text-color);
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+/* Team section */
+.about-team {
+    padding: 5rem 0;
+}
+.about-team .sectop {
+    margin-bottom: 3rem;
+}
+.about-team .sectop h2 {
+    position: relative;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+.about-team .sectop h2 span:not(.circle) {
+    padding: 0 0 0 2em;
+}
+.about-team .sectop h2 .circle {
+    top: -5px;
+}
+.team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+.team-card {
+    flex: 1 1 200px;
+    text-align: center;
+}
+.team-card .avatar {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Poppins", sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--white-color);
+}
+.team-card h4 {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--secondary-dark-color);
+    margin-bottom: 0.2rem;
+}
+.team-card .role {
+    font-size: 12px;
+    color: var(--light-text-color);
+    letter-spacing: 0.5px;
+}
+
+/* Uganda delivery banner */
+.about-delivery {
+    background-color: var(--secondary-dark-color);
+    padding: 4rem 0;
+    color: var(--white-color);
+    text-align: center;
+}
+.about-delivery h2 {
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+.about-delivery p {
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    max-width: 520px;
+    margin: 0 auto 2rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+.about-delivery .delivery-regions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+}
+.about-delivery .region-tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 2em;
+    padding: 0.4em 1.1em;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.85);
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+}
+.about-delivery .region-tag i {
+    color: var(--primary-color);
+}
+
+/* Perks strip */
+.about-perks {
+    padding: 4rem 0;
+    border-top: 1px solid var(--border-color);
+}
+.perks-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+}
+.perk-item {
+    flex: 1 1 200px;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-right: 1px solid var(--border-color);
+}
+.perk-item:last-child {
+    border-right: none;
+}
+.perk-item i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    display: block;
+    margin-bottom: 0.75rem;
+}
+.perk-item h4 {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--secondary-dark-color);
+    margin-bottom: 0.3rem;
+}
+.perk-item p {
+    font-size: 12px;
+    color: var(--light-text-color);
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+/* CTA */
+.about-cta {
+    padding: 5rem 0;
+    background-color: var(--light-bg-color);
+    text-align: center;
+}
+.about-cta h2 {
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--secondary-dark-color);
+    margin-bottom: 0.75rem;
+}
+.about-cta p {
+    font-weight: 300;
+    color: var(--light-text-color);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+.about-cta .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+    .about-hero {
+        padding: 3.5rem 0 3rem;
+    }
+    .perk-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        flex: 1 1 45%;
+    }
+    .perk-item:last-child {
+        border-bottom: none;
+    }
+}
+</style>
+
+<div id="page" class="page-about">
+<main>
+
+    {# ── HERO ─────────────────────────────────────────────────────────────── #}
+    <section class="about-hero">
+        <div class="container">
+            <div class="wrapper">
+                <span class="eyebrow">Our Story</span>
+                <h1>Uganda's Digital<br>Shopping <span>Revolution.</span></h1>
+                <p class="lead">
+                    DigitalCart was built right here in Kampala, for Ugandans who want the best
+                    products, honest prices in UGX, and delivery they can actually track.
+                </p>
+                <div class="hero-actions">
+                    <a href="{% url 'store' %}" class="primary-button">Shop Now</a>
+                    <a href="#our-values" class="secondary-button">What We Stand For</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── STATS STRIP ──────────────────────────────────────────────────────── #}
+    <section class="about-stats">
+        <div class="container">
+            <div class="wrapper">
+                <div class="stat-item">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Products Listed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50K+</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24h</span>
+                    <span class="stat-label">Kampala Delivery</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Ugandan Shillings</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── STORY ────────────────────────────────────────────────────────────── #}
+    <section class="about-story">
+        <div class="container">
+            <div class="wrapper">
+                <div class="text-col">
+                    <span class="section-label">How it started</span>
+                    <h2>Built in Kampala.<br>Built for Kampala.</h2>
+                    <p>
+                        DigitalCart started from a simple frustration, great products existed
+                        across Uganda, but buying them online meant fighting through dollar
+                        prices, sketchy payment pages, and zero local support when something
+                        went wrong.
+                    </p>
+                    <p>
+                        We set out to build the platform we always wished existed: everything
+                        priced in UGX, payments Ugandans actually use, and a customer service
+                        team that answers in the same timezone.
+                    </p>
+                    <p>
+                        Today, DigitalCart connects thousands of buyers with verified sellers
+                        across electronics, fashion, furniture, and more, all from one
+                        straightforward platform.
+                    </p>
+                    <a href="{% url 'store' %}" class="primary-button" style="margin-top:0.75rem;display:inline-block;">
+                        Explore the Store
+                    </a>
+                </div>
+                <div class="image-col">
+                    <div class="story-image-wrap">
+                        <img src="{% static 'assets/banner/samsung.jpg' %}" alt="DigitalCart in Kampala">
+                        <div class="image-badge">
+                            <i class="ri-store-2-line"></i>
+                            <div>
+                                <strong>Est. 2024</strong>
+                                <span>Kampala, Uganda</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── VALUES ───────────────────────────────────────────────────────────── #}
+    <section class="about-values" id="our-values">
+        <div class="container">
+            <div class="sectop flexitem">
+                <h2><span class="circle"></span><span>What We Stand For</span></h2>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon"><i class="ri-shield-check-line"></i></div>
+                    <h4>Verified Quality</h4>
+                    <p>Every seller on DigitalCart is vetted. We list products we'd
+                    recommend to a friend, not everything that pays for placement.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon"><i class="ri-exchange-line"></i></div>
+                    <h4>Honest Pricing</h4>
+                    <p>All prices are in UGX, no hidden forex surprises at checkout.
+                    What you see in the listing is exactly what you pay.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon"><i class="ri-truck-line"></i></div>
+                    <h4>Real Delivery</h4>
+                    <p>Same-day delivery within Kampala. Nationwide coverage to
+                    Entebbe, Jinja, Mbarara, Gulu, and growing.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon"><i class="ri-customer-service-2-line"></i></div>
+                    <h4>Local Support</h4>
+                    <p>Our team is here, not offshore. Call, WhatsApp, or visit
+                    us. We resolve issues the same day, not after five ticket queues.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon"><i class="ri-refresh-line"></i></div>
+                    <h4>Easy Returns</h4>
+                    <p>Changed your mind? Got the wrong item? Our 7-day return
+                    policy is no-questions, no-stress, and free for Kampala orders.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── TEAM ─────────────────────────────────────────────────────────────── #}
+    <section class="about-team">
+        <div class="container">
+            <div class="sectop flexitem">
+                <h2><span class="circle"></span><span>The People Behind It</span></h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="avatar" style="background:var(--secondary-dark-color);">T</div>
+                    <h4>Teddy N.</h4>
+                    <span class="role">Founder & CEO</span>
+                </div>
+                <div class="team-card">
+                    <div class="avatar" style="background:var(--secondary-color);">H</div>
+                    <h4>Haula N.M.</h4>
+                    <span class="role">Head of Operations</span>
+                </div>
+                <div class="team-card">
+                    <div class="avatar" style="background:var(--primary-color);">V</div>
+                    <h4>Vawzen K.</h4>
+                    <span class="role">Lead Engineer</span>
+                </div>
+                <div class="team-card">
+                    <div class="avatar" style="background:#10ac84;">B</div>
+                    <h4>Benjamin S.</h4>
+                    <span class="role">Customer Experience</span>
+                </div>
+                <div class="team-card">
+                    <div class="avatar" style="background:#f39c12;">L</div>
+                    <h4>Lauren K.</h4>
+                    <span class="role">Seller Relations</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── DELIVERY REGIONS ─────────────────────────────────────────────────── #}
+    <section class="about-delivery">
+        <div class="container">
+            <h2>We Deliver Across Uganda</h2>
+            <p>
+                From Kololo to Kireka, Entebbe to Mbale, DigitalCart ships nationwide.
+                Kampala orders placed before 12pm arrive the same day.
+            </p>
+            <div class="delivery-regions">
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Kampala</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Entebbe</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Jinja</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Mbarara</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Gulu</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Lira</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Mbale</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Fort Portal</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> Masaka</span>
+                <span class="region-tag"><i class="ri-map-pin-line"></i> + More</span>
+            </div>
+            <a href="{% url 'store' %}" class="primary-button">Start Shopping</a>
+        </div>
+    </section>
+
+    {# ── PERKS STRIP ──────────────────────────────────────────────────────── #}
+    <section class="about-perks">
+        <div class="container">
+            <div class="perks-grid">
+                <div class="perk-item">
+                    <i class="ri-secure-payment-line"></i>
+                    <h4>Secure Payments</h4>
+                    <p>MTN Mobile Money, Airtel Money, Visa & Mastercard, all accepted.</p>
+                </div>
+                <div class="perk-item">
+                    <i class="ri-gift-line"></i>
+                    <h4>Free Delivery</h4>
+                    <p>Free delivery on select items. No minimum order required.</p>
+                </div>
+                <div class="perk-item">
+                    <i class="ri-24-hours-line"></i>
+                    <h4>Always Open</h4>
+                    <p>Shop at 2am or 2pm, DigitalCart never closes.</p>
+                </div>
+                <div class="perk-item">
+                    <i class="ri-price-tag-3-line"></i>
+                    <h4>Best Price Promise</h4>
+                    <p>Found it cheaper elsewhere? Tell us, we'll match it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# ── CTA ──────────────────────────────────────────────────────────────── #}
+    <section class="about-cta">
+        <div class="container">
+            <h2>Ready to shop smarter?</h2>
+            <p>Join thousands of Ugandans already buying on DigitalCart.</p>
+            <div class="cta-buttons">
+                <a href="{% url 'store' %}" class="primary-button">Browse All Products</a>
+                <a href="{% url 'register' %}" class="secondary-button">Create Free Account</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+</div>
+{% endblock %}

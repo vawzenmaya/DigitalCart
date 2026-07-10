@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.store, name='store'),
     path('category/<slug:category_slug>/', views.category, name='category'),
     path('product/<slug:category_slug>/<slug:product_slug>/', views.product_detail, name='product_detail'),
+    path('about/', views.about, name='about'),
     
     # Auth URLs
     path('register/', views.register_view, name='register'),
