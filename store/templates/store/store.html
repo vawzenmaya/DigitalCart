@@ -220,7 +220,11 @@
                                             <ul>
                                                 <li class="active">
                                                     <a href="#" class="social-info wishlist-btn" data-product-id="{{ offer_product.id }}">
-                                                        <span><i class="{% if offer_product.id in nav_wishlist_product_ids %}ri-heart-fill{% else %}ri-heart-line{% endif %}" style="{% if offer_product.id in nav_wishlist_product_ids %}color:var(--primary-color);{% endif %}"></i></span>
+                                                        {% if offer_product.id in nav_wishlist_product_ids %}
+                                                            <span><i class="ri-heart-fill" style="color:var(--primary-color);"></i></span>
+                                                        {% else %}
+                                                            <span><i class="ri-heart-line"></i></span>
+                                                        {% endif %}
                                                         <p class="hover-text">Wishlist</p>
                                                     </a>
                                                 </li>
@@ -290,7 +294,14 @@
                                         <div class="hoverable">
                                             <ul>
                                                 <li class="active">
-                                                    <a href="#" class="social-info wishlist-btn" data-product-id="{{ product.id }}"><span><i class="{% if product.id in nav_wishlist_product_ids %}ri-heart-fill{% else %}ri-heart-line{% endif %}" style="{% if product.id in nav_wishlist_product_ids %}color:var(--primary-color);{% endif %}"></i></span><p class="hover-text">Wishlist</p></a>
+                                                    <a href="#" class="social-info wishlist-btn" data-product-id="{{ product.id }}">
+                                                        {% if product.id in nav_wishlist_product_ids %}
+                                                            <span><i class="ri-heart-fill" style="color:var(--primary-color);"></i></span>
+                                                        {% else %}
+                                                            <span><i class="ri-heart-line"></i></span>
+                                                        {% endif %}
+                                                        <p class="hover-text">Wishlist</p>
+                                                    </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ product.get_absolute_url }}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
@@ -346,7 +357,14 @@
                                         <div class="hoverable">
                                             <ul>
                                                 <li class="active">
-                                                    <a href="#" class="social-info wishlist-btn" data-product-id="{{ product.id }}"><span><i class="{% if product.id in nav_wishlist_product_ids %}ri-heart-fill{% else %}ri-heart-line{% endif %}" style="{% if product.id in nav_wishlist_product_ids %}color:var(--primary-color);{% endif %}"></i></span><p class="hover-text">Wishlist</p></a>
+                                                    <a href="#" class="social-info wishlist-btn" data-product-id="{{ product.id }}">
+                                                        {% if product.id in nav_wishlist_product_ids %}
+                                                            <span><i class="ri-heart-fill" style="color:var(--primary-color);"></i></span>
+                                                        {% else %}
+                                                            <span><i class="ri-heart-line"></i></span>
+                                                        {% endif %}
+                                                        <p class="hover-text">Wishlist</p>
+                                                    </a>
                                                 </li>
                                                 <li>
                                                     <a href="{{ product.get_absolute_url }}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
@@ -434,7 +452,14 @@
                                     <div class="hoverable">
                                         <ul>
                                             <li class="active">
-                                                <a href="#" class="social-info wishlist-btn" data-product-id="{{ product.id }}"><span><i class="{% if product.id in nav_wishlist_product_ids %}ri-heart-fill{% else %}ri-heart-line{% endif %}" style="{% if product.id in nav_wishlist_product_ids %}color:var(--primary-color);{% endif %}"></i></span><p class="hover-text">Wishlist</p></a>
+                                                <a href="#" class="social-info wishlist-btn" data-product-id="{{ product.id }}">
+                                                    {% if product.id in nav_wishlist_product_ids %}
+                                                        <span><i class="ri-heart-fill" style="color:var(--primary-color);"></i></span>
+                                                    {% else %}
+                                                        <span><i class="ri-heart-line"></i></span>
+                                                    {% endif %}
+                                                    <p class="hover-text">Wishlist</p>
+                                                </a>
                                             </li>
                                             <li>
                                                 <a href="{{ product.get_absolute_url }}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
