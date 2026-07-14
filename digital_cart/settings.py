@@ -29,8 +29,6 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
-STATIC_ROOT = BASE_DIR / 'staticfiles_collected'
-
 # Application definition
 
 INSTALLED_APPS = [
