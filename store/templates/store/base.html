@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css">
 </head>
-<body>
+<body data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}" data-login-url="{% url 'login' %}">
     {% include 'store/navbar.html' %}
 
     {% block content %}{% endblock %}
@@ -68,6 +68,8 @@
     <script>
     (function () {
         var CSRF = (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
+        var IS_AUTHENTICATED = document.body.dataset.authenticated === 'true';
+        var LOGIN_URL = document.body.dataset.loginUrl;
 
         function updateWishlistBadge(count) {
             document.querySelectorAll('.nav-wishlist-count').forEach(function (el) {
@@ -83,7 +85,11 @@
             var productId = btn.dataset.productId;
             if (!productId) return;
 
-            {% if user.is_authenticated %}
+            if (!IS_AUTHENTICATED) {
+                window.location.href = LOGIN_URL + "?next=" + window.location.pathname;
+                return;
+            }
+
             var icon  = btn.querySelector('i');
             var label = btn.querySelector('span:not(:has(i)), p.hover-text');
 
@@ -105,7 +111,6 @@
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 if (!data.ok) return;
-                // Confirm from server truth
                 if (icon) {
                     icon.classList.toggle('ri-heart-fill', data.added);
                     icon.classList.toggle('ri-heart-line', !data.added);
@@ -115,7 +120,6 @@
                 window.showToast && window.showToast(data.message, data.added ? 'success' : 'info');
             })
             .catch(function () {
-                // Revert on network error
                 if (icon) {
                     icon.classList.toggle('ri-heart-fill',  wasWishlisted);
                     icon.classList.toggle('ri-heart-line',  !wasWishlisted);
@@ -123,9 +127,6 @@
                 }
                 window.showToast && window.showToast('Could not update wishlist.', 'error');
             });
-            {% else %}
-            window.location.href = "{% url 'login' %}?next=" + window.location.pathname;
-            {% endif %}
         });
     })();
     </script>
@@ -134,6 +135,8 @@
     <script>
     (function () {
         var CSRF = (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
+        var IS_AUTHENTICATED = document.body.dataset.authenticated === 'true';
+        var LOGIN_URL = document.body.dataset.loginUrl;
 
         function updateCartBadge(count, total) {
             document.querySelectorAll('.iscart .item-number').forEach(function (el) {
@@ -154,7 +157,11 @@
             var productId = btn.dataset.productId;
             if (!productId) return;
 
-            {% if user.is_authenticated %}
+            if (!IS_AUTHENTICATED) {
+                window.location.href = LOGIN_URL + "?next=" + window.location.pathname;
+                return;
+            }
+
             fetch('/cart/add/' + productId + '/', {
                 method:  'POST',
                 headers: {
@@ -174,9 +181,6 @@
             .catch(function () {
                 window.showToast && window.showToast('Could not add to cart.', 'error');
             });
-            {% else %}
-            window.location.href = "{% url 'login' %}?next=" + window.location.pathname;
-            {% endif %}
         });
     })();
     </script>
