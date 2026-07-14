@@ -349,3 +349,60 @@ def delete_cart_item(request, item_id):
 
 def about(request):
     return render(request, 'store/about.html')
+
+# ---------------------------------------------------------------------------
+# Wishlist views
+# ---------------------------------------------------------------------------
+from .models import Wishlist, WishlistItem
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
+
+@login_required(login_url='login')
+def wishlist_view(request):
+    wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+    items      = wishlist.items.select_related('product').all()
+    categories = Category.objects.prefetch_related('subcategories__subsubcategories').all()
+    context = {
+        'wishlist_items': items,
+        'wishlist_count': wishlist.items.count(),
+        'categories':     categories,
+    }
+    return render(request, 'store/wishlist.html', context)
+
+
+@login_required(login_url='login')
+@require_POST
+def wishlist_toggle(request, product_id):
+    """AJAX: adds if absent, removes if present. Always returns JSON."""
+    product  = get_object_or_404(Product, pk=product_id, is_available=True)
+    wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
+    item = WishlistItem.objects.filter(wishlist=wishlist, product=product).first()
+
+    if item:
+        item.delete()
+        added = False
+    else:
+        WishlistItem.objects.create(wishlist=wishlist, product=product)
+        added = True
+
+    return JsonResponse({
+        'ok':      True,
+        'added':   added,
+        'count':   wishlist.items.count(),
+        'message': 'Added to Wishlist' if added else 'Removed from Wishlist',
+    })
+
+
+@login_required(login_url='login')
+@require_POST
+def wishlist_remove(request, item_id):
+    """Direct remove used by the wishlist page itself."""
+    item = get_object_or_404(WishlistItem, pk=item_id, wishlist__user=request.user)
+    item.delete()
+    wishlist = Wishlist.objects.get(user=request.user)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'ok': True, 'count': wishlist.items.count()})
+
+    return redirect('wishlist')
