@@ -94,7 +94,7 @@
                     </div>
                     <div class="products one cart">
                         <div class="flexwrap">
-                            <form action="" class="form-cart">
+                            <div class="form-cart">
                                 <div class="item">
                                     <table id="cart-table">
                                         <thead>
@@ -134,12 +134,12 @@
                                                     <td>
                                                         <div class="qty-control flexitem" style="border: none; margin: 0;">
                                                             <!-- Decrement Button -->
-                                                            <a href="{% url 'remove_cart_item' item.id %}" class="minus circle" style="display:flex;align-items:center;justify-content:center;text-decoration:none;width:32px;height:32px;background:#f2f3f5;color:black;">-</a>
+                                                            <a href="{% url 'remove_cart_item' item.id %}" class="minus circle">-</a>
                                                             
                                                             <input type="text" value="{{ item.quantity }}" readonly style="width:32px;text-align:center;border:none;background:transparent;">
                                                             
                                                             <!-- Increment Button (needs hidden inputs for variations to match backend logic) -->
-                                                            <form action="{% url 'add_cart' item.product.id %}" method="POST" style="margin:0;padding:0;display:flex;">
+                                                            <form action="{% url 'add_cart' item.product.id %}" method="POST" >
                                                                 {% csrf_token %}
                                                                 {% for var in item.variations.all %}
                                                                     <input type="hidden" name="{{ var.variation_category }}" value="{{ var.variation_value }}">
@@ -156,7 +156,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </form>
+                            </div>
                             
                             <!-- Cart Summary Panel -->
                             <div class="cart-summary styled">
