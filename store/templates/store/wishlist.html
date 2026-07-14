@@ -1,0 +1,288 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="page" class="page-wishlist">
+
+    {# ── Secondary header — same pattern as cart.html ────────────────────── #}
+    <header>
+        <div class="header-main mobile-hide">
+            <div class="container">
+                <div class="wrapper flexitem">
+                    <div class="left">
+                        <div class="dpt-cat">
+                            <div class="dpt-head">
+                                <div class="main-text">All Categories</div>
+                                <a href="#" class="dpt-trigger mobile-hide">
+                                    <i class="ri-menu-3-line ri-xl"></i>
+                                    <i class="ri-close-line ri-xl"></i>
+                                </a>
+                            </div>
+                            <div class="dpt-menu">
+                                <ul class="second-links">
+                                    {% for category in categories %}
+                                    <li class="has-child">
+                                        <a href="{% url 'category' category.slug %}" style="display:flex;align-items:center;">
+                                            <div class="icon-large"><i class="{{ category.icon }}"></i></div>
+                                            {{ category.name }}
+                                            <div class="icon-small"><i class="ri-arrow-right-s-line"></i></div>
+                                            <span style="font-size:14px;font-weight:500;">{{ category.get_product_count }}</span>
+                                        </a>
+                                        <div class="mega"
+                                            {% if category.menu_image %}
+                                                style="z-index:999;background-color:#cccaca;min-height:400px;background-image:url('{{ category.menu_image.url }}');background-size:cover;background-position:right center;"
+                                            {% else %}
+                                                style="z-index:999;background-color:#ffffff;min-height:400px;"
+                                            {% endif %}>
+                                            <div class="mega-subcats" style="position:relative;z-index:2;display:flex;flex-direction:row;gap:2rem;align-items:flex-start;">
+                                                {% for sub in category.subcategories.all %}
+                                                <div class="mega-sub-item" style="min-width:160px;max-width:200px;flex-shrink:0;">
+                                                    <h4 style="margin-bottom:10px;color:var(--secondary-dark-color);text-transform:uppercase;font-size:13px;font-weight:600;">
+                                                        {{ sub.name }}
+                                                    </h4>
+                                                    <ul style="list-style:none;padding:0;margin:0;">
+                                                        {% for subsub in sub.subsubcategories.all %}
+                                                        <li style="line-height:2em;"><a href="#" style="font-size:13px;">{{ subsub.name }}</a></li>
+                                                        {% empty %}
+                                                        <li><a href="#" style="color:#636161;font-style:italic;font-size:13px;">More coming soon...</a></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                {% empty %}
+                                                <div class="mega-sub-item">
+                                                    <p style="color:#999;font-style:italic;">No subcategories yet.</p>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="search box">
+                            <form action="{% url 'store' %}" class="search" method="get">
+                                <span class="icon-large"><i class="ri-search-line"></i></span>
+                                <input type="search" name="query" placeholder="Search for products.....">
+                                <button type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="single-cart">
+            <div class="container">
+                <div class="wrapper">
+
+                    <div class="breadcrumb">
+                        <ul class="flexitem">
+                            <li><a href="{% url 'store' %}">Home</a></li>
+                            <li>My Wishlist</li>
+                        </ul>
+                    </div>
+
+                    <div class="page-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+                        <h1>My Wishlist
+                            {% if wishlist_count %}
+                            <span style="font-size:0.6em;font-weight:400;color:var(--light-text-color);">
+                                ({{ wishlist_count }} item{{ wishlist_count|pluralize }})
+                            </span>
+                            {% endif %}
+                        </h1>
+                        {% if wishlist_items %}
+                        <a href="{% url 'store' %}" class="secondary-button">
+                            Add More Items
+                        </a>
+                        {% endif %}
+                    </div>
+
+                    {% if messages %}
+                    <div style="margin-bottom:1.5rem;">
+                        {% for message in messages %}
+                        <div style="padding:0.75rem 1rem;border-radius:6px;font-size:13px;margin-bottom:0.5rem;
+                            background:{% if message.tags == 'error' %}#fdecea{% else %}#eafaf1{% endif %};
+                            color:{% if message.tags == 'error' %}#c0392b{% else %}#10ac84{% endif %};">
+                            {{ message }}
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if not wishlist_items %}
+                    <div style="text-align:center;padding:5rem 1rem;">
+                        <i class="ri-heart-line" style="font-size:4rem;color:var(--border-color);display:block;margin-bottom:1rem;"></i>
+                        <h3 style="margin-bottom:0.5rem;">Your wishlist is empty</h3>
+                        <p class="mini-text" style="margin-bottom:1.5rem;">
+                            Tap the <i class="ri-heart-line"></i> on any product to save it here.
+                        </p>
+                        <a href="{% url 'store' %}" class="primary-button">Browse Products</a>
+                    </div>
+
+                    {% else %}
+                    <div class="products one cart">
+                        <div class="flexwrap">
+                            <div class="item" style="width:100%;">
+                                <table id="wishlist-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="wishlist-tbody">
+                                        {% for item in wishlist_items %}
+                                        <tr id="wishlist-row-{{ item.id }}">
+                                            <td class="flexitem">
+                                                <div class="thumbnail object-cover">
+                                                    <a href="{{ item.product.get_absolute_url }}">
+                                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <strong>
+                                                        <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+                                                    </strong>
+                                                    <p style="font-size:12px;color:var(--light-text-color);margin-top:0.25rem;">
+                                                        {{ item.product.category.name }}
+                                                    </p>
+                                                    {% if item.product.is_free_delivery %}
+                                                    <p style="font-size:11px;color:#10ac84;margin-top:0.2rem;">
+                                                        <i class="ri-truck-line"></i> Free Delivery
+                                                    </p>
+                                                    {% endif %}
+                                                    <p style="font-size:11px;color:var(--light-text-color);margin-top:0.2rem;">
+                                                        Added {{ item.added_date|timesince }} ago
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span style="color:var(--primary-color);font-weight:600;">
+                                                    {{ item.product.price|floatformat:0 }} UGX
+                                                </span>
+                                                {% if item.product.original_price > item.product.price %}
+                                                <br>
+                                                <span class="mini-text normal">{{ item.product.original_price|floatformat:0 }} UGX</span>
+                                                {% endif %}
+                                                {% if item.product.discount_percentage %}
+                                                <br>
+                                                <span style="font-size:11px;background:var(--dark-color);color:#fff;padding:2px 6px;border-radius:3px;">
+                                                    -{{ item.product.discount_percentage }}%
+                                                </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if item.product.is_in_stock %}
+                                                <span style="color:#10ac84;font-size:13px;font-weight:500;">
+                                                    <i class="ri-checkbox-circle-line"></i> In Stock
+                                                </span>
+                                                {% else %}
+                                                <span style="color:var(--primary-color);font-size:13px;font-weight:500;">
+                                                    <i class="ri-close-circle-line"></i> Out of Stock
+                                                </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if item.product.is_in_stock %}
+                                                <form method="post" action="{% url 'add_cart' item.product.id %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="quantity" value="1">
+                                                    <button type="submit" class="primary-button" style="font-size:12px;padding:0.6em 1.25em;white-space:nowrap;">
+                                                        <span>Add to Cart</span>
+                                                    </button>
+                                                </form>
+                                                {% else %}
+                                                <button class="light-button" disabled style="font-size:12px;padding:0.6em 1.25em;opacity:0.6;cursor:not-allowed;">
+                                                    Out of Stock
+                                                </button>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <form method="post" action="{% url 'wishlist_remove' item.id %}" class="wishlist-remove-form">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="item-remove" title="Remove from Wishlist"
+                                                        style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--light-text-color);transition:color 0.2s;"
+                                                        onmouseover="this.style.color='var(--primary-color)'"
+                                                        onmouseout="this.style.color=''">
+                                                        <i class="ri-close-line"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+                        <a href="{% url 'store' %}" class="secondary-button">
+                            <span>Continue Shopping</span>
+                        </a>
+                        <a href="{% url 'cart' %}" class="primary-button">
+                            </i> View Cart
+                        </a>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var CSRF = (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
+
+    function updateWishlistBadge(count) {
+        document.querySelectorAll('.nav-wishlist-count').forEach(function (el) {
+            el.textContent = count;
+        });
+    }
+
+    document.querySelectorAll('.wishlist-remove-form').forEach(function (form) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var row = form.closest('tr');
+            var fd  = new FormData(form);
+
+            fetch(form.action, {
+                method:  'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: fd,
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (!data.ok) return;
+                row.style.transition = 'opacity 0.3s';
+                row.style.opacity    = '0';
+                setTimeout(function () {
+                    row.remove();
+                    if (!document.querySelector('#wishlist-tbody tr')) {
+                        location.reload();
+                    }
+                }, 320);
+                updateWishlistBadge(data.count);
+                window.showToast && window.showToast('Removed from Wishlist', 'info');
+            })
+            .catch(function () {
+                window.showToast && window.showToast('Could not remove item — try again.', 'error');
+            });
+        });
+    });
+})();
+</script>
+{% endblock %}

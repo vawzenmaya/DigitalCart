@@ -224,9 +224,9 @@
                                                     <div class="wish-share">
                                                         <ul class="flexitem second-links">
                                                             <li>
-                                                                <a href="#">
-                                                                    <span class="icon-large"><i class="ri-heart-line"></i></span>
-                                                                    <span>Wishlist</span>
+                                                                <a href="#" class="wishlist-btn" data-product-id="{{ product.id }}">
+                                                                    <span class="icon-large"><i class="{% if product.id in nav_wishlist_product_ids %}ri-heart-fill{% else %}ri-heart-line{% endif %}" style="{% if product.id in nav_wishlist_product_ids %}color:var(--primary-color);{% endif %}"></i></span>
+                                                                    <span>{% if product.id in nav_wishlist_product_ids %}Wishlisted{% else %}Wishlist{% endif %}</span>
                                                                 </a>
                                                             </li>
                                                             <li>
@@ -369,7 +369,7 @@
                             <div class="hoverable">
                                 <ul>
                                     <li class="active">
-                                        <a href="#" class="social-info"><span><i class="ri-heart-line"></i></span><p class="hover-text">Wishlist</p></a>
+                                        <a href="#" class="social-info wishlist-btn" data-product-id="{{ related.id }}"><span><i class="{% if related.id in nav_wishlist_product_ids %}ri-heart-fill{% else %}ri-heart-line{% endif %}" style="{% if related.id in nav_wishlist_product_ids %}color:var(--primary-color);{% endif %}"></i></span><p class="hover-text">Wishlist</p></a>
                                     </li>
                                     <li>
                                         <a href="{% url 'product_detail' related.category.slug related.slug %}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>

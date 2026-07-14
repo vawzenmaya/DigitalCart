@@ -277,8 +277,8 @@
                                                 <div class="hoverable">
                                                     <ul>
                                                         <li class="active">
-                                                            <a href="#" class="social-info">
-                                                                <span><i class="ri-heart-line"></i></span>
+                                                            <a href="#" class="social-info wishlist-btn" data-product-id="{{ product.id }}">
+                                                                <span><i class="{% if product.id in nav_wishlist_product_ids %}ri-heart-fill{% else %}ri-heart-line{% endif %}" style="{% if product.id in nav_wishlist_product_ids %}color:var(--primary-color);{% endif %}"></i></span>
                                                                 <p class="hover-text">Wishlist</p>
                                                             </a>
                                                         </li>

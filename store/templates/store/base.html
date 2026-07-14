@@ -64,6 +64,72 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.7.4/index.js"></script>
     <script src="{% static 'script.js' %}"></script>
 
+    {# ── Global wishlist toggle — works on every page ─────────────────────── #}
+    <script>
+    (function () {
+        var CSRF = (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
+
+        function updateWishlistBadge(count) {
+            document.querySelectorAll('.nav-wishlist-count').forEach(function (el) {
+                el.textContent = count;
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('.wishlist-btn');
+            if (!btn) return;
+            e.preventDefault();
+
+            var productId = btn.dataset.productId;
+            if (!productId) return;
+
+            {% if user.is_authenticated %}
+            var icon  = btn.querySelector('i');
+            var label = btn.querySelector('span:not(:has(i)), p.hover-text');
+
+            // Optimistic toggle
+            var wasWishlisted = icon && icon.classList.contains('ri-heart-fill');
+            if (icon) {
+                icon.classList.toggle('ri-heart-fill', !wasWishlisted);
+                icon.classList.toggle('ri-heart-line',  wasWishlisted);
+                icon.style.color = wasWishlisted ? '' : 'var(--primary-color)';
+            }
+
+            fetch('/wishlist/toggle/' + productId + '/', {
+                method:  'POST',
+                headers: {
+                    'X-CSRFToken':      CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (!data.ok) return;
+                // Confirm from server truth
+                if (icon) {
+                    icon.classList.toggle('ri-heart-fill', data.added);
+                    icon.classList.toggle('ri-heart-line', !data.added);
+                    icon.style.color = data.added ? 'var(--primary-color)' : '';
+                }
+                updateWishlistBadge(data.count);
+                window.showToast && window.showToast(data.message, data.added ? 'success' : 'info');
+            })
+            .catch(function () {
+                // Revert on network error
+                if (icon) {
+                    icon.classList.toggle('ri-heart-fill',  wasWishlisted);
+                    icon.classList.toggle('ri-heart-line',  !wasWishlisted);
+                    icon.style.color = wasWishlisted ? 'var(--primary-color)' : '';
+                }
+                window.showToast && window.showToast('Could not update wishlist.', 'error');
+            });
+            {% else %}
+            window.location.href = "{% url 'login' %}?next=" + window.location.pathname;
+            {% endif %}
+        });
+    })();
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
