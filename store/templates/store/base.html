@@ -130,6 +130,57 @@
     })();
     </script>
 
+    {# ── Global add-to-cart — works on every page ──────────────────────────── #}
+    <script>
+    (function () {
+        var CSRF = (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
+
+        function updateCartBadge(count, total) {
+            document.querySelectorAll('.iscart .item-number').forEach(function (el) {
+                el.textContent = count;
+            });
+            document.querySelectorAll('.iscart .cart-total').forEach(function (el) {
+                el.textContent = total.toLocaleString() + ' UGX';
+            });
+            var bottomCount = document.querySelector('.cart-trigger .item-number');
+            if (bottomCount) bottomCount.textContent = count;
+        }
+
+        document.addEventListener('click', function (e) {
+            var btn = e.target.closest('.add-cart-btn');
+            if (!btn) return;
+            e.preventDefault();
+
+            var productId = btn.dataset.productId;
+            if (!productId) return;
+
+            {% if user.is_authenticated %}
+            fetch('/cart/add/' + productId + '/', {
+                method:  'POST',
+                headers: {
+                    'X-CSRFToken':      CSRF,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (!data.ok) {
+                    window.showToast && window.showToast('Could not add to cart.', 'error');
+                    return;
+                }
+                updateCartBadge(data.cart_count, data.cart_total);
+                window.showToast && window.showToast(data.message, 'success');
+            })
+            .catch(function () {
+                window.showToast && window.showToast('Could not add to cart.', 'error');
+            });
+            {% else %}
+            window.location.href = "{% url 'login' %}?next=" + window.location.pathname;
+            {% endif %}
+        });
+    })();
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

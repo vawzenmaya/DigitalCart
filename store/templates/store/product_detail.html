@@ -211,12 +211,10 @@
                                                 <div class="actions">
                                                     <div class="qty-control flexitem">
                                                         <button class="minus circle" type="button">-</button>
-                                                        <!-- Added name="quantity" so the backend can read the value -->
                                                         <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" id="qty-input" style="width:48px;text-align:center;">
                                                         <button class="plus circle" type="button">+</button>
                                                     </div>
                                                     <div class="button-cart">
-                                                        <!-- Changed to type="submit" -->
                                                         <button type="submit" class="primary-button" {% if not product.is_in_stock %}disabled style="opacity:0.5;cursor:not-allowed;"{% endif %}>
                                                             {% if product.is_in_stock %}Add to Cart{% else %}Out of Stock{% endif %}
                                                         </button>
@@ -375,7 +373,10 @@
                                         <a href="{% url 'product_detail' related.category.slug related.slug %}" class="social-info"><span><i class="ri-eye-line"></i></span><p class="hover-text">View more</p></a>
                                     </li>
                                     <li>
-                                        <a href="#" class="social-info"><span><i class="ri-shopping-cart-line"></i></span><p class="hover-text">Add to Cart</p></a>
+                                        <a href="#" class="social-info add-cart-btn" data-product-id="{{ related.id }}">
+                                            <span><i class="ri-shopping-cart-line"></i></span>
+                                            <p class="hover-text">Add to Cart</p>
+                                        </a>
                                     </li>
                                 </ul>
                             </div>

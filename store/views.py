@@ -9,6 +9,7 @@ from django.contrib import messages
 from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem, Variation
+from django.http import JsonResponse
 
 
 # ---------------------------------------------------------------------------
@@ -326,6 +327,17 @@ def add_cart(request, product_id):
         if product_variations:
             cart_item.variations.add(*product_variations)
         cart_item.save()
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        active_items = CartItem.objects.filter(cart=cart_obj, is_active=True)
+        cart_count = sum(i.quantity for i in active_items)
+        cart_total = sum(i.product.price * i.quantity for i in active_items)
+        return JsonResponse({
+            'ok': True,
+            'cart_count': cart_count,
+            'cart_total': int(cart_total),
+            'message': f'Added {product.name} to cart',
+        })
 
     return redirect('cart')
 
