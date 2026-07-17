@@ -116,8 +116,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    # --- Computed properties ---
-
     @property
     def discount_percentage(self):
         if self.original_price > self.price:
@@ -146,7 +144,7 @@ class Product(models.Model):
 
 
 # ---------------------------------------------------------------------------
-# TrendingSection — singleton-style config for the offer product + countdown
+# TrendingSection
 # ---------------------------------------------------------------------------
 
 class TrendingSection(models.Model):

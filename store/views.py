@@ -191,7 +191,6 @@ def product_detail(request, category_slug, product_slug):
         .order_by('-created_date')[:8]
     )
 
-    # Group variations by category for the detail page UI
     variations = {}
     for v in product.variations.filter(is_active=True):
         variations.setdefault(v.variation_category, []).append(v)
