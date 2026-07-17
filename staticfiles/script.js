@@ -283,7 +283,6 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
         const getMin = () => parseInt(input.min || '1', 10);
 
         minusBtn?.addEventListener('click', (e) => {
-            // Allow links to work on the cart page
             if (minusBtn.tagName === 'A' || minusBtn.type === 'submit') return;
             
             e.preventDefault();
@@ -295,7 +294,6 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
         });
 
         plusBtn?.addEventListener('click', (e) => {
-            // Allow form submissions to work on the cart page
             if (plusBtn.tagName === 'A' || plusBtn.type === 'submit') return;
             
             e.preventDefault();
@@ -306,7 +304,6 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
             }
         });
 
-        // Guard against manual out-of-range input
         input.addEventListener('change', () => {
             let val = parseInt(input.value, 10);
             if (isNaN(val) || val < getMin()) val = getMin();
@@ -367,7 +364,6 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
 // 15. "Add to Cart" / Wishlist hover-button feedback
 // =============================================================
 (function initCartWishlistButtons() {
-    // Wishlist buttons
     document.querySelectorAll('.social-info').forEach((btn) => {
         const icon = btn.querySelector('i');
         if (!icon) return;
@@ -389,7 +385,6 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
         }
     });
 
-    // Detail page "Add to Cart" form submission
     const cartForm = document.querySelector('.single-product form');
     cartForm?.addEventListener('submit', () => {
         window.showToast?.('Adding to Cart...', 'success');
@@ -403,7 +398,6 @@ document.querySelectorAll('.available[data-width]').forEach((el) => {
 (function initShareButton() {
     const shareLinks = document.querySelectorAll('a[data-share], a[onclick*="clipboard"]');
     shareLinks.forEach((btn) => {
-        // Strip the inline onclick and replace with proper handler
         btn.removeAttribute('onclick');
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
