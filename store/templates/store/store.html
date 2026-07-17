@@ -4,13 +4,10 @@
 {% block content %}
 <div id="page" class="site page-home">
 
-    {# ── Secondary header: departments + search ───────────────────────────── #}
     <header>
         <div class="header-main mobile-hide">
             <div class="container">
                 <div class="wrapper flexitem">
-
-                    {# Left: department category panel #}
                     <div class="left">
                         <div class="dpt-cat">
                             <div class="dpt-head">
@@ -67,8 +64,6 @@
                             </div>
                         </div>
                     </div>
-
-                    {# Right: search bar #}
                     <div class="right">
                         <div class="search box">
                             <form action="{% url 'store' %}" class="search" method="get">
@@ -85,7 +80,6 @@
     </header>
 
     <main>
-        {# ── Hero Slider ──────────────────────────────────────────────────── #}
         <div class="slider">
             <div class="container">
                 <div class="wrapper">
@@ -150,9 +144,6 @@
                 </div>
             </div>
         </div>
-        {# /Hero Slider #}
-
-        {# ── Brand Logos ──────────────────────────────────────────────────── #}
         <div class="brands">
             <div class="container">
                 <div class="wrapper flexitem">
@@ -165,15 +156,12 @@
                 </div>
             </div>
         </div>
-
-        {# ── Trending Products ─────────────────────────────────────────────── #}
         <div class="trending">
             <div class="container">
                 <div class="wrapper">
                     <div class="sectop flexitem">
                         <h2><span class="circle"></span><span>Trending Products</span></h2>
                     </div>
-
                     {% if not offer_product and not trending_row1 and not trending_row2 %}
                     <p style="padding:2rem 0;color:#999;text-align:center;">
                         No trending products yet. Mark products as trending in the admin.
@@ -181,13 +169,10 @@
                     {% else %}
                     <div class="column">
                         <div class="flexwrap">
-
-                            {# BIG OFFER CARD #}
                             <div class="row products big">
                                 {% if offer_product %}
                                 {% with config=trending_config %}
                                 <div class="item offer-card" id="offerCard">
-
                                     {% if config.offer_ends_at %}
                                     <div class="offer">
                                         <p>Offer ends at</p>
@@ -278,9 +263,6 @@
                                 {% endwith %}
                                 {% endif %}
                             </div>
-                            {# /BIG OFFER CARD #}
-
-                            {# SMALL CARDS ROW 1 #}
                             {% if trending_row1 %}
                             <div class="row products mini">
                                 {% for product in trending_row1 %}
@@ -342,8 +324,6 @@
                                 {% endfor %}
                             </div>
                             {% endif %}
-
-                            {# SMALL CARDS ROW 2 #}
                             {% if trending_row2 %}
                             <div class="row products mini">
                                 {% for product in trending_row2 %}
@@ -413,9 +393,6 @@
                 </div>
             </div>
         </div>
-        {# /Trending Products #}
-
-        {# ── All Products ─────────────────────────────────────────────────── #}
         <div class="features">
             <div class="container">
                 <div class="wrapper">
@@ -525,9 +502,6 @@
                 </div>
             </div>
         </div>
-        {# /All Products #}
-
-        {# ── Promotional Banners ───────────────────────────────────────────── #}
         <div class="banners">
             <div class="container">
                 <div class="wrapper">
@@ -628,9 +602,6 @@
                 </div>
             </div>
         </div>
-        {# /Promotional Banners #}
-
-        {# ── Newsletter ───────────────────────────────────────────────────── #}
         <div class="newsletter">
             <div class="container">
                 <div class="wrapper">
@@ -654,9 +625,6 @@
                 <div class="acc"><strong><a href="#">I accept the Legal Terms</a></strong></div>
             </div>
         </div>
-        {# /Newsletter #}
-
-        {# ── Footer widgets ───────────────────────────────────────────────── #}
         <div class="widgets">
             <div class="container">
                 <div class="wrapper">
@@ -726,8 +694,6 @@
                 </div>
             </div>
         </div>
-        {# /Footer widgets #}
-
     </main>
 </div>
 {% endblock %}
