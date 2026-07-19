@@ -65,7 +65,6 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-    # Hierarchy
     category    = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='primary_products')
     additional_categories = models.ManyToManyField(
         Category,
@@ -76,26 +75,21 @@ class Product(models.Model):
     subcategory    = models.ForeignKey(SubCategory,    on_delete=models.SET_NULL, blank=True, null=True)
     subsubcategory = models.ForeignKey(SubSubCategory, on_delete=models.SET_NULL, blank=True, null=True)
 
-    # Core Details
     name        = models.CharField(max_length=200, unique=True)
     slug        = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
     image       = models.ImageField(upload_to='photos/products')
 
-    # Pricing
     original_price = models.DecimalField(max_digits=10, decimal_places=2)
     price          = models.DecimalField(max_digits=10, decimal_places=2)
 
-    # Inventory & Sales
     stock      = models.IntegerField(default=0)
     units_sold = models.IntegerField(default=0)
 
-    # Metadata & Filters
     review_count     = models.IntegerField(default=0)
     is_free_delivery = models.BooleanField(default=False)
     is_available     = models.BooleanField(default=True)
 
-    # Trending
     is_trending    = models.BooleanField(
         default=False,
         help_text='Check to include this product in the Trending section.',
