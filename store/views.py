@@ -88,7 +88,6 @@ def category(request, category_slug):
         category=current_category,
     )
 
-    # --- Subcategory / sub-subcategory drill-down ---
     subcategory_slug = request.GET.get('sub')
     subsubcategory_slug = request.GET.get('subsub')
     active_sub = None
@@ -102,25 +101,21 @@ def category(request, category_slug):
             active_subsub = get_object_or_404(SubSubCategory, slug=subsubcategory_slug, subcategory=active_sub)
             products = products.filter(subsubcategory=active_subsub)
 
-    # --- Search within category ---
     query = request.GET.get('query', '').strip()
     if query:
         products = products.filter(
             Q(name__icontains=query) | Q(description__icontains=query)
         )
 
-    # --- Discount filter (pure ORM — no raw SQL) ---
     discount_filter = request.GET.get('discount', '')
     if discount_filter == 'with':
         products = products.filter(price__lt=F('original_price'))
     elif discount_filter == 'without':
         products = products.filter(price__gte=F('original_price'))
 
-    # --- Free delivery filter ---
     if request.GET.get('free_delivery'):
         products = products.filter(is_free_delivery=True)
 
-    # --- Price range filter ---
     try:
         price_min = int(request.GET.get('price_min', 0))
         price_max = int(request.GET.get('price_max', 0))
@@ -131,7 +126,6 @@ def category(request, category_slug):
     except (ValueError, TypeError):
         price_min = price_max = 0
 
-    # --- Sorting ---
     SORT_MAP = {
         'newest':     '-created_date',
         'oldest':     'created_date',
@@ -145,7 +139,6 @@ def category(request, category_slug):
 
     product_count = products.count()
 
-    # --- Pagination ---
     per_page = request.GET.get('per_page', '12')
     try:
         per_page = int(per_page) if per_page != 'all' else product_count or 1
@@ -181,7 +174,6 @@ def product_detail(request, category_slug, product_slug):
         slug=product_slug,
     )
 
-    # These are needed by the shared dpt-cat header partial
     categories = Category.objects.prefetch_related('subcategories__subsubcategories').all()
 
     related_products = (
@@ -257,7 +249,6 @@ def cart(request):
     total = sum(item.product.price * item.quantity for item in cart_items)
     quantity = sum(item.quantity for item in cart_items)
     
-    # Flat shipping fee placeholder as per your HTML
     shipping = 10000 
     grand_total = total + shipping if total > 0 else 0
 
@@ -277,10 +268,8 @@ def add_cart(request, product_id):
     product_variations = []
 
     if request.method == 'POST':
-        # Grab quantity from the form, default to 1
         qty = int(request.POST.get('quantity', 1))
         
-        # Loop through POST data to find matching variations
         for item in request.POST:
             key = item
             value = request.POST[key]
@@ -296,7 +285,6 @@ def add_cart(request, product_id):
     else:
         qty = 1
 
-    # Check if this exact product with these exact variations is already in the cart
     cart_items = CartItem.objects.filter(product=product, cart=cart_obj)
     
     if cart_items.exists():
@@ -308,20 +296,17 @@ def add_cart(request, product_id):
             id_list.append(item.id)
 
         if product_variations in existing_var_lists:
-            # Increase quantity of the existing exact match
             index = existing_var_lists.index(product_variations)
             item_id = id_list[index]
             item = CartItem.objects.get(product=product, id=item_id)
             item.quantity += qty
             item.save()
         else:
-            # Create a new cart item for the new variation
             item = CartItem.objects.create(product=product, quantity=qty, cart=cart_obj)
             if product_variations:
                 item.variations.add(*product_variations)
             item.save()
     else:
-        # Product not in cart at all, create new
         cart_item = CartItem.objects.create(product=product, quantity=qty, cart=cart_obj)
         if product_variations:
             cart_item.variations.add(*product_variations)
