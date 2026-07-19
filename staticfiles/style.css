@@ -2323,9 +2323,6 @@ input[type="range"]::-webkit-slider-thumb {
   }
 }
 
-
-
-
 @media screen and (min-width: 992px) {
   .container {
     padding: 0 2em;
@@ -2474,10 +2471,6 @@ input[type="range"]::-webkit-slider-thumb {
     background-size: auto;
 
   }
-  /* Displaying the first sub menu */
-  /* .dpt-menu .has-child:nth-child(1) > ul {
-    display: block; 
-  }*/
   .dpt-menu .beauty ul {
     background-image: url(assets/menu/menu_bg1.jpg);
   }
