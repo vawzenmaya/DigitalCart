@@ -64,7 +64,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fslightbox/3.7.4/index.js"></script>
     <script src="{% static 'script.js' %}"></script>
 
-    {# ── Global wishlist toggle — works on every page ─────────────────────── #}
     <script>
     (function () {
         var CSRF = (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
@@ -93,7 +92,6 @@
             var icon  = btn.querySelector('i');
             var label = btn.querySelector('span:not(:has(i)), p.hover-text');
 
-            // Optimistic toggle
             var wasWishlisted = icon && icon.classList.contains('ri-heart-fill');
             if (icon) {
                 icon.classList.toggle('ri-heart-fill', !wasWishlisted);
@@ -131,7 +129,6 @@
     })();
     </script>
 
-    {# ── Global add-to-cart — works on every page ──────────────────────────── #}
     <script>
     (function () {
         var CSRF = (document.cookie.match(/csrftoken=([^;]+)/) || [])[1] || '';
